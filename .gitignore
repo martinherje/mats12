@@ -8,3 +8,8 @@ data/processed/*
 # Reference materials — refetchable, some large; provenance in data/reference/SOURCES.md
 data/reference/
 reading/
+# Activations and probe outputs are regenerable and large
+*.npz
+data/*.csv
+!data/scenarios_template.csv
+!data/scenarios_smoke.csv

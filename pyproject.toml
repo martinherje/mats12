@@ -1,12 +1,27 @@
 [project]
 name = "mats12"
-version = "0.1.0"
+version = "0.2.0"
 description = "MATS 12 application task workspace (Martin Herje). Research work is Martin's own; scaffolding is generic infrastructure."
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "openai>=1.40",
     "python-dotenv>=1.0",
     "pandas>=2.0",
     "matplotlib>=3.8",
     "tqdm>=4.66",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "torch>=2.4",
+    "transformers>=5.2",
+    "accelerate>=1.0",
+    "safetensors>=0.4",
+    "huggingface-hub>=0.24",
 ]
+
+[project.optional-dependencies]
+# Optional fast kernels for the Gated DeltaNet layers on CUDA boxes only. Without them the
+# hybrid path is slow but numerically the same. Install on the pod: uv sync --extra cuda-kernels
+cuda-kernels = ["flash-linear-attention", "causal-conv1d"]
+
+[tool.uv]
+# Keep resolution simple on the Mac; the pod installs the same lock.

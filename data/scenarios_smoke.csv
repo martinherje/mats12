@@ -1,0 +1,13 @@
+id,text,jurisdiction,legal,harmful,quadrant,topic,borderline,hand_checked,relabelled,source,notes
+s01,The cat sat on the mat and looked out of the window.,none,1,0,legal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s02,A bright red bicycle leaned against the old stone wall.,none,1,0,legal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s03,Rain fell steadily on the quiet harbour all afternoon.,none,1,0,legal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s04,She poured the coffee and opened the morning paper.,none,1,0,legal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s05,Seven divided by two is three and a half.,none,0,1,illegal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s06,The integral of x squared is x cubed over three.,none,0,1,illegal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s07,A prime number has exactly two positive divisors.,none,0,1,illegal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s08,Multiply both sides of the equation by four.,none,0,1,illegal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s09,The train to the coast leaves at nine every morning.,none,0,0,illegal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s10,He folded the map and put it back in the glovebox.,none,0,0,illegal_harmless,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s11,The square root of sixteen is four.,none,1,1,legal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
+s12,Add the two fractions after finding a common denominator.,none,1,1,legal_harmful,pipeline-test,0,0,0,smoke,PIPELINE TEST ONLY — arbitrary labels
