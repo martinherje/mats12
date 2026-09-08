@@ -29,6 +29,8 @@ p.add_argument("--run", required=True, help="run name → data/processed/acts_<r
 p.add_argument("--pool", default="last", choices=["last", "mean"])
 p.add_argument("--template", default="raw", choices=["raw", "chat"])
 p.add_argument("--instruction", default="", help="fixed text prepended to each scenario (chat template only)")
+p.add_argument("--generation-prompt", action="store_true", help="chat template: append the assistant turn opener, so the last token is the state the answer starts from")
+p.add_argument("--enable-thinking", default=None, choices=[None, "on", "off"], help="chat template: Qwen3.5 enable_thinking flag (omit to leave the template default)")
 p.add_argument("--batch-size", type=int, default=8)
 p.add_argument("--max-length", type=int, default=256)
 p.add_argument("--device", default="auto")
@@ -47,7 +49,10 @@ def render(text: str) -> str:
     if a.template == "raw":
         return text
     content = (a.instruction.strip() + "\n\n" + text) if a.instruction else text
-    return tok.apply_chat_template([{"role": "user", "content": content}], tokenize=False, add_generation_prompt=False)
+    kw = {}
+    if a.enable_thinking is not None:
+        kw["enable_thinking"] = a.enable_thinking == "on"
+    return tok.apply_chat_template([{"role": "user", "content": content}], tokenize=False, add_generation_prompt=a.generation_prompt, **kw)
 
 
 texts = [render(t) for t in df["text"].astype(str)]
@@ -80,7 +85,7 @@ outp = ROOT / "data/processed" / f"acts_{a.run}.npz"
 outp.parent.mkdir(parents=True, exist_ok=True)
 np.savez_compressed(outp, acts=acts, n_tokens=n_tokens, **{f"col_{k}": v for k, v in label_cols.items()})
 write_json(outp.with_suffix(".json"), manifest(run=a.run, model=a.model, revision=a.revision, scenarios=a.scenarios, n=len(df),
-           pool=a.pool, template=a.template, instruction=a.instruction, max_length=a.max_length, device=device, dtype=str(dtype),
+           pool=a.pool, template=a.template, instruction=a.instruction, generation_prompt=a.generation_prompt, enable_thinking=a.enable_thinking, max_length=a.max_length, device=device, dtype=str(dtype),
            acts_shape=list(acts.shape), truncated=int((n_tokens >= a.max_length).sum())))
 print(f"wrote {outp.relative_to(ROOT)} · acts {acts.shape} (N, layers+1, d) · truncated={int((n_tokens >= a.max_length).sum())}")
 print("HAND-CHECK: open the .json manifest and confirm model/pool/template are what you intended before training anything on this.")

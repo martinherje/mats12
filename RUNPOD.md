@@ -23,7 +23,17 @@ rsync -avz -e "ssh -p <port>" --exclude .venv --exclude data/raw --exclude readi
 ```
 Optional (faster GDN layers, CUDA only): `uv sync --extra cuda-kernels`. If it fails to build, skip it — results are identical, only slower.
 
-## 3. Run the pipeline (on the pod)
+## 3. Run the value-leakage pipeline (on the pod)
+```bash
+uv run python scripts/donation_bet.py --backend local --run gonogo_pod --n-baseline 20 --n-per-direction 20 --think both
+uv run python scripts/extract_activations.py --scenarios data/scenarios_gonogo_pod.csv --template chat --generation-prompt --enable-thinking off --run gonogo_pod
+uv run python scripts/make_direction.py --run gonogo_pod --label good_side --filter "bet==1" --think off --out direction_gonogo_good_side
+uv run python scripts/donation_bet.py --backend local --think off --reuse-thresholds gonogo_pod --ablate data/processed/direction_gonogo_good_side.npz --layers 20 --mode ablate --run abl_L20
+uv run python scripts/donation_bet.py --backend local --think off --reuse-thresholds gonogo_pod --layers 20 --mode random --run abl_L20_random
+```
+Then on the Mac: `scripts/sync_from_pod.sh`.
+
+## 3b. Legality-probe pipeline (fallback)
 ```bash
 uv run python scripts/validate_scenarios.py data/scenarios.csv
 uv run python scripts/extract_activations.py --scenarios data/scenarios.csv --run v1_last_raw
