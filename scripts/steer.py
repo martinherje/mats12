@@ -54,7 +54,8 @@ class Intervention:
         self.layers = [l - 1 for l in layers] if hidden_index else list(layers)
         assert all(l >= 0 for l in self.layers), "layer 0 in hidden-state indexing is the embedding output; no block to hook"
         blocks = model.model.layers
-        d_model = model.config.hidden_size
+        from common import text_config
+        d_model = text_config(model.config).hidden_size
         if mode == "random":
             g = torch.Generator().manual_seed(seed)
             direction = torch.randn(d_model, generator=g)

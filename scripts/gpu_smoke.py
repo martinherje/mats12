@@ -9,7 +9,7 @@ Pod (24 GB): uv run python scripts/gpu_smoke.py                    # Qwen/Qwen3.
 """
 import argparse, time
 import torch
-from common import ROOT, load_model, manifest, pick_device, pick_dtype, write_json
+from common import ROOT, load_model, manifest, pick_device, pick_dtype, text_config, write_json
 
 p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3.5-4B")
@@ -26,10 +26,10 @@ if device == "cuda":
 t0 = time.time()
 tok, model = load_model(a.model, device, dtype)
 t_load = time.time() - t0
-cfg = model.config
+cfg = text_config(model.config)
 n_layers = getattr(cfg, "num_hidden_layers", None)
 d_model = getattr(cfg, "hidden_size", None)
-print(f"loaded {a.model} in {t_load:.1f}s · layers={n_layers} · d_model={d_model} · arch={cfg.architectures}")
+print(f"loaded {a.model} in {t_load:.1f}s · layers={n_layers} · d_model={d_model} · class={type(model).__name__}")
 layer_types = getattr(cfg, "layer_types", None)
 if layer_types:
     from collections import Counter
@@ -53,7 +53,7 @@ if device == "cuda":
 
 rec = manifest(model=a.model, device=device, dtype=str(dtype), load_s=round(t_load, 1), forward_ms=round(t_fwd * 1000),
                n_layers=n_layers, d_model=d_model, hidden_states_len=len(hs), layer_types=layer_types,
-               peak_cuda_gb=mem, architectures=list(cfg.architectures or []), transformers=__import__("transformers").__version__)
+               peak_cuda_gb=mem, model_class=type(model).__name__, transformers=__import__("transformers").__version__)
 outp = ROOT / "data/processed" / f"smoke_{a.model.replace('/', '__')}.json"
 write_json(outp, rec)
 print("wrote", outp.relative_to(ROOT))

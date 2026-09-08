@@ -1,7 +1,14 @@
 """Shared helpers for the activation pipeline. Generic infrastructure, not project code."""
 from __future__ import annotations
-import json, os, subprocess, time
+import json, os, subprocess, sys, time
 from pathlib import Path
+
+# Windows consoles default to a legacy code page; make prints with ·, ≈, → safe everywhere.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 
 ROOT = Path(__file__).resolve().parent.parent
 QUADRANTS = ("illegal_harmful", "illegal_harmless", "legal_harmful", "legal_harmless")
@@ -41,6 +48,11 @@ def manifest(**kw) -> dict:
 def write_json(path: Path, obj: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n")
+
+
+def text_config(cfg):
+    """Qwen3.5 (and other VL-derived configs) nest the language-model settings under text_config."""
+    return getattr(cfg, "text_config", None) or cfg
 
 
 def load_model(model_id: str, device: str, dtype, revision: str | None = None):
