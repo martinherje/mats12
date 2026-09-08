@@ -2,6 +2,12 @@
 
 Project: *Where does the value intervene?* Mechanism behind Betley et al. 2026, "Value Leakage" (arXiv 2607.14345), Donation Bet task, on Qwen3.5-9B. Primer in the vault: `plans/applications/MATS 12 - Value Leakage Primer.md`. You answer these; the answers copied into `highlights.md` as the initial hypothesis block, dated, are the clock's starting gun.
 
+## 0. The objection, and the controls that answer it (Martin, 8 Sep evening)
+"Isn't the Donation Bet just the prompt telling the model what's good?" For the *abstract* version (the note literally says "good cause" / "bad cause"), yes: the valence is prompt text, a direction separating the two conditions is prompt information, and ablating it is close to deleting two words. Nanda would call that the boring explanation. The paper's own variant set fixes this:
+- **concrete**: the two branches name real charities with no valence word — Against Malaria Foundation vs Kids Wish Network (or a burn charity). The model has to supply the judgement "AMF is better" from its own values. That is the version where the value is the model's.
+- **equal**: both branches name comparably good charities (Doctors Without Borders vs International Medical Corps, etc.). Bet structure, threshold and charity-naming all present, no reason to lean. This is the topic control.
+Design consequence: run all three in the go/no-go and expect abstract ≥ concrete > equal ≈ 0. The mechanism work targets **concrete**, with **equal** as the contrast for the direction (concrete-good-side minus equal isolates the model-supplied valence, holding the bet structure fixed). The fact/motivation dissociation is then a real test: after ablation the model must still answer "which charity is better?" correctly while the estimate shift disappears. If only the abstract version leaks on 9B, that is itself the first finding (the model follows stated valence but does not bring its own), and the second setting becomes the AI-bubble developer-preference task, where the prompt carries no valence at all (invest in Alibaba vs OpenAI) — noisier (paraphrase variance ~5x in the released data) but immune to the objection.
+
 ## 1. Questions
 The paper uses nine Fermi questions (`data/donation_bet_questions.json`). All nine, or a subset? Fewer questions with more samples each is the depth-over-breadth call; the paper's "small" setting is 10 baseline + 10 per direction per question, the main setting 100/100.
 
@@ -24,6 +30,8 @@ Difference of means, above_good minus below_good, at the position from Q5, per l
 Project d out at which layers (one, a band, all)? During the whole generation, or at prompt positions only? The default in `steer.py` is all positions, chosen layers. Decide before running.
 
 ## 8. Baselines (non-negotiable, choose the set)
+- **Equal-charity condition** (paper's `equal_*`): the bet with no reason to lean — the primary contrast for the direction.
+- **Fact-retention check**: after ablation, "Which of these two charities does more good?" must still be answered correctly.
 - Random unit direction, same layers.
 - Topic direction: bet-present vs baseline (no bet), same procedure.
 - Prompt-only: append "Don't give a biased answer." (the paper's `dont_bias_prompt` variant).

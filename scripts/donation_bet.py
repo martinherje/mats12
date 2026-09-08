@@ -43,6 +43,7 @@ p.add_argument("--n-per-direction", type=int, default=20)
 p.add_argument("--think", default="both", choices=["off", "on", "both"])
 p.add_argument("--temperature", type=float, default=1.0)
 p.add_argument("--max-new-tokens", type=int, default=1500)
+p.add_argument("--variant", default="abstract", help="abstract | concrete_amf_kw | concrete_amf_burn | equal_dwb_imc (see data/donation_bet_questions.json)")
 p.add_argument("--dont-bias", action="store_true", help="append the paper's 'Don't give a biased answer.' suffix (prompt-only baseline)")
 p.add_argument("--reuse-thresholds", default=None, help="run name whose thresholds to reuse (skips baseline sampling)")
 p.add_argument("--judge", default=None, help="api: OpenRouter model to extract estimates the regex could not parse (uses the paper's judge prompt)")
@@ -69,8 +70,11 @@ if raw_path.exists():
 rng = np.random.default_rng(a.seed)
 
 
+assert a.variant in Q["variants"], f"unknown variant {a.variant}; choose from {list(Q['variants'])}"
+
+
 def render(question_key: str, condition: str, threshold: int | None) -> str:
-    t = Q["templates"][condition]
+    t = Q["templates"][condition] if condition == "baseline" else Q["variants"][a.variant][condition]
     txt = t.format(question=Q["questions"][question_key], threshold=f"{threshold:,}" if threshold is not None else "")
     if a.dont_bias:
         txt += Q["dont_bias_suffix"]
@@ -247,7 +251,7 @@ def run_jobs(jobs, phase):
             if est is None and judge_client and r.get("answer"):
                 est = judge_estimate(judge_client, a.judge, r["answer"]); method = "judge" if est is not None else "unparsed"
             row = {**j, **r, "estimate": est, "parse_method": method, "phase": phase, "run": a.run, "model": model_id, "backend": a.backend,
-                   "temperature": a.temperature, "dont_bias": a.dont_bias, "intervention": intervention_desc, "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
+                   "temperature": a.temperature, "variant": a.variant, "dont_bias": a.dont_bias, "intervention": intervention_desc, "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
             f.write(json.dumps(row, ensure_ascii=False) + "\n"); rows.append(row)
     return pd.DataFrame(rows)
 
@@ -276,7 +280,7 @@ else:
 # ---------------- phase 2: directions ----------------
 jobs = [{"question": q, "condition": c, "threshold": thresholds[q], "think": th, "prompt": render(q, c, thresholds[q]), "sample": s}
         for q in qkeys if q in thresholds for c in ("above_good", "below_good") for th in thinks for s in range(a.n_per_direction)]
-print(f"phase 2: {len(jobs)} direction generations")
+print(f"phase 2: {len(jobs)} direction generations · variant={a.variant} ({Q['variants'][a.variant]['kind']})")
 dir_df = run_jobs(jobs, "direction")
 good = np.where(dir_df.condition == "above_good", dir_df.estimate > dir_df.threshold, dir_df.estimate <= dir_df.threshold).astype(float)
 good[dir_df.estimate.isna().to_numpy()] = np.nan
@@ -330,7 +334,7 @@ for q in qkeys:
     for th in thinks:
         for c in ("baseline", "above_good", "below_good"):
             sc.append({"id": f"{q}__{c}__{th}", "text": render(q, c, thresholds[q] if c != "baseline" else None), "question": q, "condition": c,
-                       "think": th, "good_side": {"above_good": 1, "below_good": 0, "baseline": -1}[c], "bet": int(c != "baseline"), "threshold": thresholds[q]})
+                       "think": th, "good_side": {"above_good": 1, "below_good": 0, "baseline": -1}[c], "bet": int(c != "baseline"), "variant": a.variant, "threshold": thresholds[q]})
 scp = ROOT / "data" / f"scenarios_{a.run}.csv"; pd.DataFrame(sc).to_csv(scp, index=False)
 print(f"\nwrote {raw_path.relative_to(ROOT)} · {outc.relative_to(ROOT)} · {scp.relative_to(ROOT)} ({len(sc)} prompts for the extractor)")
 print("HAND-CHECK: read 20 raw answers per condition and confirm the parsed estimate; check unparsed_frac; look at the baseline distribution before trusting the median threshold.")
