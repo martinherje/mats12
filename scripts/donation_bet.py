@@ -34,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import ROOT, manifest, write_json
 
 p = argparse.ArgumentParser()
-p.add_argument("--backend", default="api", choices=["api", "local"])
+p.add_argument("--backend", default="api", choices=["api", "hf", "local"], help="api = OpenRouter; hf = Hugging Face inference router (HF_TOKEN); local = transformers")
 p.add_argument("--model", default=None, help="api: OpenRouter id (default qwen/qwen3.5-9b); local: HF id (default Qwen/Qwen3.5-9B)")
 p.add_argument("--run", required=True)
 p.add_argument("--questions", default="all", help="comma list of question keys, or all")
@@ -62,7 +62,7 @@ Q = json.loads((ROOT / "data/donation_bet_questions.json").read_text())
 qkeys = list(Q["questions"]) if a.questions == "all" else a.questions.split(",")
 bad = set(qkeys) - set(Q["questions"]); assert not bad, f"unknown questions {bad}"
 thinks = ["off", "on"] if a.think == "both" else [a.think]
-model_id = a.model or ("qwen/qwen3.5-9b" if a.backend == "api" else "Qwen/Qwen3.5-9B")
+model_id = a.model or {"api": "qwen/qwen3.5-9b", "hf": "Qwen/Qwen3.5-9B", "local": "Qwen/Qwen3.5-9B"}[a.backend]
 raw_path = ROOT / "data/raw" / f"donation_bet_{a.run}.jsonl"
 raw_path.parent.mkdir(parents=True, exist_ok=True)
 if raw_path.exists():
@@ -142,16 +142,25 @@ def judge_estimate(client, judge_model: str, answer: str):
 
 # ---------------- backends ----------------
 class ApiBackend:
+    """OpenAI-compatible chat backends: OpenRouter (--backend api) or the Hugging Face inference router (--backend hf)."""
     def __init__(self):
         from dotenv import load_dotenv; load_dotenv(ROOT / ".env")
         from openai import OpenAI
-        key = os.environ.get("OPENROUTER_API_KEY")
-        if not key:
-            raise SystemExit("OPENROUTER_API_KEY is empty in .env — create a key at openrouter.ai and paste it there (README step 1-2)")
-        self.client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key)
+        if a.backend == "hf":
+            key = os.environ.get("HF_TOKEN")
+            if not key:
+                raise SystemExit("HF_TOKEN is empty in .env — paste your Hugging Face token there (settings → Access Tokens; needs inference permission)")
+            self.client = OpenAI(base_url="https://router.huggingface.co/v1", api_key=key)
+        else:
+            key = os.environ.get("OPENROUTER_API_KEY")
+            if not key:
+                raise SystemExit("OPENROUTER_API_KEY is empty in .env — create a key at openrouter.ai and paste it there (README step 1-2)")
+            self.client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key)
 
     def one(self, user_text: str, think: str):
-        extra = {"reasoning": {"enabled": think == "on"}}
+        # OpenRouter: the `reasoning` field. HF router: providers honour vLLM-style chat_template_kwargs for Qwen's thinking switch
+        # (not guaranteed on every provider — the raw rows record whether a reasoning field came back, so check the first run).
+        extra = {"reasoning": {"enabled": think == "on"}} if a.backend == "api" else {"chat_template_kwargs": {"enable_thinking": think == "on"}}
         for attempt in range(4):
             try:
                 r = self.client.chat.completions.create(model=model_id, messages=[{"role": "user", "content": user_text}],
@@ -229,10 +238,10 @@ class LocalBackend:
         return out
 
 
-backend = ApiBackend() if a.backend == "api" else LocalBackend()
+backend = ApiBackend() if a.backend in ("api", "hf") else LocalBackend()
 judge_client = None
 if a.judge:
-    if a.backend == "api":
+    if a.backend in ("api", "hf"):
         judge_client = backend.client
     else:
         from dotenv import load_dotenv; load_dotenv(ROOT / ".env")

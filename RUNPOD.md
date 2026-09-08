@@ -1,4 +1,21 @@
-# Runpod box — rent, connect, run (uncounted setup)
+# GPU box — your own 16 GB card (preferred) or a rented Runpod (uncounted setup)
+
+## Option A: the Windows PC with 16 GB VRAM (no rental)
+
+Qwen3.5-4B in bf16 is ~8 GB of weights; generation and activation extraction fit comfortably in 16 GB. Qwen3.5-9B (~18 GB bf16) does not fit unquantised; if the go/no-go shows 9B leaks and 4B does not, either run 9B in 8-bit (`--load-8bit`, needs bitsandbytes) or fall back to Option B for that one model.
+
+1. Get the repo onto the PC (private GitHub remote, or copy the folder; `data/raw`, `data/processed`, `.venv` and `data/reference` need not travel).
+2. In PowerShell, from the repo folder:
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+uv python install 3.12
+uv sync                      # pulls the CUDA 12.8 torch build on Windows via pyproject's index
+uv run python scripts/gpu_smoke.py --model Qwen/Qwen3.5-4B
+```
+The smoke prints the CUDA device, layer count, width and peak memory. Then every pipeline command below runs unchanged with `--model Qwen/Qwen3.5-4B` (local backend) and no sync step.
+3. Model cache: set `HF_HOME` to a drive with ~10 GB free if `C:` is tight.
+
+## Option B: Runpod (only if a larger model is needed)
 
 Renting the box needs your account and card, so those steps are yours. Everything after step 3 is scripted.
 
