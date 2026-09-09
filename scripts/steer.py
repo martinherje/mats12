@@ -19,6 +19,14 @@ embedding output).
 
 Sanity check: `uv run python scripts/steer.py --model Qwen/Qwen2.5-0.5B-Instruct` runs a tiny
 self-test (ablating a direction removes its component; random control differs).
+
+IN PLAIN LANGUAGE
+What it does: while the model generates, reaches into chosen layers and removes (or adds) one direction
+from the model's internal state at every token. "Ablate" means: whatever part of the state points along
+the direction, subtract it, so the model can no longer use that information. "Random" does the same with
+a meaningless direction, to show that removing *any* direction is not what changes the behaviour.
+How: a forward hook on the decoder block — a small function that runs after the block and edits its output
+before the next block sees it. Works the same for Qwen3.5's two kinds of layers.
 """
 from __future__ import annotations
 import numpy as np, torch

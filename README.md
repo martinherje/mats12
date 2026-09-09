@@ -12,6 +12,28 @@ Vault companion note (strategy, form questions, project spec, calibration): `~/D
 - Full pivot to a new project = clock resets.
 - Track with Toggl from the first project-directed minute; screenshot goes in the application doc.
 
+## Read this first: how the pieces fit
+
+The whole project is five steps, one script each. Each script has an "IN PLAIN LANGUAGE" block at the top saying what goes in, what comes out, and what to hand-check. The notebook `notebooks/mats12_colab.ipynb` runs them in order with an explanation before every cell.
+
+```mermaid
+flowchart LR
+  Q[data/donation_bet_questions.json<br/>9 questions + the paper's note wordings] --> A
+  A[1 · donation_bet.py<br/>ask the model many times,<br/>with and without the bet] --> R[(data/raw/*.jsonl<br/>every answer, verbatim)]
+  A --> S[data/processed/*.json<br/>leak score + interval]
+  A --> P[data/scenarios_run.csv<br/>one row per prompt]
+  P --> B[2 · extract_activations.py<br/>snapshot the model's internal state<br/>at the moment it starts answering]
+  B --> C[3 · make_direction.py<br/>average state good-side-above<br/>minus good-side-below = one vector per layer]
+  C --> D[4 · donation_bet.py --ablate<br/>rerun with that vector removed<br/>while the model writes]
+  D --> S
+  E[steer.py<br/>the hook that removes a direction] -.-> D
+  F[5 · fact check, notebook cell 11<br/>does it still know which charity is better?] -.-> D
+```
+
+In words: **measure the leak** (1), **look inside** (2, 3), **remove what you found and measure again** (4), **check you removed the motivation and not the knowledge** (5). The controls that make it an argument rather than a demo are all in step 4: a random direction (removing *anything* should not work), the topic direction (knowing a bet exists is not the same as knowing which side is good), and the equal-charity condition from step 1 (a bet with no reason to lean should show no leak).
+
+Conventions: raw answers are never overwritten (a run name is used once); every number in the write-up is recomputed by hand from `data/raw/` before it is quoted; `journal/verification-log.md` records each check.
+
 ## Project (decided 8 Sep evening): value-leakage mechanism
 
 **Where does the value intervene?** Mechanism behind Betley et al. 2026, *Value Leakage* (arXiv 2607.14345), Donation Bet task, on Qwen3.5-9B. Primer (read first): vault `plans/applications/MATS 12 - Value Leakage Primer.md`. Design sheet (yours): `journal/design-questions-value-leakage.md`. Paper code (sparse clone, no data): `data/reference/value_leakage/`; the exact prompt templates and nine questions are in `data/donation_bet_questions.json`.

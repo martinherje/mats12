@@ -7,6 +7,15 @@
 --filter  pandas query over the label columns to select rows first (e.g. drop baseline rows for the good_side direction)
 Writes data/processed/<out>.npz with dirs [layers+1, d] (unit vectors) plus a sidecar .json manifest.
 Also prints, per layer, the separation (cosine between each row and the direction, mean by class) as a sanity number.
+
+IN PLAIN LANGUAGE
+What it does: turns the saved snapshots into one vector per layer — the average state under label=1 minus
+the average under label=0. With label good_side that is "what changes inside the model when the good side
+flips from below the threshold to above it". With label bet it is "what changes when a bet is mentioned at
+all". No training, no fitting; one subtraction.
+What comes out: data/processed/<out>.npz holding unit vectors, one per layer, ready for the ablation.
+Caveat printed in the table: the two prompt versions differ in a few words, so the direction separates
+them trivially. That is not the result; the result is what happens when the direction is removed.
 """
 import argparse, sys
 from pathlib import Path

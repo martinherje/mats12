@@ -6,6 +6,10 @@ data/processed/smoke_<model>.json so the pod's numbers are on disk.
 
 Mac (8 GB):  uv run python scripts/gpu_smoke.py --model Qwen/Qwen2.5-0.5B-Instruct
 Pod (24 GB): uv run python scripts/gpu_smoke.py                    # Qwen/Qwen3.5-4B
+
+IN PLAIN LANGUAGE
+What it does: loads the model once and runs a single sentence through it, to confirm the GPU, the memory
+budget and the model's shape (layers, width) before any real run. If this works, everything else can.
 """
 import argparse, time
 import torch

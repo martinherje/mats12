@@ -15,6 +15,15 @@ Example (pod):
 Example (Mac pipeline check):
   uv run python scripts/extract_activations.py --model Qwen/Qwen2.5-0.5B-Instruct \
       --scenarios data/scenarios_smoke.csv --run smoke
+
+IN PLAIN LANGUAGE
+What it does: runs each prompt through the model once and saves the model's internal state (the residual
+stream) at one token position, for every layer. Think of it as taking a snapshot of what the model is
+"thinking" the moment before it starts writing.
+Which position: with --generation-prompt, the snapshot is the state the answer starts from, which is the
+most natural place to look for a decision that has already been made.
+What comes out: data/processed/acts_<run>.npz — a block of numbers shaped (prompts, layers+1, width) — plus
+every label column from the scenarios CSV, so later scripts know which prompt was which.
 """
 import argparse
 import numpy as np, pandas as pd, torch
