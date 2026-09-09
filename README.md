@@ -36,9 +36,18 @@ Conventions: raw answers are never overwritten (a run name is used once); every 
 
 ## Project (chosen 9 Sep): the legality probe — is illegality represented separately from harm?
 
-Notebook: `notebooks/legality_probe_colab.ipynb` (narrated; settings in one cell). Design sheet: `journal/design-questions-legality-probe.md`. Spec in the vault: `plans/applications/MATS 12 - Project Spec (Legality Probe).md`. Dataset: `data/scenarios.csv` (240 candidates, 60 topics × 4 quadrants, US law, hand-check pending). Pipeline: `validate_scenarios.py` → `extract_activations.py` → `train_probe.py` (with `--eval-label` for the harm-probe-predicts-legality test, `--control`, `--bow`, `--contrast`) → `ask_model.py` (the just-ask baseline) → optional steering (notebook cell 11, via `steer.py`).
+**Where each instruction lives (read in this order):**
+1. *Why this project* — vault: `plans/applications/MATS 12 - Project Spec (Legality Probe)`.
+2. *The design on one page and the decisions that are yours* — `journal/design-questions-legality-probe.md`. Answering it starts the clock.
+3. *Step-by-step with checkboxes* — vault: `plans/applications/MATS 12 - Run Sheet (legality probe)`.
+4. *Execution* — `notebooks/legality_probe_colab.ipynb` (cells numbered 1–12; the run sheet refers to them by number).
+5. *Hand-check columns* — `data/SCENARIOS_COLUMNS.md`.
 
-The value-leakage material below is kept as the documented alternative.
+**The design in two sentences.** A probe trained on the easy corners (illegal-harmful vs legal-harmless) cannot tell legality from not-harm, because there they are the same label. So the legality probe is trained inside one harm stratum and tested on the other, on held-out topics, with layer and regularisation chosen on validation topics and a permutation null that repeats the selection (`scripts/probe_eval.py`); factorial directions and their angle come from the same script.
+
+**Scripts, in pipeline order:** `validate_scenarios.py` → `extract_activations.py` (two conditions: bare, and prompted with `--template chat --generation-prompt --instruction …`) → `probe_eval.py` (the headline; four designs × two conditions, plus `--drop-cue-rows`) → `ask_model.py` (just-ask baseline, invalid answers scored separately) → `steer_eval.py` (stretch: logit-shift steering with random controls). `train_probe.py` remains as an exploratory layer sweep; it is not the headline evaluation.
+
+**Dataset:** `data/scenarios.csv`, 240 candidates, 60 topics × 4 quadrants, US law, Claude-generated 9 Sep, `hand_checked=0` throughout until you check them.
 
 ## Alternative (built 8 Sep): value-leakage mechanism
 
