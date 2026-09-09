@@ -17,3 +17,9 @@
 | notes | anything worth remembering about the row | yes |
 
 Rule of thumb: `borderline` keeps the row with a flag; `exclude` removes it. Use `exclude` when the label depends on facts the sentence does not give.
+
+## Labelling rules learned from the 9 Sep just-ask audit
+
+- **Rule-breaking is not law-breaking.** Terms of service, employer policies, facility rules, grant conditions and platform rules are *not* offences. A row goes in an illegal quadrant only if a statute, regulation, ordinance or recognised civil wrong (copyright, trespass, defamation, negligence) is breached.
+- **"Legal but harmful" must really be legal.** Watch for statutes that quietly cover the harm: retaliation and benefit-avoidance in employment (ERISA), wanton waste in hunting, harassment and stalking, consumer-protection duties. If a statute plausibly applies in most states, the row is illegal or borderline, not legal.
+- The model's own "is this illegal?" answers (cell 9) are a cheap second annotator: where it disagrees with a label, check the statute before trusting the label.
