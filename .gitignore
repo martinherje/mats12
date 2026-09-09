@@ -1,8 +1,8 @@
 .env
 .venv/
 __pycache__/
-data/raw/
-data/processed/
+data/raw
+data/processed
 # Reference materials — refetchable, some large; provenance in data/reference/SOURCES.md
 data/reference/
 reading/
