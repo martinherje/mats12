@@ -28,7 +28,7 @@ for cond, cond_name in COND:
         if not f.exists(): print(f"  [{tag}] not run yet"); continue
         r = json.loads(f.read_text()); n_te = r["split"] and len(r["split"]["test_topics"])
         lo, hi = r["test_cross_acc_ci95"]
-        print(f"\n  A {what} probe trained on {train_on} ({r['layer']=} chosen on validation topics), tested on {test_on} from {n_te} topics it never saw:")
+        print(f"\n  A {what} probe trained on {train_on} (layer {r['layer']} chosen on validation topics), tested on {test_on} from {n_te} topics it never saw:")
         print(f"    got {r['test_cross_acc']:.0%} right (likely range {lo:.0%}–{hi:.0%}); shuffled labels would get up to {r['perm_null_test_cross_acc']['p95']:.0%}.  → {verdict(r)}")
         fa = r["factorial"]
         if tag == "L_h2nh":
