@@ -1,0 +1,1 @@
+Layer sweep of a logreg probe predicting 'legal' from pooled residual-stream activations, run lp. Train quadrants: illegal_harmful,legal_harmless; transfer test quadrants: illegal_harmless,legal_harmful; N_train=120, N_test=120. Shuffled-label control shown. Bag-of-words baseline shown. 

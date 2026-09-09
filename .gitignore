@@ -13,3 +13,4 @@ reading/
 data/*.csv
 !data/scenarios_template.csv
 !data/scenarios_smoke.csv
+!data/scenarios.csv

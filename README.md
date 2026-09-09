@@ -34,7 +34,13 @@ In words: **measure the leak** (1), **look inside** (2, 3), **remove what you fo
 
 Conventions: raw answers are never overwritten (a run name is used once); every number in the write-up is recomputed by hand from `data/raw/` before it is quoted; `journal/verification-log.md` records each check.
 
-## Project (decided 8 Sep evening): value-leakage mechanism
+## Project (chosen 9 Sep): the legality probe — is illegality represented separately from harm?
+
+Notebook: `notebooks/legality_probe_colab.ipynb` (narrated; settings in one cell). Design sheet: `journal/design-questions-legality-probe.md`. Spec in the vault: `plans/applications/MATS 12 - Project Spec (Legality Probe).md`. Dataset: `data/scenarios.csv` (240 candidates, 60 topics × 4 quadrants, US law, hand-check pending). Pipeline: `validate_scenarios.py` → `extract_activations.py` → `train_probe.py` (with `--eval-label` for the harm-probe-predicts-legality test, `--control`, `--bow`, `--contrast`) → `ask_model.py` (the just-ask baseline) → optional steering (notebook cell 11, via `steer.py`).
+
+The value-leakage material below is kept as the documented alternative.
+
+## Alternative (built 8 Sep): value-leakage mechanism
 
 **Where does the value intervene?** Mechanism behind Betley et al. 2026, *Value Leakage* (arXiv 2607.14345), Donation Bet task, on Qwen3.5-9B. Primer (read first): vault `plans/applications/MATS 12 - Value Leakage Primer.md`. Design sheet (yours): `journal/design-questions-value-leakage.md`. Paper code (sparse clone, no data): `data/reference/value_leakage/`; the exact prompt templates and nine questions are in `data/donation_bet_questions.json`.
 

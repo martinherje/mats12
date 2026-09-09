@@ -39,6 +39,7 @@ p.add_argument("--folds", type=int, default=5)
 p.add_argument("--control", action="store_true")
 p.add_argument("--bow", action="store_true")
 p.add_argument("--contrast", default="")
+p.add_argument("--eval-label", default="", help="score the transfer test against THIS label instead of --label (e.g. train a harm probe, test whether it predicts legality)")
 p.add_argument("--seed", type=int, default=0)
 a = p.parse_args()
 rng = np.random.default_rng(a.seed)
@@ -70,6 +71,9 @@ if a.contrast:
     print(f"label/contrast correlation over all rows: {corr:+.2f} (should be ~0 for a balanced 2x2; else the cosine is confounded)")
 
 
+y_eval = cols[a.eval_label].astype(int) if a.eval_label else y
+
+
 def fit_eval(X, ytr, Xte=None, yte=None):
     if a.method == "logreg":
         clf = make_pipeline(StandardScaler(), LogisticRegression(C=a.C, max_iter=2000))
@@ -92,7 +96,7 @@ def fit_eval(X, ytr, Xte=None, yte=None):
 rows = []
 for l in range(L1):
     X = acts[:, l]
-    r = {"layer": l, **fit_eval(X[tr], y[tr], X[te] if a.test else None, y[te] if a.test else None)}
+    r = {"layer": l, **fit_eval(X[tr], y[tr], X[te] if a.test else None, y_eval[te] if a.test else None)}
     if a.control:
         r["control_acc_cv"] = fit_eval(X[tr], rng.permutation(y[tr]))["train_acc_cv"]
     if a.contrast:
@@ -117,16 +121,18 @@ if a.bow:
     r = {}
     clf = LogisticRegression(C=a.C, max_iter=2000)
     r["bow_train_acc_cv"] = cross_val_score(clf, Xb[tr], y[tr], cv=StratifiedKFold(a.folds, shuffle=True, random_state=a.seed)).mean()
-    if a.test and y[te].min() != y[te].max():
+    if a.test and y_eval[te].min() != y_eval[te].max():
         clf.fit(Xb[tr], y[tr]); s = clf.decision_function(Xb[te])
-        r["bow_test_acc"] = float(((s > 0).astype(int) == y[te]).mean()); r["bow_test_auroc"] = float(roc_auc_score(y[te], s))
+        r["bow_test_acc"] = float(((s > 0).astype(int) == y_eval[te]).mean()); r["bow_test_auroc"] = float(roc_auc_score(y_eval[te], s))
     print("bag-of-words baseline:", {k: round(v, 3) for k, v in r.items()})
     for k, v in r.items():
         tab[k] = v
 
-stem = f"probe_{a.run}_{a.label}"
+stem = f"probe_{a.run}_{a.label}" + (f"_eval-{a.eval_label}" if a.eval_label else "")
 outc = ROOT / "data/processed" / f"{stem}.csv"; tab.to_csv(outc, index=False)
-write_json(outc.with_suffix(".json"), manifest(**vars(a), n_train=int(tr.sum()), n_test=int(te.sum())))
+best = tab.iloc[tab["test_acc"].idxmax()] if "test_acc" in tab else tab.iloc[tab["train_acc_cv"].idxmax()]
+write_json(outc.with_suffix(".json"), manifest(args=vars(a), n_train=int(tr.sum()), n_test=int(te.sum()),
+           best_layer=int(best["layer"]), best={k: (None if pd.isna(v) else float(v)) for k, v in best.items()}))
 
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -135,7 +141,7 @@ if "test_acc" in tab: ax.plot(tab["layer"], tab["test_acc"], marker="s", label=f
 if "control_acc_cv" in tab: ax.plot(tab["layer"], tab["control_acc_cv"], ls="--", color="gray", label="shuffled-label control")
 if a.bow and "bow_test_acc" in tab: ax.axhline(tab["bow_test_acc"].iloc[0], ls=":", color="k", label="bag-of-words transfer acc")
 ax.set_xlabel("layer (0 = embeddings)"); ax.set_ylabel("accuracy"); ax.set_ylim(0.3, 1.02); ax.legend(fontsize=8)
-ax.set_title(f"{a.method} probe for '{a.label}' — run {a.run}")
+ax.set_title(f"{a.method} probe trained on '{a.label}'" + (f", scored against '{a.eval_label}'" if a.eval_label else "") + f" — run {a.run}")
 outf = ROOT / "figures" / f"{stem}.png"; fig.tight_layout(); fig.savefig(outf, dpi=150)
 (ROOT / "figures" / f"{stem}.txt").write_text(f"Layer sweep of a {a.method} probe predicting '{a.label}' from pooled residual-stream activations, run {a.run}. "
     f"Train quadrants: {a.train}; transfer test quadrants: {a.test or 'none'}; N_train={int(tr.sum())}, N_test={int(te.sum())}. "
