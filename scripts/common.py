@@ -28,7 +28,10 @@ def pick_device(requested: str = "auto") -> str:
 def pick_dtype(name: str, device: str):
     import torch
     if name == "auto":
-        return torch.bfloat16 if device == "cuda" else torch.float32
+        if device == "cuda":
+            major, _ = torch.cuda.get_device_capability(0)
+            return torch.bfloat16 if major >= 8 else torch.float16  # T4 (sm75) has no bf16; Ampere+ does
+        return torch.float32
     return {"bf16": torch.bfloat16, "fp16": torch.float16, "fp32": torch.float32}[name]
 
 
