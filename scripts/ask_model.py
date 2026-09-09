@@ -32,6 +32,7 @@ yes_means = {"legal": 0, "harmful": 1}[a.label]
 
 df = pd.read_csv(ROOT / a.scenarios)
 device = pick_device(a.device); tok, model = load_model(a.model, device, pick_dtype(a.dtype, device)); tok.padding_side = "left"
+yes_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("Yes", " Yes")]; no_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("No", " No")]
 raw = ROOT / "data/raw" / f"ask_{a.run}_{a.label}.jsonl"
 if raw.exists():
     raise SystemExit(f"{raw} exists; choose a new --run")
@@ -42,13 +43,15 @@ for i in tqdm(range(0, len(df), a.batch_size), desc=f"ask {a.label}"):
                                      add_generation_prompt=True, enable_thinking=False) for t in batch.text]
     enc = tok(texts, return_tensors="pt", padding=True).to(device)
     with torch.no_grad():
+        logits = model(**enc).logits[:, -1].float()
         out = model.generate(**enc, max_new_tokens=8, do_sample=False, pad_token_id=tok.pad_token_id)
-    for (_, r), o in zip(batch.iterrows(), out):
+    ly = torch.logsumexp(logits[:, yes_ids], -1); ln = torch.logsumexp(logits[:, no_ids], -1); ld = (ly - ln).cpu().tolist()
+    for (_, r), o, d in zip(batch.iterrows(), out, ld):
         ans = tok.decode(o[enc["input_ids"].shape[1]:], skip_special_tokens=True).strip()
         m = re.match(r"\s*(yes|no)\b", ans, re.I)
         pred = (yes_means if m.group(1).lower() == "yes" else 1 - yes_means) if m else None
         refused = m is None
-        rows.append({**r.to_dict(), "answer": ans, "pred": pred, "refused_or_unparsed": refused, "model": a.model, "label_asked": a.label})
+        rows.append({**r.to_dict(), "answer": ans, "pred": pred, "refused_or_unparsed": refused, "yes_minus_no_logit": float(d), "model": a.model, "label_asked": a.label})
 with open(raw, "w") as f:
     for r in rows: f.write(json.dumps(r, ensure_ascii=False) + "\n")
 res = pd.DataFrame(rows); y = res[a.label].astype(int)
@@ -56,7 +59,14 @@ ok = res.pred.notna()
 acc = float((res.pred[ok].astype(int) == y[ok]).mean()) if ok.any() else float("nan")
 per_q = {q: float((res.pred[ok & (res.quadrant == q)].astype(int) == y[ok & (res.quadrant == q)]).mean()) for q in QUADRANTS}
 offdiag = ok & res.quadrant.isin(["illegal_harmless", "legal_harmful"])
+from sklearn.metrics import roc_auc_score
+# logit-difference AUROC: the model's own graded judgement as a classifier (a "Yes" to "is it illegal?" means legal=0)
+score = -res.yes_minus_no_logit if a.label == "legal" else res.yes_minus_no_logit
+offd = res.quadrant.isin(["illegal_harmless", "legal_harmful"])
+logit_auroc_all = float(roc_auc_score(y, score)); logit_auroc_offdiag = float(roc_auc_score(y[offd], score[offd]))
+by_topic = {tp: None for tp in res.topic.unique()}
 summary = manifest(run=a.run, label=a.label, model=a.model, n=len(res), accuracy=acc, per_quadrant=per_q,
+                   logit_auroc_all=logit_auroc_all, logit_auroc_offdiagonal=logit_auroc_offdiag,
                    offdiagonal_accuracy=float((res.pred[offdiag].astype(int) == y[offdiag]).mean()) if offdiag.any() else None,
                    refused_or_unparsed_frac=float(res.refused_or_unparsed.mean()),
                    refusal_by_quadrant={q: float(res.refused_or_unparsed[res.quadrant == q].mean()) for q in QUADRANTS})
