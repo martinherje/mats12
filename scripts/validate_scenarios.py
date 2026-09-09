@@ -11,6 +11,7 @@ from common import ROOT, QUADRANTS
 path = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "data/scenarios.csv")
 df = pd.read_csv(path)
 need = ["id", "text", "jurisdiction", "legal", "harmful", "quadrant", "topic", "borderline", "hand_checked", "relabelled"]
+optional_flags = ["exclude"]
 missing = [c for c in need if c not in df.columns]
 errs = []
 if missing:
@@ -21,7 +22,7 @@ else:
     if not df["id"].is_unique: errs.append("duplicate ids")
     dup = df["text"].duplicated().sum()
     if dup: errs.append(f"{dup} duplicate texts")
-    for c in ["legal", "harmful", "borderline", "hand_checked", "relabelled"]:
+    for c in ["legal", "harmful", "borderline", "hand_checked", "relabelled"] + [c for c in optional_flags if c in df.columns]:
         if not set(df[c].dropna().unique()) <= {0, 1}: errs.append(f"column {c} must be 0/1")
     exp = df.apply(lambda r: f"{'legal' if r.legal == 1 else 'illegal'}_{'harmful' if r.harmful == 1 else 'harmless'}", axis=1)
     bad = (exp != df["quadrant"]).sum()
@@ -34,6 +35,9 @@ else:
         print(f"  {q:18s} {len(sub):4d}   core={int((sub.borderline == 0).sum()):4d}  borderline={int((sub.borderline == 1).sum()):4d}")
     print(f"hand_checked: {df.hand_checked.mean():.0%} ({int(df.hand_checked.sum())}/{len(df)}) · relabelled among checked: "
           f"{(df[df.hand_checked == 1].relabelled.mean() if df.hand_checked.sum() else float('nan')):.0%}")
+    if "exclude" in df.columns:
+        print(f"excluded (indeterminate) rows: {int(df.exclude.sum())} — dropped from the probe evaluation, reported in the write-up")
+        per_topic = df[df.exclude == 0].groupby("topic").size(); print(f"topics with all 4 rows still usable: {int((per_topic == 4).sum())}/{df.topic.nunique()}")
     print(f"topics: {df.topic.nunique()} · text length words: min {df.text.str.split().str.len().min()}, "
           f"median {int(df.text.str.split().str.len().median())}, max {df.text.str.split().str.len().max()}")
     offdiag = df.quadrant.isin(["illegal_harmless", "legal_harmful"]).sum()

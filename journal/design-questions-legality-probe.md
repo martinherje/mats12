@@ -8,7 +8,18 @@
 
 The sheet for the retired confabulated-compliance direction is kept as-is (append-only). This one is for the project actually being run: **does the model represent illegality as distinct from harmfulness?** Spec: vault `plans/applications/MATS 12 - Project Spec (Legality Probe).md`. You answer these; the answers copied into `highlights.md` as the initial hypothesis block, dated, are the clock's starting gun.
 
-## 1. Jurisdiction
+## 0b. External review, 9 Sep (ChatGPT on the notebook; accepted unless noted)
+1. **Diagonal training confounds legality with not-harm.** Accepted; it was a real identification error. The evaluation is now *conditional generalisation*: the legality probe is trained inside one harm stratum and tested on the other, on held-out topics, both directions, plus the symmetric harm experiment (`scripts/probe_eval.py`). The old "harm probe scored on legality labels" cell is gone because it was the sign-flipped legality probe.
+2. **Topic as the unit; layer and C chosen on validation topics; test scored once; topic-block bootstrap; permutation null with the same selection.** Accepted and implemented.
+3. **Factorial directions** d_L = ½[(LH − IH) + (LH̄ − IH̄)], d_H likewise, on training topics; cosine between them; each scored on held-out topics; d_L residualised against d_H. Accepted and implemented.
+4. **"US law" underspecified.** Partly accepted. Jurisdiction stated as "US federal law or the law of most US states, as of 2025"; an `exclude` column marks indeterminate rows (dropped from the evaluation, reported); `borderline` stays as a flag. The fictional-stipulated-rule alternative was not taken because it turns the project into rule-following, which is Sadhu's design; the cost is that labels are a judgement, which the write-up says.
+5. **Lexical and templating shortcuts.** Accepted: a rerun with legality-vocabulary rows dropped (`--drop-cue-rows`), the bag-of-words number kept, and the hand-check doubles as the minimal-pair audit (Q4). A blinded audit by a second annotator would be better and is not available in the window; say so.
+6. **Bare sentences vs prompted behaviour.** Accepted: two extraction conditions, bare last token and the pre-answer token inside the "is this illegal?" prompt; every design runs in both.
+7. **Invalid answers and steering measurement.** Accepted: `ask_model.py` already scored invalid separately; the steering evaluation now uses the Yes−No logit difference, yes/no/invalid categories, strengths as fractions of the activation norm, five random directions, and the residualised legality direction (`scripts/steer_eval.py`).
+8. **Prior-work wording.** Accepted: Sadhu et al. *do* use a crossed rule × scenario design and group-disjoint evaluation; the contribution here is the legality × harm factorial with conditional generalisation, not "crossed controls". Their model list must be taken from the full text before any size is quoted (the abstract names an 8B zero-shot judge and four guard models; the earlier "Qwen3.5-4B/9B/27B" claim in the vault came from an agent and is unverified). Shah et al. report a strikingly low-rank harm subspace with a dominant direction, not "collapse to one axis".
+9. **Token in .git/config.** Accepted and fixed: the notebook passes the token as a per-command header; the saved remote URL has no credential.
+
+
 One only, named in every table. Menu: (a) Norwegian law — your expertise, cleaner hand-checks, but the model's legality knowledge is weaker and English-language scenarios about Norwegian law are unusual; (b) US federal/common state law — model knowledge strongest, reviewers can sanity-check, but your relabelling authority is weaker at the margin. Pick and state why in one sentence.
 
 ## 2. Scenario shape
