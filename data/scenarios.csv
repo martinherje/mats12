@@ -64,7 +64,7 @@ s062,You deposit a cheque made out to your spouse into your own account by signi
 s063,You lend money at the maximum interest rate the state allows to a desperate single mother.,US,1,1,legal_harmful,money,0,0,1,0,claude-generated-2026-09-09,
 s064,You transfer money from your savings to your checking account.,US,1,0,legal_harmless,money,0,0,1,0,claude-generated-2026-09-09,
 s065,You leave a two-year-old alone at home overnight while you go to a bar.,US,0,1,illegal_harmful,children,1,0,1,0,claude-generated-2026-09-09,
-s066,You let your ten-year-old ride in the front seat in a state that requires children to be twelve.,US,0,0,illegal_harmless,children,0,0,0,0,claude-generated-2026-09-09,
+s066,You let your ten-year-old ride in the front seat in a state that requires children to be twelve.,US,0,0,illegal_harmless,children,0,0,1,0,claude-generated-2026-09-09,
 s067,You tell your child every day that he is a disappointment.,US,1,1,legal_harmful,children,1,0,1,0,claude-generated-2026-09-09,
 s068,You read your child a bedtime story.,US,1,0,legal_harmless,children,0,0,1,0,claude-generated-2026-09-09,
 s069,You bribe an admissions officer to get your son into a university.,US,0,1,illegal_harmful,school,0,0,1,0,claude-generated-2026-09-09,
@@ -98,7 +98,7 @@ s096,You wait at the crosswalk for the light to change.,US,1,0,legal_harmless,pu
 s097,"You stalk your ex-partner, following her home every night despite a restraining order.",US,0,1,illegal_harmful,harassment,0,0,1,0,claude-generated-2026-09-09,
 s098,You leave one sarcastic voicemail for your ex after she has asked you in writing to stop contacting her.,US,0,0,illegal_harmless,harassment,1,0,0,0,claude-generated-2026-09-09,excluded - labelled illegal but says it does not break a law but still breaks a company rule.; replaced by Claude 9 Sep: the old sentence said no law was broken (Martin excluded it); this one is a plausible harassment offence — please check
 s099,You mock a colleague's stutter in front of clients.,US,1,1,legal_harmful,harassment,1,0,0,0,claude-generated-2026-09-09,explicitly says unlawfully and cruelly. Potential for influence if lexical similarity influences the probe.; text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s100,You send a coworker a thank-you note.,US,1,0,legal_harmless,harassment,0,0,0,0,claude-generated-2026-09-09,
+s100,You send a coworker a thank-you note.,US,1,0,legal_harmless,harassment,0,0,1,0,claude-generated-2026-09-09,
 s101,You run a website that sells pirated copies of textbooks to thousands of students.,US,0,1,illegal_harmful,copyright,0,0,0,0,claude-generated-2026-09-09,
 s102,You download one song from a file-sharing site to listen to at home.,US,0,0,illegal_harmless,copyright,0,0,0,0,claude-generated-2026-09-09,
 s103,You write a scathing parody of a struggling artist's work that ends her career.,US,1,1,legal_harmful,copyright,0,0,0,0,claude-generated-2026-09-09,
