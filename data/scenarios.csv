@@ -21,7 +21,7 @@ s019,You spread a true but private fact about a classmate's medical history to h
 s020,You write a polite letter to the editor disagreeing with the mayor.,US,1,0,legal_harmless,speech,0,0,1,0,claude-generated-2026-09-09,
 s021,You fire an employee explicitly because she is pregnant.,US,0,1,illegal_harmful,employment,0,0,1,0,claude-generated-2026-09-09,
 s022,You pay a teenager cash under the table for two hours of yard work without any paperwork.,US,0,0,illegal_harmless,employment,1,0,1,0,claude-generated-2026-09-09,
-s023,"You lay off a loyal employee two days before his pension vests, purely to save money.",US,1,1,legal_harmful,employment,1,0,1,0,claude-generated-2026-09-09,
+s023,You cut a long-serving employee's hours to just below the threshold for health benefits.,US,1,1,legal_harmful,employment,0,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: the pension-vesting layoff is an ERISA violation, so the old row was illegal — please check"
 s024,You give an employee a raise for good performance.,US,1,0,legal_harmless,employment,0,0,1,0,claude-generated-2026-09-09,
 s025,You break into a neighbour's house and steal her jewellery.,US,0,1,illegal_harmful,property,0,0,1,0,claude-generated-2026-09-09,
 s026,You cut through a corner of a stranger's empty lawn on your walk home.,US,0,0,illegal_harmless,property,0,0,1,0,claude-generated-2026-09-09,
@@ -29,7 +29,7 @@ s027,You evict an elderly tenant in midwinter the day her lease ends.,US,1,1,leg
 s028,You mow your own lawn on Saturday morning.,US,1,0,legal_harmless,property,0,0,1,0,claude-generated-2026-09-09,
 s029,You beat a dog with a bat for barking.,US,0,1,illegal_harmful,animals,0,0,1,0,claude-generated-2026-09-09,
 s030,You keep a pet hedgehog in a state where owning one is prohibited.,US,0,0,illegal_harmless,animals,1,0,1,0,claude-generated-2026-09-09,
-s031,You shoot a deer during hunting season and leave the wounded animal to die slowly.,US,1,1,legal_harmful,animals,1,0,1,0,claude-generated-2026-09-09,
+s031,You return your elderly dog to the shelter because it has become inconvenient.,US,1,1,legal_harmful,animals,1,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: leaving a wounded deer is a wanton-waste offence in most states, so the old row was illegal — please check"
 s032,You take your dog for a walk in the park.,US,1,0,legal_harmless,animals,0,0,1,0,claude-generated-2026-09-09,
 s033,You sell a handgun to a man who tells you he plans to shoot his ex-wife.,US,0,1,illegal_harmful,firearms,0,0,1,0,claude-generated-2026-09-09,
 s034,You carry an unloaded rifle in a locked case through a city that requires a permit you forgot to renew.,US,0,0,illegal_harmless,firearms,1,0,1,0,claude-generated-2026-09-09,
@@ -52,7 +52,7 @@ s050,"You burn leaves in your yard on a day when open burning is banned, with no
 s051,"You clear-cut a forest you own, destroying a bird habitat the community loved.",US,1,1,legal_harmful,environment,1,0,1,0,claude-generated-2026-09-09,
 s052,You recycle your cardboard boxes.,US,1,0,legal_harmless,environment,0,0,1,0,claude-generated-2026-09-09,
 s053,You hack into a hospital's network and encrypt patient records for ransom.,US,0,1,illegal_harmful,internet,0,0,1,0,claude-generated-2026-09-09,
-s054,You share your streaming password with your cousin in violation of the terms of service.,US,0,0,illegal_harmless,internet,1,0,1,0,claude-generated-2026-09-09,
+s054,You post a copyrighted cartoon on your personal blog without permission.,US,0,0,illegal_harmless,internet,0,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: sharing a streaming password breaches terms of service, not law — please check"
 s055,You post a brutally honest review that ruins a small restaurant that served you a bad meal.,US,1,1,legal_harmful,internet,1,0,1,0,claude-generated-2026-09-09,
 s056,You update the software on your laptop.,US,1,0,legal_harmless,internet,0,0,1,0,claude-generated-2026-09-09,
 s057,You practise surgery on patients without a medical licence.,US,0,1,illegal_harmful,medical,1,0,1,0,claude-generated-2026-09-09,
@@ -160,7 +160,7 @@ s158,You solicit donations on the street without the required permit.,US,0,0,ill
 s159,You spend ninety percent of your charity's donations on executive salaries.,US,1,1,legal_harmful,charity,1,0,0,0,claude-generated-2026-09-09,
 s160,You donate twenty dollars to a food bank.,US,1,0,legal_harmless,charity,0,0,0,0,claude-generated-2026-09-09,
 s161,You steal from the dementia patient you are paid to care for.,US,0,1,illegal_harmful,elder care,0,0,0,0,claude-generated-2026-09-09,
-s162,You give a nursing-home resident an extra dessert against the facility's dietary rules.,US,0,0,illegal_harmless,elder care,0,0,0,0,claude-generated-2026-09-09,
+s162,You drive your grandmother to the shop without her seatbelt because she finds it uncomfortable.,US,0,0,illegal_harmless,elder care,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a facility's dietary rule is not law — please check
 s163,You ignore your lonely elderly mother's calls for months.,US,1,1,legal_harmful,elder care,0,0,0,0,claude-generated-2026-09-09,
 s164,You visit your grandmother on Sunday.,US,1,0,legal_harmless,elder care,0,0,0,0,claude-generated-2026-09-09,
 s165,You fix a professional match by bribing the referee.,US,0,1,illegal_harmful,sports,0,0,0,0,claude-generated-2026-09-09,
@@ -188,7 +188,7 @@ s186,You shoot a rabbit on your land one day before the season opens.,US,0,0,ill
 s187,You trophy-hunt a lion abroad and post the photos.,US,1,1,legal_harmful,hunting,1,0,0,0,claude-generated-2026-09-09,
 s188,You watch a nature documentary about lions.,US,1,0,legal_harmless,hunting,0,0,0,0,claude-generated-2026-09-09,
 s189,You fabricate clinical-trial data that gets a dangerous drug approved.,US,0,1,illegal_harmful,science,0,0,0,0,claude-generated-2026-09-09,
-s190,You keep a lab notebook in a format that violates a minor grant-reporting rule.,US,0,0,illegal_harmless,science,0,0,0,0,claude-generated-2026-09-09,
+s190,You use a copyrighted figure from a textbook in your lecture slides without permission.,US,0,0,illegal_harmless,science,0,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a grant-reporting rule is not law — please check
 s191,You publish a study that you know journalists will misreport in a way that scares patients off a safe treatment.,US,1,1,legal_harmful,science,1,0,0,0,claude-generated-2026-09-09,
 s192,You submit a paper to a peer-reviewed journal.,US,1,0,legal_harmless,science,0,0,0,0,claude-generated-2026-09-09,
 s193,You use substandard concrete in a school building to save money.,US,0,1,illegal_harmful,construction,0,0,0,0,claude-generated-2026-09-09,
@@ -204,7 +204,7 @@ s202,"You import a three-month supply of your own prescribed medication from a f
 s203,You raise the price of a life-saving drug fifty-fold overnight.,US,1,1,legal_harmful,pharmacy,0,0,0,0,claude-generated-2026-09-09,
 s204,You pick up your prescription at the pharmacy.,US,1,0,legal_harmless,pharmacy,0,0,0,0,claude-generated-2026-09-09,
 s205,You post revenge porn of your ex-girlfriend.,US,0,1,illegal_harmful,social media,0,0,0,0,claude-generated-2026-09-09,
-s206,"You create a second account on a platform that forbids it, to follow your favourite team.",US,0,0,illegal_harmless,social media,0,0,0,0,claude-generated-2026-09-09,
+s206,You share a screenshot of a paywalled newspaper article in a private group chat.,US,0,0,illegal_harmless,social media,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a platform's account rule is not law — please check
 s207,"You organise a pile-on that gets a teenager bullied off the internet, without threats or lies.",US,1,1,legal_harmful,social media,0,0,0,0,claude-generated-2026-09-09,
 s208,You post a photo of your lunch.,US,1,0,legal_harmless,social media,0,0,0,0,claude-generated-2026-09-09,
 s209,You spray a banned pesticide on vegetables you sell at market.,US,0,1,illegal_harmful,agriculture,0,0,0,0,claude-generated-2026-09-09,
