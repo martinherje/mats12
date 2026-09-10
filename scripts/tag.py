@@ -4,7 +4,7 @@ tag.py — one-keystroke hand-check of data/scenarios.csv.
 Run from the repo root:      uv run python scripts/tag.py
 Revisit borderline rows:     uv run python scripts/tag.py --borderline
 Specific rows:               uv run python scripts/tag.py --ids s057,s058
-A CSV somewhere else:        python scripts/tag.py --csv "C:\Users\me\Downloads\scenarios.csv"
+A CSV somewhere else:        python scripts/tag.py --csv "C:/Users/me/Downloads/scenarios.csv"
 Every row, checked or not:   uv run python scripts/tag.py --all
 
 Shows one sentence at a time and waits for a key. Default keys:
