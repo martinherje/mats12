@@ -3,7 +3,7 @@ direction (x) and the legality direction (y), at the probe's chosen layer.
 
 IN PLAIN LANGUAGE
 Two arrows are computed from the training topics only: d_harm (harmful minus harmless, averaged over both
-legality strata) and d_legal (legal minus illegal, averaged over both harm strata). Every sentence's state is
+legality strata) and d_illegal (illegal minus legal, averaged over both harm strata). Every sentence's state is
 projected onto both. If the model keeps the two concepts apart, the four quadrants sit in four corners: harm
 separates left from right, legality separates bottom from top, and the corners form a rectangle. If legality
 is harm in a hat, the points fall on one diagonal line and the "legal" axis adds nothing. Held-out topics are
@@ -36,7 +36,7 @@ def fdir(target, other):
         if m1.any() and m0.any(): d += 0.5 * (X[m1].mean(0) - X[m0].mean(0))
     return d / (np.linalg.norm(d) + 1e-8)
 
-dH, dL = fdir(yh, yl), fdir(yl, yh); cos = float(dH @ dL)
+dH, dL = fdir(yh, yl), -fdir(yl, yh); cos = float(dH @ dL)   # dL = illegal minus legal (the illegality direction)
 # centre on the training mean, project, and express in units of the training rows' spread along each axis
 mu = X[is_train].mean(0); px, py = (X - mu) @ dH, (X - mu) @ dL
 sx, sy = px[is_train].std() + 1e-8, py[is_train].std() + 1e-8; px, py = px / sx, py / sy
@@ -51,11 +51,11 @@ for name, mk, lab in (("simple", "o", "plain legal acts (never trained on)"), ("
     m = sset == name
     if m.any(): ax.scatter(px[m], py[m], s=34, facecolor="none", edgecolor="k", marker=mk, lw=0.8, label=lab)
 ax.axhline(0, color="gray", lw=0.6); ax.axvline(0, color="gray", lw=0.6)
-ax.set_xlabel("← harmless        projection on the harm direction        harmful →"); ax.set_ylabel("← illegal        projection on the legality direction        legal →")
+ax.set_xlabel("← harmless        projection on the harm direction        harmful →"); ax.set_ylabel("← legal        projection on the illegality direction        illegal →")
 sup = f" — {a.title}" if a.title else ""
-ax.set_title(f"Harm and legality as two axes, layer {layer}{sup}\ncos(d_legal, d_harm) = {cos:+.2f}; X = held-out quadrant mean; faint = training/validation topics", fontsize=9)
+ax.set_title(f"Harm and illegality as two axes, layer {layer}{sup}\ncos(d_illegal, d_harm) = {cos:+.2f}; X = held-out quadrant mean; faint = training/validation topics", fontsize=9)
 ax.legend(fontsize=7, loc="best"); fig.tight_layout()
 out = ROOT / "figures" / f"geometry_{a.run}_L{layer}.png"; fig.savefig(out, dpi=150)
 tm = {name: (float(px[(yl == lq) & (yh == hq) & is_test].mean()), float(py[(yl == lq) & (yh == hq) & is_test].mean())) for name, lq, hq, _ in QUADS}
-print(f"layer {layer} · cos(d_legal, d_harm) {cos:+.2f} · held-out quadrant means (harm axis, legality axis):"); [print(f"  {k:18s} {v[0]:+.2f}, {v[1]:+.2f}") for k, v in tm.items()]
+print(f"layer {layer} · cos(d_illegal, d_harm) {cos:+.2f} · held-out quadrant means (harm axis, illegality axis):"); [print(f"  {k:18s} {v[0]:+.2f}, {v[1]:+.2f}") for k, v in tm.items()]
 print("Four corners = two concepts; a single diagonal = one concept wearing two names."); print(f"wrote {out.relative_to(ROOT)}")

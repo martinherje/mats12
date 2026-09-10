@@ -16,7 +16,7 @@ DESIGNS = [("legal", "harmful", "L_h2nh", "legality, harmful → harmless (headl
            ("harmful", "illegal", "H_i2l", "harm, illegal → legal"), ("harmful", "legal", "H_l2i", "harm, legal → illegal")]
 p = argparse.ArgumentParser(); p.add_argument("--run", required=True); p.add_argument("--out", default="journal/results.md"); a = p.parse_args()
 out = [f"# Results — run `{a.run}` (copied from data/processed/*.json; recompute by hand before quoting)\n"]
-out.append("| condition | test | layer | AUROC | acc (CI95) | beat shuffles | cos(dL,dH) | dL within harmless, top-1 harm removed | word count alone |")
+out.append("| condition | test | layer | AUROC | acc (CI95) | beat shuffles | cos(d_illegal, d_harm) | illegality dir. within harmless, top-1 harm removed | word count alone |")
 out.append("|---|---|---|---|---|---|---|---|---|")
 checks = []
 for cond, cname in ((a.run, "bare"), (f"{a.run}_prompted", "prompted")):
@@ -25,7 +25,7 @@ for cond, cname in ((a.run, "bare"), (f"{a.run}_prompted", "prompted")):
         if not f.exists(): out.append(f"| {cname} | {label} | – | not run | | | | | |"); continue
         r = json.loads(f.read_text()); pn = r["perm_null"]; fa = r["factorial"]; lo, hi = r["test_cross_acc_ci95"]
         within = fa.get("dlegal_minus_harm_top1_auroc_within_harmless") if target == "legal" else fa.get("dharm_auroc_within_legal")
-        out.append(f"| {cname} | {label} | {r['layer']} | {r['test_cross_auroc']:.2f} | {r['test_cross_acc']:.0%} ({lo:.0%}–{hi:.0%}) | {pn['shuffles_beaten_acc']}/{pn['n']} (p95 {pn['acc_p95']:.0%}) | {fa['cos_dlegal_dharm']:+.2f} | {within if within is None else f'{within:.2f}'} | {r.get('length_only_test_auroc', float('nan')):.2f} |")
+        out.append(f"| {cname} | {label} | {r['layer']} | {r['test_cross_auroc']:.2f} | {r['test_cross_acc']:.0%} ({lo:.0%}–{hi:.0%}) | {pn['shuffles_beaten_acc']}/{pn['n']} (p95 {pn['acc_p95']:.0%}) | {-fa['cos_dlegal_dharm']:+.2f} | {within if within is None else f'{within:.2f}'} | {r.get('length_only_test_auroc', float('nan')):.2f} |")
         for name, ex in (r.get("extra_sets") or {}).items():
             k = [k for k in ex if k.startswith("frac_predicted_")][0]
             checks.append(f"- {cname}, {label}: check set **{name}** ({ex['n']} rows, never trained on, expected {ex['expected']}): the probe calls {ex[k]:.0%} of them {k.split('_')[2]}=1.")

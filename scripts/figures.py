@@ -2,7 +2,7 @@
 
 IN PLAIN LANGUAGE
 Three pictures, each answering one question:
-  1. cosine_by_layer_<run>.png   Do the legality and harm directions share a line? cos(d_legal, d_harm) at every
+  1. cosine_by_layer_<run>.png   Do the illegality and harm directions share a line? cos(d_illegal, d_harm) at every
      layer, bare and prompted, with the label-swap null band (inside the band = no more aligned than chance).
   2. cross_<run>.png             The 2x2 cross. For each of the four tests and both conditions: the cross-stratum
      test AUROC (dot with its bootstrap interval on accuracy shown as text), the null's 95th percentile (grey bar),
@@ -29,11 +29,11 @@ fig, ax = plt.subplots(figsize=(8, 4))
 for cond, name, col in conds:
     r = J(cond, "L_h2nh")
     if not r: continue
-    c = r["cosine_curve"]; ax.plot(c["layers"], c["cos_dlegal_dharm"], color=col, lw=2, label=name)
-    ax.fill_between(c["layers"], c["null_lo"], c["null_hi"], color=col, alpha=0.12, label=f"label-swap null 95% ({name.split()[0]})")
+    c = r["cosine_curve"]; ax.plot(c["layers"], [-v for v in c["cos_dlegal_dharm"]], color=col, lw=2, label=name)   # d_illegal = −d_legal, so the sign flips
+    ax.fill_between(c["layers"], [-v for v in c["null_hi"]], [-v for v in c["null_lo"]], color=col, alpha=0.12, label=f"label-swap null 95% ({name.split()[0]})")
     ax.axvline(r["layer"], color=col, ls=":", lw=1)
-ax.axhline(0, color="gray", lw=0.6); ax.set_ylim(-1, 1); ax.set_xlabel("layer"); ax.set_ylabel("cos(d_legal, d_harm)")
-ax.set_title(f"Do legality and harm share a direction?{sup}\n(dotted = the layer each probe chose on validation topics)"); ax.legend(fontsize=8, loc="lower left")
+ax.axhline(0, color="gray", lw=0.6); ax.set_ylim(-1, 1); ax.set_xlabel("layer"); ax.set_ylabel("cos(d_illegal, d_harm)   (+1 = same line, same way)")
+ax.set_title(f"Do illegality and harm share a direction?{sup}\n(dotted = the layer each probe chose on validation topics)"); ax.legend(fontsize=8, loc="lower left")
 fig.tight_layout(); fig.savefig(ROOT / "figures" / f"cosine_by_layer_{a.run}.png", dpi=150); plt.close(fig)
 
 # 2. the cross
@@ -62,8 +62,8 @@ for j, (cond, name, col) in enumerate(conds):
     fa = r["factorial"]; ks = ["dlegal_auroc_within_harmless"] + [f"dlegal_minus_harm_top{k}_auroc_within_harmless" for k in (1, 2, 3)]
     axes[1].plot(range(4), [fa.get(k, np.nan) for k in ks], "o-", color=col, label=name)
     axes[2].bar(j, r["test_cross_auroc"], width=0.6, color=col, alpha=0.8, label=f"probe, {name}")
-axes[0].axhline(1, color="gray", ls="--", lw=0.8); axes[0].set_ylim(0, 1.05); axes[0].set_title("Check sets: fraction called legal\n(never trained on; expected 100%)", fontsize=9); axes[0].legend(fontsize=7)
-axes[1].axhline(0.5, color="gray", ls="--", lw=0.8); axes[1].set_ylim(0.3, 1.0); axes[1].set_xticks(range(4)); axes[1].set_xticklabels(["as is", "top-1\nharm out", "top-2", "top-3"]); axes[1].set_title("Legality direction within the harmless stratum\n(held-out topics; AUROC after projecting harm out)", fontsize=9); axes[1].legend(fontsize=7)
+axes[0].axhline(1, color="gray", ls="--", lw=0.8); axes[0].set_ylim(0, 1.05); axes[0].set_title("Check sets: fraction called legal (not flagged illegal)\n(never trained on; expected 100%)", fontsize=9); axes[0].legend(fontsize=7)
+axes[1].axhline(0.5, color="gray", ls="--", lw=0.8); axes[1].set_ylim(0.3, 1.0); axes[1].set_xticks(range(4)); axes[1].set_xticklabels(["as is", "top-1\nharm out", "top-2", "top-3"]); axes[1].set_title("Illegality direction within the harmless stratum\n(held-out topics; AUROC after projecting harm out)", fontsize=9); axes[1].legend(fontsize=7)
 # fair baseline from the ask file
 try:
     ask = [json.loads(l) for l in (ROOT / "data/raw" / f"ask_{a.run}_legal.jsonl").open()]

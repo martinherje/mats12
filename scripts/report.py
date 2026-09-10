@@ -39,9 +39,9 @@ for cond, cond_name in COND:
             print(f"    Check set '{name}' ({ex['n']} rows, never trained on, expected {ex['expected']}): the probe calls {ex[k]:.0%} of them {k.split('_')[2]}=1.")
         fa = r["factorial"]
         if tag == "L_h2nh":
-            print(f"    The legality and harm directions sit at cosine {fa['cos_dlegal_dharm']:+.2f} (0 = unrelated, ±1 = the same line).")
+            print(f"    The illegality and harm directions sit at cosine {-fa['cos_dlegal_dharm']:+.2f} (0 = unrelated, +1 = the same line, same way).")
             if "dlegal_minus_harm_top1_auroc_within_harmless" in fa:
-                print(f"    Within the harmless sentences of held-out topics, the legality direction sorts legal from illegal at AUROC {fa['dlegal_auroc_within_harmless']:.2f}; with the top 1/2/3 harm components removed: "
+                print(f"    Within the harmless sentences of held-out topics, the illegality direction sorts illegal from legal at AUROC {fa['dlegal_auroc_within_harmless']:.2f}; with the top 1/2/3 harm components removed: "
                       + "/".join(f"{fa[f'dlegal_minus_harm_top{k}_auroc_within_harmless']:.2f}" for k in (1, 2, 3)) + " (0.5 = coin flip).")
             else:
                 print(f"    After removing the harm component, the legality direction still sorts held-out sentences at AUROC {fa['dlegal_residualised_auroc_on_test_topics']:.2f} (0.5 = coin flip).")

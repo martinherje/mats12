@@ -4,7 +4,7 @@ IN PLAIN LANGUAGE
 A two-class probe cannot tell "the model represents illegality, and legal is just its absence" from the
 reverse. This script uses the 60 plain legal acts (set=simple, "You cook pasta") as a NEUTRAL BASELINE and
 asks which quadrant is displaced from it. For each layer it projects every sentence's state onto the
-legality direction (d_legal from the factorial contrast on training topics, held-out topics only are
+illegality direction (d_legal from the factorial contrast on training topics, held-out topics only are
 reported) and measures each quadrant's mean distance from the plain-act mean, in units of the plain acts'
 own spread. The marked concept is the one whose sentences move away from the baseline:
   illegal rows far, legal rows near  → the concept is ILLEGALITY (legal = default)
@@ -37,11 +37,13 @@ def factorial_dir(X, target, other):   # ½[(T1 − T0 | other=0) + (T1 − T0 |
         if m1.any() and m0.any(): d += 0.5 * (X[m1].mean(0) - X[m0].mean(0))
     return d / (np.linalg.norm(d) + 1e-8)
 
-L = acts.shape[1]; out = {"legality_direction": {q: [] for q in QUADS}, "harm_direction": {q: [] for q in QUADS}, "layers": list(range(L))}
+L = acts.shape[1]; out = {"illegality_direction": {q: [] for q in QUADS}, "harm_direction": {q: [] for q in QUADS}, "layers": list(range(L))}
 for l in range(L):
     X = acts[:, l]
-    for key, target, other in (("legality_direction", yl, yh), ("harm_direction", yh, yl)):
-        d = factorial_dir(X, target, other); proj = X @ d
+    for key, target, other in (("illegality_direction", yl, yh), ("harm_direction", yh, yl)):
+        d = factorial_dir(X, target, other)
+        if key == "illegality_direction": d = -d   # report along the ILLEGALITY direction: positive = displaced toward illegal
+        proj = X @ d
         base_mu, base_sd = proj[simple].mean(), proj[simple].std() + 1e-8   # the plain acts: the neutral baseline
         for q, (lq, hq) in QUADS.items():
             m = is_test & (yl == lq) & (yh == hq)
@@ -49,7 +51,7 @@ for l in range(L):
 # summary at the probe's chosen layer and averaged over the last third of layers
 chosen = json.loads((ROOT / "data/processed" / f"probeeval_{a.run}_{a.tag}.json").read_text())["layer"]
 summ = {}
-for key in ("legality_direction", "harm_direction"):
+for key in ("illegality_direction", "harm_direction"):
     at = {q: out[key][q][chosen] for q in QUADS}; late = {q: float(np.nanmean(out[key][q][2 * L // 3:])) for q in QUADS}
     summ[key] = {"layer_used": chosen, "at_chosen_layer": at, "mean_over_last_third_of_layers": late}
 out["summary"] = summ
@@ -59,15 +61,15 @@ def verdict(at):
     if leg > 1 and ill < 0.5: return "LEGALITY is the marked concept (legal rows displaced; illegal rows near the baseline)"
     if ill > 1 and leg > 1: return "both are displaced from the baseline, in opposite directions: both represented"
     return "neither quadrant is clearly displaced along this direction (too weak to say)"
-out["verdict_legality_direction"] = verdict(summ["legality_direction"]["at_chosen_layer"])
+out["verdict_illegality_direction"] = verdict(summ["illegality_direction"]["at_chosen_layer"])
 (ROOT / "data/processed").mkdir(exist_ok=True); (ROOT / "data/processed" / f"markedness_{a.run}.json").write_text(json.dumps(out, indent=1))
 print(f"run={a.run} · baseline = {int(simple.sum())} plain legal acts · held-out topics only · distances in plain-act standard deviations\n")
-for key in ("legality_direction", "harm_direction"):
+for key in ("illegality_direction", "harm_direction"):
     print(f"[{key}] at layer {chosen}:  " + "  ".join(f"{q} {summ[key]['at_chosen_layer'][q]:+.2f}" for q in QUADS))
-print(f"\nVERDICT (legality direction, chosen layer): {out['verdict_legality_direction']}")
+print(f"\nVERDICT (illegality direction, chosen layer): {out['verdict_illegality_direction']}")
 print("Reading: a quadrant near 0 sits where the plain acts sit; |value| > 1 means it has moved more than one plain-act spread away.")
 fig, axes = plt.subplots(1, 2, figsize=(11, 3.8), sharey=True)
-for ax, key, title in zip(axes, ("legality_direction", "harm_direction"), ("along the legality direction", "along the harm direction")):
+for ax, key, title in zip(axes, ("illegality_direction", "harm_direction"), ("along the legality direction", "along the harm direction")):
     for q, col in zip(QUADS, ("C3", "C1", "C0", "C2")): ax.plot(out["layers"], out[key][q], color=col, lw=2, label=q.replace("_", "-"))
     ax.axhline(0, color="gray", lw=0.8); ax.axvline(chosen, color="gray", ls=":", lw=1); ax.set_xlabel("layer"); ax.set_title(f"Distance from the plain-act baseline, {title}", fontsize=9)
 axes[0].set_ylabel("distance (plain-act standard deviations)"); axes[0].legend(fontsize=7)
