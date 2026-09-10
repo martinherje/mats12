@@ -1,8 +1,41 @@
-# MATS 12 application task — workspace
+# MATS 12 application task — the legality probe
 
-Working environment for the Neel Nanda MATS 12 application task (due **Fri 11 Sep 2026** (extension granted; original 4 Sep)). The research in this repo is Martin's own work; this scaffold (folders, env config, smoke test, journal templates) is generic infrastructure, which Nanda's rules place **outside** the 16–20 h clock — as is all general learning done before project work starts.
+Working repo for the Neel Nanda MATS 12 application task (due **Fri 11 Sep 2026 23:59 PT**; extension granted, original 4 Sep). Author: Martin Herje, law PhD (University of Bergen).
 
-Vault companion note (strategy, form questions, project spec, calibration): `~/Documents/PhDAI/plans/applications/MATS 12 - Application Task Plan.md`
+**Who did what, stated plainly.** The research question, the design decisions recorded in `journal/design-questions-legality-probe.md`, the hand-check of every dataset row, the runs, the by-hand verification of the headline numbers (`journal/verification-log.md`) and the write-up are Martin's. The scripts, the notebook, the first draft of the 240 sentences and this scaffold were written by Claude (Claude Code) under Martin's direction, and were reviewed against the design sheet by four independent reviewer passes on 9 Sep; the design itself was corrected once after an external review (ChatGPT) caught an identification problem. Nothing produced by an agent is quoted in the write-up until Martin has recomputed it by hand.
+
+## The question
+
+Does Qwen3.5-4B represent *illegality* as a concept distinct from *harmfulness*, or is a legality probe just a harm probe wearing a hat? It matters for monitoring: compliance detectors have been shown to be rule-blind (Sadhu et al. 2026) and harm probes to be topic detectors (Schwarz 2026), so a compliance monitor built from a harm probe misfires exactly where legality and harm come apart.
+
+## Where each instruction lives (read in this order)
+
+1. *Why this project* — vault: `plans/applications/MATS 12 - Project Spec (Legality Probe)`.
+2. *The design on one page and the decisions that are Martin's* — `journal/design-questions-legality-probe.md`. Answering it starts the clock.
+3. *Step-by-step with checkboxes* — vault: `plans/applications/MATS 12 - Run Sheet (legality probe)`.
+4. *Execution* — `notebooks/legality_probe_colab.ipynb` (cells numbered 1–12; the run sheet refers to them by number). The box is a free Colab T4; `RUNPOD.md` is the rented-GPU alternative.
+5. *Hand-check columns and labelling rules* — `data/SCENARIOS_COLUMNS.md`; the one-keystroke checker is `scripts/tag.py` (keys in `scripts/tag_keys.json`).
+
+## The design in three sentences
+
+The dataset is 60 topics × 4 matched sentences (illegal-harmful, illegal-harmless, legal-harmful, legal-harmless; US law; second person), so legality and harm are crossed rather than confounded. A probe trained on the easy corners cannot tell legality from not-harm, because there they are the same label, so the legality probe is trained inside one harm stratum and tested on the other, on held-out topics, with layer and regularisation chosen on validation topics only and a permutation null that repeats the whole selection on labels shuffled within topic × stratum ("beat N of 100"). Factorial mean-difference directions, their cosine at every layer against a label-swap null band, the legality direction with harm components projected out, a just-ask baseline (the model's own Yes−No logit on the same held-out rows), a no-cue-word rerun and a neutral-question control turn the number into an argument; steering is the stretch goal.
+
+```mermaid
+flowchart LR
+  D[data/scenarios.csv<br/>240 rows, 60 topics × 4 quadrants<br/>hand-checked with tag.py] --> V[validate_scenarios.py]
+  V --> X[extract_activations.py<br/>residual stream, all layers<br/>bare · prompted · neutral question]
+  X --> P[probe_eval.py<br/>conditional generalisation<br/>permutation null · factorial directions · cosine curve]
+  P --> R[report.py<br/>plain-language report + fair-baseline line + figure]
+  D --> A[ask_model.py<br/>just-ask baseline, Yes−No logit]
+  A --> R
+  P --> S[steer_eval.py<br/>stretch: logit-shift steering vs random directions]
+```
+
+**Scripts, in pipeline order:** `validate_scenarios.py` → `extract_activations.py` (`--template chat --generation-prompt --instruction …` for the prompted and neutral conditions) → `probe_eval.py` (the headline; `--target legal|harmful --train-stratum …`, `--drop-cue-rows`, `--drop-borderline`) → `ask_model.py` → `report.py` → `steer_eval.py`. `train_probe.py` remains as an exploratory layer sweep; it is not the headline evaluation. `common.py` holds model loading (Qwen3.5's config nests under `text_config`).
+
+**Dataset:** `data/scenarios.csv`, 240 rows, drafted by Claude on 9 Sep, rewritten once after a cue-word audit, hand-checked row by row by Martin (columns `hand_checked`, `relabelled`, `borderline_legal`, `borderline_harm`, `exclude`; counts go directly under the executive summary).
+
+**Conventions:** raw answers are never overwritten (a run name is used once); every number in the write-up is recomputed by hand before it is quoted; `journal/verification-log.md` records each check; `journal/highlights.md` holds the pre-registered prediction and the running results.
 
 ## The clock (Nanda's rules, condensed)
 
@@ -10,47 +43,11 @@ Vault companion note (strategy, form questions, project spec, calibration): `~/D
 - Not counted: general prep/learning before picking the problem; generic tech setup (this repo, API keys, connectivity); breaks; waiting on runs; the MATS form answers.
 - +2 h extra allowed for the executive summary (no new experiment code in those hours; new graphs from existing data OK).
 - Full pivot to a new project = clock resets.
-- Track with Toggl from the first project-directed minute; screenshot goes in the application doc.
+- Hours ledger: `journal/hours.md`.
 
-## Read this first: how the pieces fit
+---
 
-The whole project is five steps, one script each. Each script has an "IN PLAIN LANGUAGE" block at the top saying what goes in, what comes out, and what to hand-check. The notebook `notebooks/mats12_colab.ipynb` runs them in order with an explanation before every cell.
-
-```mermaid
-flowchart LR
-  Q[data/donation_bet_questions.json<br/>9 questions + the paper's note wordings] --> A
-  A[1 · donation_bet.py<br/>ask the model many times,<br/>with and without the bet] --> R[(data/raw/*.jsonl<br/>every answer, verbatim)]
-  A --> S[data/processed/*.json<br/>leak score + interval]
-  A --> P[data/scenarios_run.csv<br/>one row per prompt]
-  P --> B[2 · extract_activations.py<br/>snapshot the model's internal state<br/>at the moment it starts answering]
-  B --> C[3 · make_direction.py<br/>average state good-side-above<br/>minus good-side-below = one vector per layer]
-  C --> D[4 · donation_bet.py --ablate<br/>rerun with that vector removed<br/>while the model writes]
-  D --> S
-  E[steer.py<br/>the hook that removes a direction] -.-> D
-  F[5 · fact check, notebook cell 11<br/>does it still know which charity is better?] -.-> D
-```
-
-In words: **measure the leak** (1), **look inside** (2, 3), **remove what you found and measure again** (4), **check you removed the motivation and not the knowledge** (5). The controls that make it an argument rather than a demo are all in step 4: a random direction (removing *anything* should not work), the topic direction (knowing a bet exists is not the same as knowing which side is good), and the equal-charity condition from step 1 (a bet with no reason to lean should show no leak).
-
-Conventions: raw answers are never overwritten (a run name is used once); every number in the write-up is recomputed by hand from `data/raw/` before it is quoted; `journal/verification-log.md` records each check.
-
-## Project (chosen 9 Sep): the legality probe — is illegality represented separately from harm?
-
-**Where each instruction lives (read in this order):**
-1. *Why this project* — vault: `plans/applications/MATS 12 - Project Spec (Legality Probe)`.
-2. *The design on one page and the decisions that are yours* — `journal/design-questions-legality-probe.md`. Answering it starts the clock.
-3. *Step-by-step with checkboxes* — vault: `plans/applications/MATS 12 - Run Sheet (legality probe)`.
-4. *Execution* — `notebooks/legality_probe_colab.ipynb` (cells numbered 1–12; the run sheet refers to them by number).
-5. *Hand-check columns* — `data/SCENARIOS_COLUMNS.md`.
-
-**The design in two sentences.** A probe trained on the easy corners (illegal-harmful vs legal-harmless) cannot tell legality from not-harm, because there they are the same label. So the legality probe is trained inside one harm stratum and tested on the other, on held-out topics, with layer and regularisation chosen on validation topics and a permutation null that repeats the selection (`scripts/probe_eval.py`); factorial directions and their angle come from the same script.
-
-**Scripts, in pipeline order:** `validate_scenarios.py` → `extract_activations.py` (two conditions: bare, and prompted with `--template chat --generation-prompt --instruction …`) → `probe_eval.py` (the headline; four designs × two conditions, plus `--drop-cue-rows`) → `ask_model.py` (just-ask baseline, invalid answers scored separately) → `steer_eval.py` (stretch: logit-shift steering with random controls). `train_probe.py` remains as an exploratory layer sweep; it is not the headline evaluation.
-- `scripts/tag.py` — the one-keystroke hand-check tool (keys in `scripts/tag_keys.json`; works on Mac and Windows).
-
-**Dataset:** `data/scenarios.csv`, 240 candidates, 60 topics × 4 quadrants, US law, Claude-generated 9 Sep, `hand_checked=0` throughout until you check them.
-
-## Alternative (built 8 Sep): value-leakage mechanism
+## Archived alternative (8 Sep, not pursued): value-leakage mechanism
 
 **Where does the value intervene?** Mechanism behind Betley et al. 2026, *Value Leakage* (arXiv 2607.14345), Donation Bet task, on Qwen3.5-9B. Primer (read first): vault `plans/applications/MATS 12 - Value Leakage Primer.md`. Design sheet (yours): `journal/design-questions-value-leakage.md`. Paper code (sparse clone, no data): `data/reference/value_leakage/`; the exact prompt templates and nine questions are in `data/donation_bet_questions.json`.
 
@@ -67,13 +64,9 @@ Pipeline:
 
 Self-tests on the Mac (0.5B stand-in): `scripts/steer.py` and `scripts/donation_bet.py --backend local --model Qwen/Qwen2.5-0.5B-Instruct ... --run plumb` both pass; numbers from the stand-in mean nothing.
 
-## Environment (updated 8 Sep — GPU/activation path)
+---
 
-The legality probe (spec in the vault; sheet `journal/design-questions-legality-probe.md`) is now the **fallback**. Either project needs residual-stream activations from **Qwen/Qwen3.5-4B**, so the box is a rented 24 GB GPU — see `RUNPOD.md`. The API-only path below is kept for the "just ask the model" baseline.
-
-Pipeline (all generic, all outside the clock): `scripts/gpu_smoke.py` → `scripts/validate_scenarios.py` → `scripts/extract_activations.py` → `scripts/train_probe.py` → `scripts/sync_from_pod.sh`. The Mac runs the same pipeline on a 0.5B model to check the plumbing; the numbers only mean anything on the pod. `data/scenarios_smoke.csv` is a plumbing test with arbitrary labels and is never project data. Python is pinned to 3.12 (`.python-version`) because torch does not yet ship for 3.14.
-
-## One-time setup (Martin does these — accounts and payments are yours)
+## One-time setup (only needed for the OpenRouter path of the archived alternative)
 
 1. Create an OpenRouter account (openrouter.ai) → add a few dollars of credit → create an API key.
 2. `cp .env.example .env` and paste the key. `.env` is gitignored — keys never enter git.
@@ -83,17 +76,17 @@ Pipeline (all generic, all outside the clock): `scripts/gpu_smoke.py` → `scrip
 
 ## Layout
 
-- `scripts/` — experiment code (Martin's). `api_smoke.py` is the only pre-provided file, and it is deliberately trivial.
+- `scripts/` — experiment code; every script opens with an "IN PLAIN LANGUAGE" block. `tag.py` is the hand-check tool.
 - `data/raw/` — every raw transcript/rollout saved verbatim, named by run. Gitignored (size), never deleted.
 - `data/processed/` — derived tables.
-- `figures/` — PNGs (every plot saved to disk, not just shown).
+- `figures/` — PNGs (every plot saved to disk, not just shown). The seven `pilot_*`-era PNGs are from the pre-rewrite dataset and must not appear in the write-up.
 - `journal/highlights.md` — the running doc Nanda's process expects: hypotheses, key graphs, dead ends, in order.
 - `journal/verification-log.md` — what was checked, how, and how surprising an error would be. **The form asks for exactly this** ("which parts you did and didn't check... how surprised you'd be to discover a major error in each part") — keep it as you go and the answer writes itself.
 - `journal/hours.md` — Toggl backup ledger.
 
 ## Reference points
 
-- Application doc snapshot: vault `raw/MATS 12 - Nanda application doc snapshot 2026-08-10.md`
+- Application doc snapshot: vault `raw/MATS 12 - Nanda application doc snapshot 2026-09-08.md`
 - Past accepted applications + admissions FAQ: vault `raw/MATS 12 - past application examples and admissions FAQ 2026-08-10.md`
 - Nanda's 600k-token mech-interp context file (for LLM context, if used): linked from the application doc ("this default file")
 - Model notes: `openai/gpt-oss-120b` on OpenRouter — $0.03/$0.17 per M tokens, 131k context, CoT access; Qwen 3.5-27B as contrast model; OpenAI Model Spec at model-spec.openai.com
