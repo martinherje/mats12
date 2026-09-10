@@ -58,6 +58,8 @@ try:
         r = json.loads(f.read_text()); ask = pd.DataFrame([json.loads(l) for l in g.open()])
         if "yes_minus_no_logit" not in ask: print("\n(just-ask logits not recorded in this run; re-run cell 9 for the fair baseline)"); break
         m = ask.topic.isin(r["split"]["test_topics"]) & (ask.harmful == 0)   # the harmless-stratum rows from the test topics = the main design's test set
+        if "set" in ask.columns: m &= ask["set"].astype(str) == "main"          # the simple/negated check rows are not part of the probe's test set
+        if "exclude" in ask.columns: m &= ask["exclude"].astype(int) == 0
         au = roc_auc_score(ask.legal[m], -ask.yes_minus_no_logit[m])
         print(f"\nFAIR BASELINE ({cond_name}): on the same {int(m.sum())} held-out harmless-stratum sentences, the model's own Yes/No judgement sorts legal from illegal at AUROC {au:.2f}; the probe scored {r['test_cross_auroc']:.2f}.")
 except Exception as e:

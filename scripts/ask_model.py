@@ -33,6 +33,7 @@ df = pd.read_csv(ROOT / a.scenarios)
 if "exclude" in df.columns:
     n_ex = int(df["exclude"].astype(int).sum()); df = df[df["exclude"].astype(int) == 0].reset_index(drop=True)
     print(f"dropped {n_ex} rows with exclude=1 (same rows the probe evaluation drops); {len(df)} remain")
+if "set" not in df.columns: df["set"] = "main"
 device = pick_device(a.device); tok, model = load_model(a.model, device, pick_dtype(a.dtype, device)); tok.padding_side = "left"
 yes_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("Yes", " Yes")]; no_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("No", " No")]
 raw = ROOT / "data/raw" / f"ask_{a.run}_{a.label}.jsonl"
@@ -56,7 +57,17 @@ for i in tqdm(range(0, len(df), a.batch_size), desc=f"ask {a.label}"):
         rows.append({**r.to_dict(), "answer": ans, "pred": pred, "refused_or_unparsed": refused, "yes_minus_no_logit": float(d), "model": a.model, "label_asked": a.label})
 with open(raw, "w") as f:
     for r in rows: f.write(json.dumps(r, ensure_ascii=False) + "\n")
-res = pd.DataFrame(rows); y = res[a.label].astype(int)
+res_all = pd.DataFrame(rows)
+# summary numbers on the main-design rows only; the simple / negated check sets are reported separately below
+extra_sets = {}
+if "set" in res_all.columns:
+    for name in sorted(set(res_all["set"].astype(str)) - {"main"}):
+        sub = res_all[res_all["set"].astype(str) == name]; okk = sub.pred.notna()
+        extra_sets[name] = {"n": int(len(sub)), "frac_answered_yes": float(sub.pred[okk].astype(int).mean()) if okk.any() else None, "frac_invalid": float((~okk).mean())}
+    res = res_all[res_all["set"].astype(str) == "main"].reset_index(drop=True)
+else:
+    res = res_all
+y = res[a.label].astype(int)
 ok = res.pred.notna()
 acc = float((res.pred[ok].astype(int) == y[ok]).mean()) if ok.any() else float("nan")
 per_q = {q: float((res.pred[ok & (res.quadrant == q)].astype(int) == y[ok & (res.quadrant == q)]).mean()) for q in QUADRANTS}
@@ -67,7 +78,7 @@ score = -res.yes_minus_no_logit if a.label == "legal" else res.yes_minus_no_logi
 offd = res.quadrant.isin(["illegal_harmless", "legal_harmful"])
 logit_auroc_all = float(roc_auc_score(y, score)); logit_auroc_offdiag = float(roc_auc_score(y[offd], score[offd]))
 by_topic = {tp: None for tp in res.topic.unique()}
-summary = manifest(run=a.run, label=a.label, model=a.model, n=len(res), accuracy=acc, per_quadrant=per_q,
+summary = manifest(run=a.run, label=a.label, model=a.model, n=len(res), accuracy=acc, per_quadrant=per_q, extra_sets=extra_sets,
                    logit_auroc_all=logit_auroc_all, logit_auroc_offdiagonal=logit_auroc_offdiag,
                    offdiagonal_accuracy=float((res.pred[offdiag].astype(int) == y[offdiag]).mean()) if offdiag.any() else None,
                    refused_or_unparsed_frac=float(res.refused_or_unparsed.mean()),
