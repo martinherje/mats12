@@ -3,6 +3,7 @@ tag.py — one-keystroke hand-check of data/scenarios.csv.
 
 Run from the repo root:      uv run python scripts/tag.py
 Revisit borderline rows:     uv run python scripts/tag.py --borderline
+Split old borderline flags:  uv run python scripts/tag.py --split-borderline   (6 = legality only, 7 = harm only, 0 = both; each advances)
 Specific rows:               uv run python scripts/tag.py --ids s057,s058
 A CSV somewhere else:        python scripts/tag.py --csv "C:/Users/me/Downloads/scenarios.csv"
 Every row, checked or not:   uv run python scripts/tag.py --all
@@ -31,6 +32,7 @@ QUAD = {("0", "1"): "illegal_harmful", ("0", "0"): "illegal_harmless", ("1", "1"
 CLAUDE_PROMPT = re.compile(r"\s*;?\s*(?:text edited by Claude[^;]*?please re-read|rewritten by Claude[^;]*?please check|replaced by Claude[^;]*?please check)\s*;?\s*", re.I)
 FLAGGED = re.compile(r"please (?:check|re-read)", re.I)
 OFFDIAG = {"illegal_harmless", "legal_harmful"}
+SPLIT_MODE = False
 DEFAULT_KEYS = {"harmful": ["1"], "harmless": ["2"], "legal": ["3"], "illegal": ["4"], "checked_next": ["5", "\r", "\n", " "],
                 "borderline_legal": ["6"], "borderline_harm": ["7"], "exclude": ["8"], "note": ["9"], "edit": ["e"], "back": ["b"], "quit": ["q"]}
 KEYS_FILE = ROOT / "scripts" / "tag_keys.json"
@@ -103,20 +105,24 @@ def show(row, pos, total, keys, msg=""):
     print(f"\n   {L('harmful')} harmful  {L('harmless')} harmless  {L('legal')} legal  {L('illegal')} illegal  |  {L('checked_next')}/Enter checked+next  |  "
           f"{L('borderline_legal')} bl-legal  {L('borderline_harm')} bl-harm  {L('exclude')} exclude  |  {L('note')} note  {L('edit')} edit  {L('back')} back  {L('quit')} quit")
     if msg: print(f"\n   {msg}")
+    if SPLIT_MODE: print("\n   SPLIT MODE: 6 = borderline on legality only · 7 = on harm only · 0 = both · (5 keeps both as they are)")
 
 
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--all", action="store_true"); p.add_argument("--borderline", action="store_true"); p.add_argument("--ids")
     p.add_argument("--csv", help="path to the CSV (default: data/scenarios.csv in the repo)")
+    p.add_argument("--split-borderline", action="store_true", help="queue rows where borderline_legal and borderline_harm are both 1; 6/7/0 set one/other/both and advance")
     a = p.parse_args()
-    global CSV
+    global CSV, SPLIT_MODE
+    SPLIT_MODE = a.split_borderline
     if a.csv: CSV = Path(a.csv).expanduser().resolve()
     rows, cols = load()
     shutil.copy(CSV, CSV.with_name(f"scenarios.csv.bak-{time.strftime('%Y%m%d-%H%M%S')}"))
     orig = {r["id"]: (r["legal"], r["harmful"]) for r in rows}
     byid = {r["id"]: r for r in rows}
     if a.ids: queue = [byid[i.strip()] for i in a.ids.split(",")]
+    elif a.split_borderline: queue = [r for r in rows if r["borderline_legal"] == "1" and r["borderline_harm"] == "1"]
     elif a.borderline: queue = [r for r in rows if r["borderline"] == "1"]
     elif a.all: queue = list(rows)
     else:
@@ -141,6 +147,10 @@ def main():
         elif act == "checked_next" or k in ("\r", "\n"):
             row["hand_checked"] = "1"; row["notes"] = CLAUDE_PROMPT.sub("; ", row["notes"]).strip(" ;")
             sync(row); save(rows, cols); pos += 1
+        elif a.split_borderline and (act in ("borderline_legal", "borderline_harm") or k == "0"):
+            row["borderline_legal"] = "1" if act == "borderline_legal" or k == "0" else "0"
+            row["borderline_harm"] = "1" if act == "borderline_harm" or k == "0" else "0"
+            row["hand_checked"] = "1"; sync(row); save(rows, cols); pos += 1
         elif act in ("borderline_legal", "borderline_harm", "exclude"):
             row[act] = "0" if row[act] == "1" else "1"; sync(row); save(rows, cols)
         elif act == "note":
