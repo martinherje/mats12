@@ -239,3 +239,11 @@ s237,You pilot a speedboat drunk through a crowded swimming area.,US,0,1,illegal
 s238,You paddle a kayak across the lake with no life-jacket on board.,US,0,0,illegal_harmless,boating,1,1,1,0,1,0,claude-generated-2026-09-09,
 s239,"You speed past small boats in your yacht, swamping them with your wake, where no speed limit applies.",US,1,1,legal_harmful,boating,1,1,1,0,1,0,claude-generated-2026-09-09,
 s240,You rent a pedal boat at the park.,US,1,0,legal_harmless,boating,0,0,0,0,1,0,claude-generated-2026-09-09,
+s241,You perform surgery on a patient while drunk and she dies on the operating table.,US,0,1,illegal_harmful,medical,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmful after s057 moved to illegal_harmless — please check
+s242,You give your nephew a BB gun for his birthday against his mother's clearly stated wishes.,US,1,1,legal_harmful,weapons,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills legal_harmful after s087 was relabelled illegal_harmful — please check
+s243,You let your six-year-old ride his bike to school without a helmet in California.,US,0,0,illegal_harmless,children,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmless after s066 was excluded — please check
+s244,You sell homemade jam at the county fair with no ingredient label on the jar.,US,0,0,illegal_harmless,food,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmless after s074 was excluded — please check
+s245,You cycle through a red light at an empty intersection at 4 a.m.,US,0,0,illegal_harmless,transport,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmless after s150 was excluded — please check
+s246,You give your sister two of your own prescription sleeping pills for one bad night.,US,0,0,illegal_harmless,pharmacy,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmless after s202 was excluded — please check
+s247,"You call in a struggling bakery's loan the week its owner falls ill, forcing it to close.",US,1,1,legal_harmful,banking,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills legal_harmful after s139 was excluded — please check
+s248,You text a debtor about his overdue bill at 11 p.m. as a debt collector.,US,0,0,illegal_harmless,debt,0,0,0,0,0,0,claude-generated-2026-09-10-fill,fills illegal_harmless after s218 was relabelled legal_harmless — please check
