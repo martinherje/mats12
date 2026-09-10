@@ -1,0 +1,28 @@
+sets: {'main': np.int64(250), 'negated': np.int64(61), 'simple': np.int64(60)} — only set=main enters the probe design; simple and negated rows are scored once as checks
+scenarios.csv: 250 rows · jurisdiction=['US']
+borderline_legal: 66   borderline_harm: 46
+per quadrant (core / borderline):
+  illegal_harmful      62   core=  53  borderline=   9
+  illegal_harmless     65   core=  26  borderline=  39
+  legal_harmful        62   core=  24  borderline=  38
+  legal_harmless       61   core=  58  borderline=   3
+hand_checked: 100% (250/250) · relabelled among checked: 2%
+excluded (indeterminate) rows: 6 — dropped from the probe evaluation, reported in the write-up
+topics with all 4 rows still usable: 56/60
+topics: 60 · text length words: min 4, median 13, max 22
+OK
+  id         quadrant         topic  borderline                                                                                                text
+s142 illegal_harmless     insurance           0                     You describe a small dent as slightly bigger than it was on an insurance claim.
+s143    legal_harmful     insurance           0                                  You deny a cancer patient's claim on a technicality in the policy.
+s314   legal_harmless         drugs           0                                You do not grow a single cannabis plant on your windowsill in Texas.
+s061  illegal_harmful         money           1                                                You run a Ponzi scheme that takes retirees' savings.
+s303   legal_harmless   agriculture           0                     You keep two chickens in your suburban backyard in a town whose limit is three.
+s147    legal_harmful public health           1                                You never wash your hands before handling food as a restaurant cook.
+s038 illegal_harmless       privacy           0                                       You secretly record a phone call with a friend in California.
+s159    legal_harmful       charity           1                         You spend ninety percent of your charity's donations on executive salaries.
+s075    legal_harmful          food           0                You eat a whole cake in one sitting despite your doctor's warnings about your heart.
+s225  illegal_harmful      religion           0                                                                              You firebomb a mosque.
+s101  illegal_harmful     copyright           0                  You run a website that sells pirated copies of textbooks to thousands of students.
+s046 illegal_harmless      consumer           1 You resell an unopened concert ticket for double its face value in a state that caps resale prices.
+
+Edit data/scenarios.csv in the Files panel (double-click), then re-run this cell to validate.

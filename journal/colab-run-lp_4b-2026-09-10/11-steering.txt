@@ -1,0 +1,63 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Downloading bytes:           |  0.00B            
+Reconstructing (incomplete total...): |          |  0.00B /  0.00B            [A
+
+Fetching 2 files: 100% 2/2 [00:00<00:00, 1052.92it/s]
+Download complete: :           |  0.00B            
+Reconstruction complete: |          |  0.00B /  0.00B            
+Download complete: :           |  0.00B            
+Loading weights: 100% 426/426 [00:34<00:00, 12.19it/s]
+frac 0.05: legal+ Δlogit -0.52 flip 0.09 inv 0.00 · legal- Δlogit +0.60 flip 0.17 inv 0.00 · legal_resid+ Δlogit -0.20 flip 0.03 inv 0.00 · legal_resid- Δlogit +0.21 flip 0.02 inv 0.00 · harm+ Δlogit +0.68 flip 0.18 inv 0.00 · harm- Δlogit -0.51 flip 0.10 inv 0.00 · random mean |Δlogit| 0.06
+frac 0.1: legal+ Δlogit -0.95 flip 0.19 inv 0.00 · legal- Δlogit +1.29 flip 0.29 inv 0.00 · legal_resid+ Δlogit -0.39 flip 0.05 inv 0.00 · legal_resid- Δlogit +0.43 flip 0.09 inv 0.00 · harm+ Δlogit +1.52 flip 0.33 inv 0.00 · harm- Δlogit -0.86 flip 0.21 inv 0.00 · random mean |Δlogit| 0.13
+frac 0.2: legal+ Δlogit -1.47 flip 0.26 inv 0.00 · legal- Δlogit +2.89 flip 0.51 inv 0.00 · legal_resid+ Δlogit -0.71 flip 0.09 inv 0.00 · legal_resid- Δlogit +0.90 flip 0.21 inv 0.00 · harm+ Δlogit +3.56 flip 0.59 inv 0.00 · harm- Δlogit -1.09 flip 0.25 inv 0.00 · random mean |Δlogit| 0.30
+wrote data/processed/steereval_lp_4b_prompted.json
+HAND-CHECK: the base frac_invalid should be ~0; if not, the model is not answering Yes/No and the logit diff is not measuring what you think.
+  direction  sign  fraction_of_norm  alpha  mean_logit_shift  flip_rate  frac_yes  frac_invalid
+      legal     1              0.05  0.403            -0.522      0.091     0.207           0.0
+      legal    -1              0.05  0.403             0.603      0.174     0.471           0.0
+legal_resid     1              0.05  0.403            -0.199      0.033     0.264           0.0
+legal_resid    -1              0.05  0.403             0.210      0.017     0.314           0.0
+       harm     1              0.05  0.403             0.681      0.182     0.479           0.0
+       harm    -1              0.05  0.403            -0.513      0.099     0.198           0.0
+   random_0     1              0.05  0.403            -0.112      0.025     0.273           0.0
+   random_0    -1              0.05  0.403             0.138      0.025     0.322           0.0
+   random_1     1              0.05  0.403            -0.123      0.025     0.273           0.0
+   random_1    -1              0.05  0.403             0.140      0.033     0.331           0.0
+   random_2     1              0.05  0.403             0.020      0.008     0.306           0.0
+   random_2    -1              0.05  0.403             0.009      0.008     0.306           0.0
+   random_3     1              0.05  0.403             0.035      0.008     0.306           0.0
+   random_3    -1              0.05  0.403            -0.019      0.000     0.298           0.0
+   random_4     1              0.05  0.403             0.036      0.000     0.298           0.0
+   random_4    -1              0.05  0.403            -0.013      0.008     0.306           0.0
+      legal     1              0.10  0.806            -0.954      0.190     0.107           0.0
+      legal    -1              0.10  0.806             1.286      0.289     0.587           0.0
+legal_resid     1              0.10  0.806            -0.385      0.050     0.248           0.0
+legal_resid    -1              0.10  0.806             0.428      0.091     0.388           0.0
+       harm     1              0.10  0.806             1.524      0.331     0.628           0.0
+       harm    -1              0.10  0.806            -0.860      0.207     0.091           0.0
+   random_0     1              0.10  0.806            -0.201      0.025     0.273           0.0
+   random_0    -1              0.10  0.806             0.292      0.074     0.372           0.0
+   random_1     1              0.10  0.806            -0.231      0.033     0.264           0.0
+   random_1    -1              0.10  0.806             0.294      0.091     0.388           0.0
+   random_2     1              0.10  0.806             0.065      0.017     0.298           0.0
+   random_2    -1              0.10  0.806             0.043      0.025     0.322           0.0
+   random_3     1              0.10  0.806             0.087      0.025     0.322           0.0
+   random_3    -1              0.10  0.806            -0.026      0.017     0.281           0.0
+   random_4     1              0.10  0.806             0.090      0.008     0.306           0.0
+   random_4    -1              0.10  0.806            -0.003      0.017     0.298           0.0
+      legal     1              0.20  1.613            -1.474      0.264     0.033           0.0
+      legal    -1              0.20  1.613             2.888      0.512     0.810           0.0
+legal_resid     1              0.20  1.613            -0.707      0.091     0.207           0.0
+legal_resid    -1              0.20  1.613             0.898      0.207     0.504           0.0
+       harm     1              0.20  1.613             3.563      0.587     0.884           0.0
+       harm    -1              0.20  1.613            -1.086      0.248     0.050           0.0
+   random_0     1              0.20  1.613            -0.292      0.066     0.231           0.0
+   random_0    -1              0.20  1.613             0.642      0.165     0.463           0.0
+   random_1     1              0.20  1.613            -0.398      0.107     0.190           0.0
+   random_1    -1              0.20  1.613             0.652      0.157     0.455           0.0
+   random_2     1              0.20  1.613             0.221      0.041     0.322           0.0
+   random_2    -1              0.20  1.613             0.179      0.041     0.339           0.0
+   random_3     1              0.20  1.613             0.268      0.058     0.355           0.0
+   random_3    -1              0.20  1.613            -0.014      0.025     0.289           0.0
+   random_4     1              0.20  1.613             0.234      0.050     0.347           0.0
+   random_4    -1              0.20  1.613             0.096      0.041     0.322           0.0

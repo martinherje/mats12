@@ -1,0 +1,120 @@
+
+################ lp_4b · L_h2nh: legal probe trained inside harmful, tested on the other stratum ################
+run=lp_4b · target=legal · train inside harmful=1 · rows kept 244 · topics train/val/test 30/15/15
+train n=61 · validation cross-stratum n=30 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 25 · C 1.0 · validation cross-stratum AUROC 0.711
+TEST cross-stratum acc 0.700  CI95 0.53–0.83  AUROC 0.742  (in-stratum test acc 0.900)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.505, p95 0.600, max 0.633 · beat 100/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 25: -0.091 (null band -0.26..+0.28); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.871, within harmless 0.676; d_legal predicting harm 0.502
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 0.862, 0.942, 0.973 · within harmless: 0.676, 0.676, 0.707
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.716
+wrote data/processed/probeeval_lp_4b_L_h2nh.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b · L_nh2h: legal probe trained inside harmless, tested on the other stratum ################
+run=lp_4b · target=legal · train inside harmful=0 · rows kept 244 · topics train/val/test 30/15/15
+train n=62 · validation cross-stratum n=31 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 32 · C 0.01 · validation cross-stratum AUROC 0.875
+TEST cross-stratum acc 0.667  CI95 0.57–0.80  AUROC 0.711  (in-stratum test acc 0.733)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.499, p95 0.667, max 0.700 · beat 93/100 on accuracy, 97/100 on AUROC
+cos(d_legal, d_harm) at layer 32: -0.110 (null band -0.28..+0.34); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.876, within harmless 0.698; d_legal predicting harm 0.496
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 0.862, 0.924, 0.960 · within harmless: 0.680, 0.627, 0.680
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.711
+wrote data/processed/probeeval_lp_4b_L_nh2h.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b · H_i2l: harmful probe trained inside illegal, tested on the other stratum ################
+run=lp_4b · target=harmful · train inside legal=0 · rows kept 244 · topics train/val/test 30/15/15
+train n=62 · validation cross-stratum n=30 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 14 · C 0.01 · validation cross-stratum AUROC 1.000
+TEST cross-stratum acc 0.767  CI95 0.63–0.90  AUROC 0.947  (in-stratum test acc 0.900)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.502, p95 0.667, max 0.767 · beat 98/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 14: -0.176 (null band -0.20..+0.20); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.969, within harmless 0.658; d_legal predicting harm 0.460
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 0.978, 0.973, 0.978 · within harmless: 0.640, 0.671, 0.667
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.933
+wrote data/processed/probeeval_lp_4b_H_i2l.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b · H_l2i: harmful probe trained inside legal, tested on the other stratum ################
+run=lp_4b · target=harmful · train inside legal=1 · rows kept 244 · topics train/val/test 30/15/15
+train n=61 · validation cross-stratum n=31 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 3 · C 10.0 · validation cross-stratum AUROC 0.854
+TEST cross-stratum acc 0.800  CI95 0.67–0.90  AUROC 0.827  (in-stratum test acc 0.833)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.494, p95 0.633, max 0.667 · beat 100/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 3: -0.002 (null band -0.30..+0.29); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.938, within harmless 0.591; d_legal predicting harm 0.503
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 0.938, 0.933, 0.933 · within harmless: 0.591, 0.587, 0.631
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.809
+wrote data/processed/probeeval_lp_4b_H_l2i.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b_prompted · L_h2nh: legal probe trained inside harmful, tested on the other stratum ################
+run=lp_4b_prompted · target=legal · train inside harmful=1 · rows kept 244 · topics train/val/test 30/15/15
+train n=61 · validation cross-stratum n=30 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 15 · C 0.01 · validation cross-stratum AUROC 0.693
+TEST cross-stratum acc 0.500  CI95 0.50–0.50  AUROC 0.742  (in-stratum test acc 1.000)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.498, p95 0.568, max 0.667 · beat 36/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 15: -0.695 (null band -0.49..+0.54); curve over layers saved
+d_legal AUROC on test topics — within harmful 1.000, within harmless 0.849; d_legal predicting harm 0.249
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 1.000, 0.973, 0.951 · within harmless: 0.738, 0.640, 0.658
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.844
+wrote data/processed/probeeval_lp_4b_prompted_L_h2nh.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b_prompted · L_nh2h: legal probe trained inside harmless, tested on the other stratum ################
+run=lp_4b_prompted · target=legal · train inside harmful=0 · rows kept 244 · topics train/val/test 30/15/15
+train n=62 · validation cross-stratum n=31 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 26 · C 10.0 · validation cross-stratum AUROC 0.917
+TEST cross-stratum acc 0.700  CI95 0.57–0.83  AUROC 0.907  (in-stratum test acc 0.800)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.495, p95 0.635, max 0.767 · beat 98/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 26: -0.922 (null band -0.78..+0.84); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.996, within harmless 0.707; d_legal predicting harm 0.210
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 1.000, 0.951, 0.991 · within harmless: 0.511, 0.684, 0.684
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.409
+wrote data/processed/probeeval_lp_4b_prompted_L_nh2h.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b_prompted · H_i2l: harmful probe trained inside illegal, tested on the other stratum ################
+run=lp_4b_prompted · target=harmful · train inside legal=0 · rows kept 244 · topics train/val/test 30/15/15
+train n=62 · validation cross-stratum n=30 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 15 · C 10.0 · validation cross-stratum AUROC 0.978
+TEST cross-stratum acc 0.633  CI95 0.53–0.77  AUROC 0.969  (in-stratum test acc 1.000)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.504, p95 0.668, max 0.733 · beat 87/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 15: -0.695 (null band -0.49..+0.54); curve over layers saved
+d_legal AUROC on test topics — within harmful 1.000, within harmless 0.849; d_legal predicting harm 0.249
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 1.000, 0.973, 0.951 · within harmless: 0.738, 0.640, 0.658
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.902
+wrote data/processed/probeeval_lp_4b_prompted_H_i2l.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
+
+################ lp_4b_prompted · H_l2i: harmful probe trained inside legal, tested on the other stratum ################
+run=lp_4b_prompted · target=harmful · train inside legal=1 · rows kept 244 · topics train/val/test 30/15/15
+train n=61 · validation cross-stratum n=31 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 14 · C 0.1 · validation cross-stratum AUROC 0.938
+TEST cross-stratum acc 0.867  CI95 0.73–0.97  AUROC 0.991  (in-stratum test acc 0.833)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.500, p95 0.633, max 0.700 · beat 100/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 14: -0.605 (null band -0.49..+0.41); curve over layers saved
+d_legal AUROC on test topics — within harmful 1.000, within harmless 0.836; d_legal predicting harm 0.262
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 1.000, 0.996, 0.991 · within harmless: 0.720, 0.533, 0.564
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.973
+wrote data/processed/probeeval_lp_4b_prompted_H_l2i.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.

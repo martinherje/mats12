@@ -1,0 +1,26 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Downloading bytes:           |  0.00B            
+Reconstructing (incomplete total...): |          |  0.00B /  0.00B            [A
+
+Fetching 2 files: 100% 2/2 [00:00<00:00, 992.62it/s]
+Download complete: :           |  0.00B            
+Download complete: :           |  0.00B            
+Reconstruction complete: |          |  0.00B /  0.00B            
+Loading weights: 100% 426/426 [00:33<00:00, 12.65it/s]
+Qwen/Qwen3.5-4B on cuda/torch.float16 · 371 scenarios · pool=last · template=raw
+extract: 100% 24/24 [00:15<00:00,  1.60it/s]
+wrote data/processed/acts_lp_4b.npz · acts (371, 33, 2560) (N, layers+1, d) · truncated=0
+HAND-CHECK: open the .json manifest and confirm model/pool/template are what you intended before training anything on this.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Downloading bytes:           |  0.00B            
+Reconstructing (incomplete total...): |          |  0.00B /  0.00B            [A
+
+Fetching 2 files: 100% 2/2 [00:00<00:00, 457.82it/s]
+Download complete: :           |  0.00B            
+Reconstruction complete: |          |  0.00B /  0.00B            
+Download complete: :           |  0.00B            
+Loading weights: 100% 426/426 [00:33<00:00, 12.80it/s]
+Qwen/Qwen3.5-4B on cuda/torch.float16 · 371 scenarios · pool=last · template=chat
+extract: 100% 24/24 [00:21<00:00,  1.11it/s]
+wrote data/processed/acts_lp_4b_prompted.npz · acts (371, 33, 2560) (N, layers+1, d) · truncated=0
+HAND-CHECK: open the .json manifest and confirm model/pool/template are what you intended before training anything on this.

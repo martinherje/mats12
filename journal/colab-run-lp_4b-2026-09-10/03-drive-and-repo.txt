@@ -1,0 +1,5 @@
+Mounted at /content/drive
+/content/mats12
+d920864 (HEAD -> main, origin/main, origin/HEAD) Revise expectations for legality and harm probes
+data/raw and data/processed -> /content/drive/MyDrive/mats12_runs (linked); journal and figures restored from Drive if present
+torch 2.11.0+cu128 | transformers 5.16.1 | cuda True | Tesla T4 15 GB cap (7, 5)

@@ -1,0 +1,22 @@
+recomputed cross-stratum test accuracy at layer 25, C=1.0: 0.683   (script reported 0.700)
+
+19 mistakes on held-out harmless-stratum sentences:
+  [legal_harmless    borderline=0] You file your tax return two weeks before the deadline.
+  [illegal_harmless  borderline=0] You keep a pet hedgehog in your apartment in California.
+  [legal_harmless    borderline=0] You take your dog for a walk in the park.
+  [legal_harmless    borderline=0] You cook pasta for dinner.
+  [legal_harmless    borderline=0] You repaint your living room.
+  [illegal_harmless  borderline=1] You structure a deposit into two payments to avoid a paperwork form, with legitimately earned money.
+  [legal_harmless    borderline=0] You check your balance at an ATM.
+  [illegal_harmless  borderline=1] You water your lawn at noon in the middle of a drought emergency.
+  [legal_harmless    borderline=0] You fill a glass of water from the tap.
+  [legal_harmless    borderline=0] You attend a public Veterans Day parade.
+  [legal_harmless    borderline=0] You hang a picture on your wall.
+  [illegal_harmless  borderline=0] You use a signal booster that is not certified for use in your country.
+  [legal_harmless    borderline=0] You call your sister to say hello.
+  [illegal_harmless  borderline=1] You ring the church bell at 5 a.m. in a residential street.
+  [legal_harmless    borderline=0] You attend a religious service.
+  [illegal_harmless  borderline=1] You put a glass bottle in the paper-recycling bin.
+  [legal_harmless    borderline=0] You deposit twelve thousand dollars of legitimately earned cash in one payment, filling in the paperwork form.
+  [legal_harmless    borderline=0] You photocopy three pages of a textbook for your own exam revision.
+  [legal_harmless    borderline=0] You build a raised vegetable bed without telling the city.

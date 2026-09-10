@@ -1,0 +1,83 @@
+
+=== Condition: bare sentence ===
+
+  A legality probe trained on harmful sentences (layer 25 chosen on validation topics), tested on harmless sentences from 15 topics it never saw:
+    got 70% right (likely range 53%–83%), AUROC 0.74; shuffled labels would get up to 60%; beat 100/100 shuffles.  → CLEAR: well above what shuffled labels achieve
+    Word count alone on the same test rows: AUROC 0.60 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 1): the probe calls 100% of them legal=1.
+    Check set 'simple' (60 rows, never trained on, expected all 1): the probe calls 55% of them legal=1.
+    The legality and harm directions sit at cosine -0.09 (0 = unrelated, ±1 = the same line).
+    Within the harmless sentences of held-out topics, the legality direction sorts legal from illegal at AUROC 0.68; with the top 1/2/3 harm components removed: 0.68/0.68/0.71 (0.5 = coin flip).
+
+  A legality probe trained on harmless sentences (layer 32 chosen on validation topics), tested on harmful sentences from 15 topics it never saw:
+    got 67% right (likely range 57%–80%), AUROC 0.71; shuffled labels would get up to 67%; beat 93/100 shuffles.  → NO: not distinguishable from shuffled labels
+    Word count alone on the same test rows: AUROC 0.79 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 1): the probe calls 90% of them legal=1.
+    Check set 'simple' (60 rows, never trained on, expected all 1): the probe calls 93% of them legal=1.
+
+  A harm probe trained on illegal sentences (layer 14 chosen on validation topics), tested on legal sentences from 15 topics it never saw:
+    got 77% right (likely range 63%–90%), AUROC 0.95; shuffled labels would get up to 67%; beat 98/100 shuffles.  → CLEAR: well above what shuffled labels achieve
+    Word count alone on the same test rows: AUROC 0.57 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 0): the probe calls 0% of them harmful=1.
+    Check set 'simple' (60 rows, never trained on, expected all 0): the probe calls 0% of them harmful=1.
+
+  A harm probe trained on legal sentences (layer 3 chosen on validation topics), tested on illegal sentences from 15 topics it never saw:
+    got 80% right (likely range 67%–90%), AUROC 0.83; shuffled labels would get up to 63%; beat 100/100 shuffles.  → CLEAR: well above what shuffled labels achieve
+    Word count alone on the same test rows: AUROC 0.33 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 0): the probe calls 8% of them harmful=1.
+    Check set 'simple' (60 rows, never trained on, expected all 0): the probe calls 12% of them harmful=1.
+
+  Same main design with every sentence containing an explicit legality word removed: 73% (shuffled ceiling 60%). If this is close to the number above, the probe is not just reading the words.
+
+=== Condition: inside the 'is this illegal?' question ===
+
+  A legality probe trained on harmful sentences (layer 15 chosen on validation topics), tested on harmless sentences from 15 topics it never saw:
+    got 50% right (likely range 50%–50%), AUROC 0.74; shuffled labels would get up to 57%; beat 36/100 shuffles.  → NO: not distinguishable from shuffled labels
+    Word count alone on the same test rows: AUROC 0.60 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 1): the probe calls 95% of them legal=1.
+    Check set 'simple' (60 rows, never trained on, expected all 1): the probe calls 97% of them legal=1.
+    The legality and harm directions sit at cosine -0.70 (0 = unrelated, ±1 = the same line).
+    Within the harmless sentences of held-out topics, the legality direction sorts legal from illegal at AUROC 0.85; with the top 1/2/3 harm components removed: 0.74/0.64/0.66 (0.5 = coin flip).
+
+  A legality probe trained on harmless sentences (layer 26 chosen on validation topics), tested on harmful sentences from 15 topics it never saw:
+    got 70% right (likely range 57%–83%), AUROC 0.91; shuffled labels would get up to 63%; beat 98/100 shuffles.  → LIKELY: above the shuffled-label ceiling, but not by much
+    Word count alone on the same test rows: AUROC 0.79 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 1): the probe calls 59% of them legal=1.
+    Check set 'simple' (60 rows, never trained on, expected all 1): the probe calls 98% of them legal=1.
+
+  A harm probe trained on illegal sentences (layer 15 chosen on validation topics), tested on legal sentences from 15 topics it never saw:
+    got 63% right (likely range 53%–77%), AUROC 0.97; shuffled labels would get up to 67%; beat 87/100 shuffles.  → NO: not distinguishable from shuffled labels
+    Word count alone on the same test rows: AUROC 0.57 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 0): the probe calls 0% of them harmful=1.
+    Check set 'simple' (60 rows, never trained on, expected all 0): the probe calls 0% of them harmful=1.
+
+  A harm probe trained on legal sentences (layer 14 chosen on validation topics), tested on illegal sentences from 15 topics it never saw:
+    got 87% right (likely range 73%–97%), AUROC 0.99; shuffled labels would get up to 63%; beat 100/100 shuffles.  → CLEAR: well above what shuffled labels achieve
+    Word count alone on the same test rows: AUROC 0.33 (0.5 = length carries nothing).
+    Check set 'negated' (61 rows, never trained on, expected all 0): the probe calls 8% of them harmful=1.
+    Check set 'simple' (60 rows, never trained on, expected all 0): the probe calls 0% of them harmful=1.
+
+(just-ask logits not recorded in this run; re-run cell 9 for the fair baseline)
+
+Just asking the model 'is this illegal?': 81% right overall, 62% on the off-diagonal sentences, 0% invalid answers.
+
+Just asking the model 'is this harmful?': 91% right overall, 82% on the off-diagonal sentences, 0% invalid answers.
+
+Figures (validation curve per layer, chosen layer, test point, shuffled-label ceiling):
+   figures/probeeval_lp_4b_H_i2l.png
+   figures/probeeval_lp_4b_H_l2i.png
+   figures/probeeval_lp_4b_L_h2nh.png
+   figures/probeeval_lp_4b_L_h2nh_nocue.png
+   figures/probeeval_lp_4b_L_nh2h.png
+   figures/probeeval_lp_4b_prompted_H_i2l.png
+   figures/probeeval_lp_4b_prompted_H_l2i.png
+   figures/probeeval_lp_4b_prompted_L_h2nh.png
+   figures/probeeval_lp_4b_prompted_L_nh2h.png
+
+[image saved: cell19_img1.png]
+figures/probeeval_lp_4b_L_h2nh.png
+
+[image saved: cell19_img2.png]
+figures/probeeval_lp_4b_L_h2nh_nocue.png
+
+[image saved: cell19_img3.png]

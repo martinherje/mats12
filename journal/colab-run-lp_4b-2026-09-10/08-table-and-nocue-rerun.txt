@@ -1,0 +1,29 @@
+condition   probe trained inside  layer     C  test acc      ci95  test AUROC beat shuffles  null p95  cos(dL,dH)  dL within harmless  dL−harm(top3) within harmless  length only  check negated  check simple
+     bare   legal        harmful     25  1.00     0.700 0.53–0.83       0.742       100/100     0.600      -0.091               0.676                          0.707        0.600          1.000         0.550
+     bare   legal       harmless     32  0.01     0.667 0.57–0.80       0.711        93/100     0.667      -0.110               0.698                          0.680        0.793          0.902         0.933
+     bare harmful        illegal     14  0.01     0.767 0.63–0.90       0.947        98/100     0.667      -0.176               0.658                          0.667        0.569          0.000         0.000
+     bare harmful          legal      3 10.00     0.800 0.67–0.90       0.827       100/100     0.633      -0.002               0.591                          0.631        0.333          0.082         0.117
+ prompted   legal        harmful     15  0.01     0.500 0.50–0.50       0.742        36/100     0.568      -0.695               0.849                          0.658        0.600          0.951         0.967
+ prompted   legal       harmless     26 10.00     0.700 0.57–0.83       0.907        98/100     0.635      -0.922               0.707                          0.684        0.793          0.590         0.983
+ prompted harmful        illegal     15 10.00     0.633 0.53–0.77       0.969        87/100     0.668      -0.695               0.849                          0.658        0.569          0.000         0.000
+ prompted harmful          legal     14  0.10     0.867 0.73–0.97       0.991       100/100     0.633      -0.605               0.836                          0.564        0.333          0.082         0.000
+Traceback (most recent call last):
+  File "/content/mats12/scripts/results_table.py", line 34, in <module>
+    r = json.loads(nc.read_text()); checks.append(f"- {cname}: headline design with every legality-vocabulary row dropped ({r['n_rows']} rows kept): AUROC {r['test_cross_auroc']:.2f}, beat {r['perm_null']['shuffles_beaten_acc']}/{r['perm_null']['n']}.")
+                                                                                                                                                                                              ~^^^^^^^^^^^^^
+KeyError: 'perm_null'
+
+--- main design with legality-vocabulary rows dropped ---
+run=lp_4b · target=legal · train inside harmful=1 · rows kept 241 · topics train/val/test 30/15/15
+train n=60 · validation cross-stratum n=30 · test in-stratum n=30 cross-stratum n=30
+
+=== headline (layer and C chosen on validation AUROC, test topics scored once, cross-stratum) ===
+layer 24 · C 1.0 · validation cross-stratum AUROC 0.707
+TEST cross-stratum acc 0.733  CI95 0.57–0.87  AUROC 0.742  (in-stratum test acc 0.900)
+null (labels shuffled within topic×stratum, same selection, 100 shuffles): acc mean 0.513, p95 0.602, max 0.700 · beat 100/100 on accuracy, 100/100 on AUROC
+cos(d_legal, d_harm) at layer 24: -0.071 (null band -0.23..+0.33); curve over layers saved
+d_legal AUROC on test topics — within harmful 0.893, within harmless 0.684; d_legal predicting harm 0.507
+d_legal with harm removed (top-1/2/3 harm components) — within harmful: 0.880, 0.938, 0.973 · within harmless: 0.689, 0.658, 0.676
+mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC 0.724
+wrote data/processed/probeeval_lp_4b_L_h2nh_nocue.json
+HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.
