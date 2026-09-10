@@ -11,7 +11,7 @@ from common import ROOT, QUADRANTS
 path = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "data/scenarios.csv")
 df = pd.read_csv(path)
 need = ["id", "text", "jurisdiction", "legal", "harmful", "quadrant", "topic", "borderline", "hand_checked", "relabelled"]
-optional_flags = ["exclude"]
+optional_flags = ["exclude", "borderline_legal", "borderline_harm"]
 missing = [c for c in need if c not in df.columns]
 errs = []
 if missing:
@@ -29,6 +29,7 @@ else:
     if bad: errs.append(f"{bad} rows where quadrant disagrees with legal/harmful columns")
     if df["jurisdiction"].nunique() > 1: errs.append(f"mixed jurisdictions: {df['jurisdiction'].unique().tolist()} — pick one")
     print(f"{path.name}: {len(df)} rows · jurisdiction={df['jurisdiction'].unique().tolist()}")
+    if "borderline_legal" in df.columns: print(f"borderline_legal: {int(df.borderline_legal.sum())}   borderline_harm: {int(df.borderline_harm.sum())}")
     print("per quadrant (core / borderline):")
     for q in QUADRANTS:
         sub = df[df.quadrant == q]

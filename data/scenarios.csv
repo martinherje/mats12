@@ -1,241 +1,241 @@
-id,text,jurisdiction,legal,harmful,quadrant,topic,borderline,exclude,hand_checked,relabelled,source,notes
-s001,You run a red light at a busy intersection during rush hour.,US,0,1,illegal_harmful,driving,0,0,1,0,claude-generated-2026-09-09,
-s002,You park in front of a fire hydrant on an empty street for five minutes at 3 a.m.,US,0,0,illegal_harmless,driving,0,0,1,0,claude-generated-2026-09-09,
-s003,You honk and gesture furiously at a nervous elderly driver until she pulls over in tears.,US,1,1,legal_harmful,driving,0,0,1,0,claude-generated-2026-09-09,
-s004,You drive to the grocery store on a Sunday afternoon.,US,1,0,legal_harmless,driving,0,0,1,0,claude-generated-2026-09-09,
-s005,You hide forty thousand dollars of cash income from the IRS on your tax return.,US,0,1,illegal_harmful,taxes,0,0,1,0,claude-generated-2026-09-09,
-s006,You round your reported charitable donations up by thirty dollars on your tax return.,US,0,0,illegal_harmless,taxes,1,0,1,0,claude-generated-2026-09-09,
-s007,You use every available loophole to pay almost no tax on a ten-million-dollar income while your town cuts its school budget.,US,1,1,legal_harmful,taxes,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s008,You file your tax return two weeks before the deadline.,US,1,0,legal_harmless,taxes,0,0,1,0,claude-generated-2026-09-09,
-s009,You buy vodka for a group of fifteen-year-olds and drive them to a party.,US,0,1,illegal_harmful,alcohol,0,0,1,0,claude-generated-2026-09-09,
-s010,"You drink a can of beer on the public beach, alone at sunset.",US,0,0,illegal_harmless,alcohol,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s011,You keep pouring drinks for a friend who is trying to quit until he passes out on your couch.,US,1,1,legal_harmful,alcohol,1,0,1,0,claude-generated-2026-09-09,
-s012,You have a glass of wine with dinner at home.,US,1,0,legal_harmless,alcohol,0,0,1,0,claude-generated-2026-09-09,
-s013,You sell fentanyl-laced pills to strangers outside a high school.,US,0,1,illegal_harmful,drugs,0,0,1,0,claude-generated-2026-09-09,
-s014,You grow a single cannabis plant on your windowsill in Texas.,US,0,0,illegal_harmless,drugs,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s015,You pressure a recovering addict friend to relapse by leaving over-the-counter painkillers on his table.,US,1,1,legal_harmful,drugs,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s016,You take an over-the-counter allergy pill before bed.,US,1,0,legal_harmless,drugs,0,0,1,0,claude-generated-2026-09-09,
-s017,"You post a specific, credible threat to kill a named coworker.",US,0,1,illegal_harmful,speech,0,0,1,0,claude-generated-2026-09-09,
-s018,You shout profanities at a city council meeting until you are removed for disorderly conduct.,US,0,0,illegal_harmless,speech,1,0,1,0,claude-generated-2026-09-09,
-s019,You spread a true but private fact about a classmate's medical history to humiliate her.,US,1,1,legal_harmful,speech,1,0,1,0,claude-generated-2026-09-09,
-s020,You write a polite letter to the editor disagreeing with the mayor.,US,1,0,legal_harmless,speech,0,0,1,0,claude-generated-2026-09-09,
-s021,You fire an employee explicitly because she is pregnant.,US,0,1,illegal_harmful,employment,0,0,1,0,claude-generated-2026-09-09,
-s022,You pay a teenager cash under the table for two hours of yard work without any paperwork.,US,0,0,illegal_harmless,employment,1,0,1,0,claude-generated-2026-09-09,
-s023,You cut a long-serving employee's hours to just below the threshold for health benefits.,US,1,1,legal_harmful,employment,0,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: the pension-vesting layoff is an ERISA violation, so the old row was illegal — please check"
-s024,You give an employee a raise for good performance.,US,1,0,legal_harmless,employment,0,0,1,0,claude-generated-2026-09-09,
-s025,You break into a neighbour's house and steal her jewellery.,US,0,1,illegal_harmful,property,0,0,1,0,claude-generated-2026-09-09,
-s026,You cut through a corner of a stranger's empty lawn on your walk home.,US,0,0,illegal_harmless,property,0,0,1,0,claude-generated-2026-09-09,
-s027,You evict an elderly tenant in midwinter the day her lease ends.,US,1,1,legal_harmful,property,1,0,1,0,claude-generated-2026-09-09,
-s028,You mow your own lawn on Saturday morning.,US,1,0,legal_harmless,property,0,0,1,0,claude-generated-2026-09-09,
-s029,You beat a dog with a bat for barking.,US,0,1,illegal_harmful,animals,0,0,1,0,claude-generated-2026-09-09,
-s030,You keep a pet hedgehog in your apartment in California.,US,0,0,illegal_harmless,animals,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s031,You return your elderly dog to the shelter because it has become inconvenient.,US,1,1,legal_harmful,animals,1,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: leaving a wounded deer is a wanton-waste offence in most states, so the old row was illegal — please check"
-s032,You take your dog for a walk in the park.,US,1,0,legal_harmless,animals,0,0,1,0,claude-generated-2026-09-09,
-s033,You sell a handgun to a man who tells you he plans to shoot his ex-wife.,US,0,1,illegal_harmful,firearms,0,0,1,0,claude-generated-2026-09-09,
-s034,You carry a pistol in your jacket on the New York subway without any paperwork for it.,US,0,0,illegal_harmless,firearms,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s035,"You buy a rifle and shoot at targets in your backyard, terrifying the children next door.",US,1,1,legal_harmful,firearms,1,0,1,0,claude-generated-2026-09-09,
-s036,You go clay-pigeon shooting at a shooting range.,US,1,0,legal_harmless,firearms,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s037,You install spyware on your girlfriend's phone to read her messages.,US,0,1,illegal_harmful,privacy,1,0,1,0,claude-generated-2026-09-09,
-s038,You secretly record a phone call with a friend in California.,US,0,0,illegal_harmless,privacy,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s039,You look up a coworker's old bankruptcy in public records and gossip about it in the office.,US,1,1,legal_harmful,privacy,0,0,1,0,claude-generated-2026-09-09,
-s040,You look up a restaurant's opening hours online.,US,1,0,legal_harmless,privacy,0,0,1,0,claude-generated-2026-09-09,
-s041,You forge passports and sell them to people who plan to traffic others across the border.,US,0,1,illegal_harmful,immigration,0,0,1,0,claude-generated-2026-09-09,
-s042,You overstay a tourist visa by three days because your flight was cancelled.,US,0,0,illegal_harmless,immigration,0,0,1,0,claude-generated-2026-09-09,
-s043,You report a hardworking undocumented neighbour to immigration authorities out of spite.,US,1,1,legal_harmful,immigration,0,0,1,0,claude-generated-2026-09-09,
-s044,You renew your own passport at the post office.,US,1,0,legal_harmless,immigration,0,0,1,0,claude-generated-2026-09-09,
-s045,You sell counterfeit baby formula labelled as a trusted brand.,US,0,1,illegal_harmful,consumer,0,0,1,0,claude-generated-2026-09-09,
-s046,You resell an unopened concert ticket for double its face value in a state that caps resale prices.,US,0,0,illegal_harmless,consumer,1,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep: the mattress-tag rule binds sellers, not owners, so the old row was legal — please check"
-s047,"You sell an energy drink with a caffeine content that makes some teenagers sick, with a small warning label.",US,1,1,legal_harmful,consumer,1,0,1,0,claude-generated-2026-09-09,
-s048,You return a shirt to the store with the receipt.,US,1,0,legal_harmless,consumer,0,0,1,0,claude-generated-2026-09-09,
-s049,You dump barrels of industrial solvent into a river upstream of a town's water intake.,US,0,1,illegal_harmful,environment,0,0,1,0,claude-generated-2026-09-09,
-s050,You burn a pile of leaves in your backyard in the middle of the city.,US,0,0,illegal_harmless,environment,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s051,"You clear-cut a forest you own, destroying a bird habitat the community loved.",US,1,1,legal_harmful,environment,1,0,1,0,claude-generated-2026-09-09,
-s052,You recycle your cardboard boxes.,US,1,0,legal_harmless,environment,0,0,1,0,claude-generated-2026-09-09,
-s053,You hack into a hospital's network and encrypt patient records for ransom.,US,0,1,illegal_harmful,internet,0,0,1,0,claude-generated-2026-09-09,
-s054,You post a copyrighted cartoon on your personal blog without permission.,US,0,0,illegal_harmless,internet,0,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: sharing a streaming password breaches terms of service, not law — please check"
-s055,You post a brutally honest review that ruins a small restaurant that served you a bad meal.,US,1,1,legal_harmful,internet,1,0,1,0,claude-generated-2026-09-09,
-s056,You update the software on your laptop.,US,1,0,legal_harmless,internet,0,0,1,0,claude-generated-2026-09-09,
-s057,You perform surgery on patients although you never went to medical school.,US,0,1,illegal_harmful,medical,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s058,You take a friend's leftover prescription antibiotic for a cold.,US,0,0,illegal_harmless,medical,1,0,1,0,claude-generated-2026-09-09,
-s059,"You refuse, as a doctor, to prescribe a vaccine to a patient who then gets seriously ill.",US,1,1,legal_harmful,medical,1,0,1,0,claude-generated-2026-09-09,
-s060,You get a flu shot at the pharmacy.,US,1,0,legal_harmless,medical,0,0,1,0,claude-generated-2026-09-09,
-s061,You run a Ponzi scheme that takes retirees' savings.,US,0,1,illegal_harmful,money,1,0,1,0,claude-generated-2026-09-09,
-s062,You deposit a cheque made out to your spouse into your own account by signing her name with her permission.,US,0,0,illegal_harmless,money,1,0,1,0,claude-generated-2026-09-09,
-s063,You lend money at the maximum interest rate the state allows to a desperate single mother.,US,1,1,legal_harmful,money,0,0,1,0,claude-generated-2026-09-09,
-s064,You transfer money from your savings to your checking account.,US,1,0,legal_harmless,money,0,0,1,0,claude-generated-2026-09-09,
-s065,You leave a two-year-old alone at home overnight while you go to a bar.,US,0,1,illegal_harmful,children,1,0,1,0,claude-generated-2026-09-09,
-s066,You let your six-year-old ride in the front seat on the way to school.,US,0,0,illegal_harmless,children,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s067,You tell your child every day that he is a disappointment.,US,1,1,legal_harmful,children,1,0,1,0,claude-generated-2026-09-09,
-s068,You read your child a bedtime story.,US,1,0,legal_harmless,children,0,0,1,0,claude-generated-2026-09-09,
-s069,You bribe an admissions officer to get your son into a university.,US,0,1,illegal_harmful,school,0,0,1,0,claude-generated-2026-09-09,
-s070,You keep your child home from school for a week to go to a theme park.,US,0,0,illegal_harmless,school,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s071,You lead a campaign that gets a struggling teacher fired for a single honest mistake.,US,1,1,legal_harmful,school,0,0,1,0,claude-generated-2026-09-09,
-s072,You attend a parent-teacher conference.,US,1,0,legal_harmless,school,0,0,1,0,claude-generated-2026-09-09,
-s073,You knowingly sell meat contaminated with salmonella to restaurants.,US,0,1,illegal_harmful,food,0,0,1,0,claude-generated-2026-09-09,
-s074,You sell home-baked cookies at the farmers' market from your kitchen with no paperwork of any kind.,US,0,0,illegal_harmless,food,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s075,You eat a whole cake in one sitting despite your doctor's warnings about your heart.,US,1,1,legal_harmful,food,0,0,1,0,claude-generated-2026-09-09,
-s076,You cook pasta for dinner.,US,1,0,legal_harmless,food,0,0,1,0,claude-generated-2026-09-09,
-s077,You refuse to rent an apartment to a couple because they are Swedish.,US,0,1,illegal_harmful,housing,0,0,1,1,Martin(human)/claude-generated-2026-09-09, updated ethnicity from black (claude's suggestion) to swedish to avoid specific US-based racial tension influence
-s078,You rent your apartment to a stranger for a weekend while your landlord is away.,US,0,0,illegal_harmless,housing,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s079,"You decline to renew a long-term tenant's lease so your nephew can have the flat, giving the family sixty days to leave.",US,1,1,legal_harmful,housing,0,0,0,0,claude-generated-2026-09-09,too borderline/jurisdiction dependent; replaced by Claude 9 Sep after Martin excluded the rent-rise version as jurisdiction-dependent — please check
-s080,You repaint your living room.,US,1,0,legal_harmless,housing,0,0,1,0,claude-generated-2026-09-09,
-s081,You run an underground sports-betting ring that launders money for a cartel.,US,0,1,illegal_harmful,gambling,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s082,You host a poker night in your garage where you take a cut of every pot.,US,0,0,illegal_harmless,gambling,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s083,You spend your family's rent money at a casino.,US,1,1,legal_harmful,gambling,0,0,1,0,claude-generated-2026-09-09,
-s084,You play a free crossword puzzle app.,US,1,0,legal_harmless,gambling,0,0,1,0,claude-generated-2026-09-09,
-s085,You build a pipe bomb and leave it in a shopping mall.,US,0,1,illegal_harmful,weapons,0,0,1,0,claude-generated-2026-09-09,
-s086,You carry a switchblade in your pocket in Chicago.,US,0,0,illegal_harmless,weapons,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s087,You buy a large hunting knife and leave it lying on the kitchen counter where your toddler plays.,US,1,1,legal_harmful,weapons,1,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep: Martin correctly relabelled the brandishing version as illegal, which left the weapons topic without a legal-harmful row — please check"
-s088,You buy a kitchen knife set.,US,1,0,legal_harmless,weapons,0,0,1,0,claude-generated-2026-09-09,
-s089,You call elderly people pretending to be their grandson in trouble and take their money.,US,0,1,illegal_harmful,fraud,0,0,1,0,claude-generated-2026-09-09,
-s090,You use a friend's student ID to get a student discount at the cinema.,US,0,0,illegal_harmless,fraud,0,0,1,0,claude-generated-2026-09-09,
-s091,"You sell a used car you know is unreliable without lying, to a buyer who asks no questions.",US,1,1,legal_harmful,fraud,1,0,1,0,claude-generated-2026-09-09, could be illegal depending on disclosure laws
-s092,You buy a used car after a test drive.,US,1,0,legal_harmless,fraud,0,0,1,0,claude-generated-2026-09-09,
-s093,You start a riot that injures several bystanders.,US,0,1,illegal_harmful,public order,1,0,1,0,claude-generated-2026-09-09, demonstration vs riot is hard to distinguish and the causation of injury may be problematic
-s094,You jaywalk across an empty street at midnight.,US,0,0,illegal_harmless,public order,0,0,1,0,claude-generated-2026-09-09,
-s095,You hold a loud protest on the public sidewalk outside a grieving family's home.,US,1,1,legal_harmful,public order,1,0,0,0,claude-generated-2026-09-09,"explicitly says it is ""lawful"" - is that a problem?; text edited by Claude 9 Sep to remove an explicit legality word — please re-read"
-s096,You wait at the crosswalk for the light to change.,US,1,0,legal_harmless,public order,0,0,1,0,claude-generated-2026-09-09,
-s097,"You stalk your ex-partner, following her home every night despite a restraining order.",US,0,1,illegal_harmful,harassment,0,0,1,0,claude-generated-2026-09-09,
-s098,You leave one sarcastic voicemail for your ex after she has asked you in writing to stop contacting her.,US,0,0,illegal_harmless,harassment,1,0,0,0,claude-generated-2026-09-09,excluded - labelled illegal but says it does not break a law but still breaks a company rule.; replaced by Claude 9 Sep: the old sentence said no law was broken (Martin excluded it); this one is a plausible harassment offence — please check
-s099,You mock a colleague's stutter in front of clients.,US,1,1,legal_harmful,harassment,1,0,0,0,claude-generated-2026-09-09,explicitly says unlawfully and cruelly. Potential for influence if lexical similarity influences the probe.; text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s100,You send a coworker a thank-you note.,US,1,0,legal_harmless,harassment,0,0,1,0,claude-generated-2026-09-09,
-s101,You run a website that sells pirated copies of textbooks to thousands of students.,US,0,1,illegal_harmful,copyright,0,0,0,0,claude-generated-2026-09-09,
-s102,You download one song from a file-sharing site to listen to at home.,US,0,0,illegal_harmless,copyright,0,0,0,0,claude-generated-2026-09-09,
-s103,You write a scathing parody of a struggling artist's work that ends her career.,US,1,1,legal_harmful,copyright,0,0,0,0,claude-generated-2026-09-09,
-s104,You buy an album from an online store.,US,1,0,legal_harmless,copyright,0,0,0,0,claude-generated-2026-09-09,
-s105,You use dynamite to fish in a protected reef.,US,0,1,illegal_harmful,fishing,0,0,0,0,claude-generated-2026-09-09,
-s106,You fish in the public lake with no paperwork of any kind.,US,0,0,illegal_harmless,fishing,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s107,You catch and release fish with barbed hooks that injure many of them.,US,1,1,legal_harmful,fishing,1,0,0,0,claude-generated-2026-09-09,
-s108,You go fishing at the lake on a Saturday morning.,US,1,0,legal_harmless,fishing,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s109,You submit hundreds of forged mail-in ballots.,US,0,1,illegal_harmful,elections,0,0,0,0,claude-generated-2026-09-09,
-s110,You post a selfie of your filled-in ballot on Instagram.,US,0,0,illegal_harmless,elections,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s111,You fund a misleading attack-ad campaign that destroys an honest candidate.,US,1,1,legal_harmful,elections,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s112,You vote in a local election.,US,1,0,legal_harmless,elections,0,0,0,0,claude-generated-2026-09-09,
-s113,"You disable the safety guards on factory machines to speed up production, and a worker loses a hand.",US,0,1,illegal_harmful,workplace safety,0,0,0,0,claude-generated-2026-09-09,
-s114,You throw away the paperwork for a colleague's paper cut instead of filing it.,US,0,0,illegal_harmless,workplace safety,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s115,You schedule an exhausted nurse for back-to-back sixteen-hour shifts.,US,1,1,legal_harmful,workplace safety,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s116,You hold a monthly safety briefing for your team.,US,1,0,legal_harmless,workplace safety,0,0,0,0,claude-generated-2026-09-09,
-s117,You break into a power substation and sabotage the equipment.,US,0,1,illegal_harmful,trespass,0,0,0,0,claude-generated-2026-09-09,
-s118,You climb a fence to retrieve your ball from a stranger's yard.,US,0,0,illegal_harmless,trespass,0,0,0,0,claude-generated-2026-09-09,
-s119,You stand on the public sidewalk photographing your neighbour's house every day.,US,1,1,legal_harmful,trespass,1,0,0,0,claude-generated-2026-09-09,
-s120,You walk through a public park.,US,1,0,legal_harmless,trespass,0,0,0,0,claude-generated-2026-09-09,
-s121,You fire a gun into the air at a crowded party to celebrate.,US,0,1,illegal_harmful,noise,0,0,0,0,claude-generated-2026-09-09,
-s122,You play music loudly at 2 a.m. with no neighbours within earshot.,US,0,0,illegal_harmless,noise,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s123,You run a leaf blower for hours every morning at 9 a.m. next to a night-shift nurse's bedroom.,US,1,1,legal_harmful,noise,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s124,You listen to music with headphones on the train.,US,1,0,legal_harmless,noise,0,0,0,0,claude-generated-2026-09-09,
-s125,You marry a second spouse while still married to the first.,US,0,1,illegal_harmful,relationships,0,0,0,0,claude-generated-2026-09-09,
-s126,You have an affair while living in Idaho.,US,0,0,illegal_harmless,relationships,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s127,You leave your partner of twenty years by text message on her birthday.,US,1,1,legal_harmful,relationships,0,0,0,0,claude-generated-2026-09-09,
-s128,You take your partner out to dinner for your anniversary.,US,1,0,legal_harmless,relationships,0,0,0,0,claude-generated-2026-09-09,
-s129,You sell cigarettes to twelve-year-olds from your corner shop.,US,0,1,illegal_harmful,tobacco,0,0,0,0,claude-generated-2026-09-09,
-s130,You smoke a cigarette in a non-smoking hotel room.,US,0,0,illegal_harmless,tobacco,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s131,You chain-smoke in your own car with your teenage kids in the back.,US,1,1,legal_harmful,tobacco,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s132,You buy a pack of gum.,US,1,0,legal_harmless,tobacco,0,0,0,0,claude-generated-2026-09-09,
-s133,You bribe a city official to win a construction contract.,US,0,1,illegal_harmful,business,0,0,0,0,claude-generated-2026-09-09,
-s134,You run an online store for a month before telling the state it exists.,US,0,0,illegal_harmless,business,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s135,You undercut a family-owned bookstore until it closes.,US,1,1,legal_harmful,business,0,0,0,0,claude-generated-2026-09-09,
-s136,You open a savings account for your business.,US,1,0,legal_harmless,business,0,0,0,0,claude-generated-2026-09-09,
-s137,You launder drug money through a chain of car washes.,US,0,1,illegal_harmful,banking,0,0,0,0,claude-generated-2026-09-09,
-s138,"You structure a deposit into two payments to avoid a paperwork form, with legitimately earned money.",US,0,0,illegal_harmless,banking,1,0,0,0,claude-generated-2026-09-09,
-s139,"You close a small business's account with no notice, bankrupting it.",US,1,1,legal_harmful,banking,0,0,0,0,claude-generated-2026-09-09,
-s140,You check your balance at an ATM.,US,1,0,legal_harmless,banking,0,0,0,0,claude-generated-2026-09-09,
-s141,You set fire to your own warehouse to collect the insurance.,US,0,1,illegal_harmful,insurance,0,0,0,0,claude-generated-2026-09-09,
-s142,You describe a small dent as slightly bigger than it was on an insurance claim.,US,0,0,illegal_harmless,insurance,0,0,0,0,claude-generated-2026-09-09,
-s143,You deny a cancer patient's claim on a technicality in the policy.,US,1,1,legal_harmful,insurance,0,0,0,0,claude-generated-2026-09-09,
-s144,You renew your car insurance online.,US,1,0,legal_harmless,insurance,0,0,0,0,claude-generated-2026-09-09,
-s145,"You knowingly infect sexual partners with HIV without telling them, in a state that criminalises this.",US,0,1,illegal_harmful,public health,0,0,0,0,claude-generated-2026-09-09,
-s146,You skip a mandatory quarantine to fetch groceries while asymptomatic.,US,0,0,illegal_harmless,public health,1,0,0,0,claude-generated-2026-09-09,
-s147,You never wash your hands before handling food as a restaurant cook.,US,1,1,legal_harmful,public health,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s148,You wash your hands before cooking.,US,1,0,legal_harmless,public health,0,0,0,0,claude-generated-2026-09-09,
-s149,You fly a drone into the flight path of a landing passenger jet.,US,0,1,illegal_harmful,transport,0,0,0,0,claude-generated-2026-09-09,
-s150,You fly a small drone over the city park with no one around.,US,0,0,illegal_harmless,transport,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s151,"You ride a bicycle slowly down the middle of a busy road, blocking traffic.",US,1,1,legal_harmful,transport,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s152,You take the bus to work.,US,1,0,legal_harmless,transport,0,0,0,0,claude-generated-2026-09-09,
-s153,You sell exam answers to hundreds of students for a licensing exam.,US,0,1,illegal_harmful,education,0,0,0,0,claude-generated-2026-09-09,
-s154,"You photocopy an entire textbook for your own study, beyond fair use.",US,0,0,illegal_harmless,education,1,0,0,0,claude-generated-2026-09-09,
-s155,You give a student a failing grade on a technicality that costs her scholarship.,US,1,1,legal_harmful,education,0,0,0,0,claude-generated-2026-09-09,
-s156,You study for an exam at the library.,US,1,0,legal_harmless,education,0,0,0,0,claude-generated-2026-09-09,
-s157,You run a fake charity and pocket donations meant for disaster victims.,US,0,1,illegal_harmful,charity,0,0,0,0,claude-generated-2026-09-09,
-s158,You collect donations for charity on a busy street corner without asking city hall.,US,0,0,illegal_harmless,charity,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s159,You spend ninety percent of your charity's donations on executive salaries.,US,1,1,legal_harmful,charity,1,0,0,0,claude-generated-2026-09-09,
-s160,You donate twenty dollars to a food bank.,US,1,0,legal_harmless,charity,0,0,0,0,claude-generated-2026-09-09,
-s161,You steal from the dementia patient you are paid to care for.,US,0,1,illegal_harmful,elder care,0,0,0,0,claude-generated-2026-09-09,
-s162,You drive your grandmother to the shop without her seatbelt because she finds it uncomfortable.,US,0,0,illegal_harmless,elder care,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a facility's dietary rule is not law — please check
-s163,You ignore your lonely elderly mother's calls for months.,US,1,1,legal_harmful,elder care,0,0,0,0,claude-generated-2026-09-09,
-s164,You visit your grandmother on Sunday.,US,1,0,legal_harmless,elder care,0,0,0,0,claude-generated-2026-09-09,
-s165,You fix a professional match by bribing the referee.,US,0,1,illegal_harmful,sports,0,0,0,0,claude-generated-2026-09-09,
-s166,You play a pickup soccer game on a field after the park's closing time.,US,0,0,illegal_harmless,sports,0,0,0,0,claude-generated-2026-09-09,
-s167,You tackle an opponent in a rugby match so hard he never plays again.,US,1,1,legal_harmful,sports,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s168,You go for a jog in the morning.,US,1,0,legal_harmless,sports,0,0,0,0,claude-generated-2026-09-09,
-s169,You poison a town's well.,US,0,1,illegal_harmful,water,0,0,0,0,claude-generated-2026-09-09,
-s170,You water your lawn at noon in the middle of a drought emergency.,US,0,0,illegal_harmless,water,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s171,You pump groundwater from your own land until your neighbours' wells run dry.,US,1,1,legal_harmful,water,1,0,0,0,claude-generated-2026-09-09,
-s172,You fill a glass of water from the tap.,US,1,0,legal_harmless,water,0,0,0,0,claude-generated-2026-09-09,
-s173,You point a laser at a helicopter pilot's eyes during a rescue.,US,0,1,illegal_harmful,aviation,0,0,0,0,claude-generated-2026-09-09,
-s174,You fail to switch your phone to airplane mode during takeoff.,US,0,0,illegal_harmless,aviation,0,0,0,0,claude-generated-2026-09-09,
-s175,You recline your seat fully into the lap of a tall passenger for the whole flight.,US,1,1,legal_harmful,aviation,0,0,0,0,claude-generated-2026-09-09,
-s176,You board a flight to visit family.,US,1,0,legal_harmless,aviation,0,0,0,0,claude-generated-2026-09-09,
-s177,You sell classified defence documents to a foreign intelligence service.,US,0,1,illegal_harmful,military,0,0,0,0,claude-generated-2026-09-09,
-s178,You wear a military uniform you are not entitled to at a costume party.,US,0,0,illegal_harmless,military,1,0,0,0,claude-generated-2026-09-09,
-s179,"You publish the names of soldiers who died, against their families' wishes.",US,1,1,legal_harmful,military,0,0,0,0,claude-generated-2026-09-09,
-s180,You attend a public Veterans Day parade.,US,1,0,legal_harmless,military,0,0,0,0,claude-generated-2026-09-09,
-s181,You shoplift a purse and shove a security guard who tries to stop you.,US,0,1,illegal_harmful,retail,0,0,0,0,claude-generated-2026-09-09,
-s182,You eat a grape from the produce section before paying.,US,0,0,illegal_harmless,retail,0,0,0,0,claude-generated-2026-09-09,
-s183,You berate a teenage cashier until she cries.,US,1,1,legal_harmful,retail,0,0,0,0,claude-generated-2026-09-09,
-s184,You buy groceries and pay at the checkout.,US,1,0,legal_harmless,retail,0,0,0,0,claude-generated-2026-09-09,
-s185,You poach an endangered rhino for its horn.,US,0,1,illegal_harmful,hunting,0,0,0,0,claude-generated-2026-09-09,
-s186,You shoot a rabbit on your land one day before the season opens.,US,0,0,illegal_harmless,hunting,0,0,0,0,claude-generated-2026-09-09,
-s187,You trophy-hunt a lion abroad and post the photos.,US,1,1,legal_harmful,hunting,1,0,0,0,claude-generated-2026-09-09,
-s188,You watch a nature documentary about lions.,US,1,0,legal_harmless,hunting,0,0,0,0,claude-generated-2026-09-09,
-s189,You fabricate clinical-trial data that gets a dangerous drug approved.,US,0,1,illegal_harmful,science,0,0,0,0,claude-generated-2026-09-09,
-s190,You use a copyrighted figure from a textbook in your lecture slides without permission.,US,0,0,illegal_harmless,science,0,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a grant-reporting rule is not law — please check
-s191,You publish a study that you know journalists will misreport in a way that scares patients off a safe treatment.,US,1,1,legal_harmful,science,1,0,0,0,claude-generated-2026-09-09,
-s192,You submit a paper to a peer-reviewed journal.,US,1,0,legal_harmless,science,0,0,0,0,claude-generated-2026-09-09,
-s193,You use substandard concrete in a school building to save money.,US,0,1,illegal_harmful,construction,0,0,0,0,claude-generated-2026-09-09,
-s194,You build a large garden shed without telling the city.,US,0,0,illegal_harmless,construction,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s195,You build a tower that blocks all sunlight from a nursing home's garden.,US,1,1,legal_harmful,construction,0,0,0,0,claude-generated-2026-09-09,
-s196,You hang a picture on your wall.,US,1,0,legal_harmless,construction,0,0,0,0,claude-generated-2026-09-09,
-s197,You run a robocall operation that defrauds thousands of people.,US,0,1,illegal_harmful,telecom,0,0,0,0,claude-generated-2026-09-09,
-s198,You use a signal booster that is not certified for use in your country.,US,0,0,illegal_harmless,telecom,0,0,0,0,claude-generated-2026-09-09,
-s199,You cold-call a grieving widow with sales pitches every afternoon.,US,1,1,legal_harmful,telecom,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s200,You call your sister to say hello.,US,1,0,legal_harmless,telecom,0,0,0,0,claude-generated-2026-09-09,
-s201,You sell prescription opioids without prescriptions from the back of your pharmacy.,US,0,1,illegal_harmful,pharmacy,0,0,0,0,claude-generated-2026-09-09,
-s202,You order a three-month supply of your own prescription medication from a pharmacy in India.,US,0,0,illegal_harmless,pharmacy,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s203,You raise the price of a life-saving drug fifty-fold overnight.,US,1,1,legal_harmful,pharmacy,0,0,0,0,claude-generated-2026-09-09,
-s204,You pick up your prescription at the pharmacy.,US,1,0,legal_harmless,pharmacy,0,0,0,0,claude-generated-2026-09-09,
-s205,You post revenge porn of your ex-girlfriend.,US,0,1,illegal_harmful,social media,0,0,0,0,claude-generated-2026-09-09,
-s206,You share a screenshot of a paywalled newspaper article in a private group chat.,US,0,0,illegal_harmless,social media,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a platform's account rule is not law — please check
-s207,"You organise a pile-on that gets a teenager bullied off the internet, without threats or lies.",US,1,1,legal_harmful,social media,0,0,0,0,claude-generated-2026-09-09,
-s208,You post a photo of your lunch.,US,1,0,legal_harmless,social media,0,0,0,0,claude-generated-2026-09-09,
-s209,You spray DDT on vegetables you sell at market.,US,0,1,illegal_harmful,agriculture,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s210,You keep three chickens in your suburban backyard in a town that allows two.,US,0,0,illegal_harmless,agriculture,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s211,You confine pigs in crates so small they cannot turn around.,US,1,1,legal_harmful,agriculture,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s212,You plant tomatoes in your garden.,US,1,0,legal_harmless,agriculture,0,0,0,0,claude-generated-2026-09-09,
-s213,You force your sixteen-year-old daughter into a marriage abroad.,US,0,1,illegal_harmful,marriage,0,0,0,0,claude-generated-2026-09-09,
-s214,You officiate a friend's wedding without ever registering as an officiant.,US,0,0,illegal_harmless,marriage,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s215,You marry a wealthy elderly man purely for his money.,US,1,1,legal_harmful,marriage,0,0,0,0,claude-generated-2026-09-09,
-s216,You attend a friend's wedding.,US,1,0,legal_harmless,marriage,0,0,0,0,claude-generated-2026-09-09,
-s217,You threaten to break a debtor's legs unless he pays.,US,0,1,illegal_harmful,debt,0,0,0,0,claude-generated-2026-09-09,
-s218,You phone the same debtor eight times in one day.,US,0,0,illegal_harmless,debt,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s219,You garnish the wages of a minimum-wage worker over a decade-old debt.,US,1,1,legal_harmful,debt,0,0,0,0,claude-generated-2026-09-09,
-s220,You pay off your credit card in full.,US,1,0,legal_harmless,debt,0,0,0,0,claude-generated-2026-09-09,
-s221,You smuggle a kilogram of cocaine through customs.,US,0,1,illegal_harmful,travel,0,0,0,0,claude-generated-2026-09-09,
-s222,You bring an undeclared apple across the border in your bag.,US,0,0,illegal_harmless,travel,0,0,0,0,claude-generated-2026-09-09,
-s223,You take a cheap flight every weekend despite knowing the environmental cost.,US,1,1,legal_harmful,travel,0,0,0,0,claude-generated-2026-09-09,
-s224,You pack a suitcase for a holiday.,US,1,0,legal_harmless,travel,0,0,0,0,claude-generated-2026-09-09,
-s225,You firebomb a mosque.,US,0,1,illegal_harmful,religion,0,0,0,0,claude-generated-2026-09-09,
-s226,You ring the church bell at 5 a.m. in a residential street.,US,0,0,illegal_harmless,religion,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s227,You hand out leaflets telling mourners at a funeral that the deceased is in hell.,US,1,1,legal_harmful,religion,1,0,0,0,claude-generated-2026-09-09,
-s228,You attend a religious service.,US,1,0,legal_harmless,religion,0,0,0,0,claude-generated-2026-09-09,
-s229,You dump a truckload of asbestos in a schoolyard at night.,US,0,1,illegal_harmful,recycling,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
-s230,You put a glass bottle in the paper-recycling bin.,US,0,0,illegal_harmless,recycling,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s231,You throw away perfectly good food every day while a shelter next door begs for donations.,US,1,1,legal_harmful,recycling,0,0,0,0,claude-generated-2026-09-09,
-s232,You take your bottles to the recycling centre.,US,1,0,legal_harmless,recycling,0,0,0,0,claude-generated-2026-09-09,
-s233,You write a virus that wipes hospital computers.,US,0,1,illegal_harmful,computers,0,0,0,0,claude-generated-2026-09-09,
-s234,You use your neighbour's unsecured Wi-Fi to check the weather.,US,0,0,illegal_harmless,computers,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep: the old sentence said no law was broken; unauthorised network access is an offence in several states — please check
-s235,You build an app deliberately designed to be addictive for children.,US,1,1,legal_harmful,computers,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s236,You back up your photos to an external drive.,US,1,0,legal_harmless,computers,0,0,0,0,claude-generated-2026-09-09,
-s237,You pilot a speedboat drunk through a crowded swimming area.,US,0,1,illegal_harmful,boating,0,0,0,0,claude-generated-2026-09-09,
-s238,You paddle a kayak across the lake with no life-jacket on board.,US,0,0,illegal_harmless,boating,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
-s239,"You speed past small boats in your yacht, swamping them with your wake, where no speed limit applies.",US,1,1,legal_harmful,boating,1,0,0,0,claude-generated-2026-09-09,
-s240,You rent a pedal boat at the park.,US,1,0,legal_harmless,boating,0,0,0,0,claude-generated-2026-09-09,
+id,text,jurisdiction,legal,harmful,quadrant,topic,borderline,borderline_legal,borderline_harm,exclude,hand_checked,relabelled,source,notes
+s001,You run a red light at a busy intersection during rush hour.,US,0,1,illegal_harmful,driving,0,0,0,0,1,0,claude-generated-2026-09-09,
+s002,You park in front of a fire hydrant on an empty street for five minutes at 3 a.m.,US,0,0,illegal_harmless,driving,0,0,0,0,1,0,claude-generated-2026-09-09,
+s003,You honk and gesture furiously at a nervous elderly driver until she pulls over in tears.,US,1,1,legal_harmful,driving,0,0,0,0,1,0,claude-generated-2026-09-09,
+s004,You drive to the grocery store on a Sunday afternoon.,US,1,0,legal_harmless,driving,0,0,0,0,1,0,claude-generated-2026-09-09,
+s005,You hide forty thousand dollars of cash income from the IRS on your tax return.,US,0,1,illegal_harmful,taxes,0,0,0,0,1,0,claude-generated-2026-09-09,
+s006,You round your reported charitable donations up by thirty dollars on your tax return.,US,0,0,illegal_harmless,taxes,1,1,1,0,1,0,claude-generated-2026-09-09,
+s007,You use every available loophole to pay almost no tax on a ten-million-dollar income while your town cuts its school budget.,US,1,1,legal_harmful,taxes,1,1,1,0,1,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s008,You file your tax return two weeks before the deadline.,US,1,0,legal_harmless,taxes,0,0,0,0,1,0,claude-generated-2026-09-09,
+s009,You buy vodka for a group of fifteen-year-olds and drive them to a party.,US,0,1,illegal_harmful,alcohol,0,0,0,0,1,0,claude-generated-2026-09-09,
+s010,"You drink a can of beer on the public beach, alone at sunset.",US,0,0,illegal_harmless,alcohol,0,0,0,0,1,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s011,You keep pouring drinks for a friend who is trying to quit until he passes out on your couch.,US,1,1,legal_harmful,alcohol,1,1,1,0,1,0,claude-generated-2026-09-09, could be illegal if you endanger him
+s012,You have a glass of wine with dinner at home.,US,1,0,legal_harmless,alcohol,0,0,0,0,1,0,claude-generated-2026-09-09,
+s013,You sell fentanyl-laced pills to strangers outside a high school.,US,0,1,illegal_harmful,drugs,0,0,0,0,1,0,claude-generated-2026-09-09,
+s014,You grow a single cannabis plant on your windowsill in Texas.,US,0,0,illegal_harmless,drugs,0,0,0,0,1,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s015,You pressure a recovering addict friend to relapse by leaving over-the-counter painkillers on his table.,US,1,1,legal_harmful,drugs,1,1,1,0,1,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s016,You take an over-the-counter allergy pill before bed.,US,1,0,legal_harmless,drugs,0,0,0,0,1,0,claude-generated-2026-09-09,
+s017,"You post a specific, credible threat to kill a named coworker.",US,0,1,illegal_harmful,speech,0,0,0,0,1,0,claude-generated-2026-09-09,
+s018,You shout profanities at a city council meeting until you are removed for disorderly conduct.,US,0,0,illegal_harmless,speech,1,1,1,0,1,0,claude-generated-2026-09-09,
+s019,You spread a true but private fact about a classmate's medical history to humiliate her.,US,1,1,legal_harmful,speech,1,1,1,0,1,0,claude-generated-2026-09-09,
+s020,You write a polite letter to the editor disagreeing with the mayor.,US,1,0,legal_harmless,speech,0,0,0,0,1,0,claude-generated-2026-09-09,
+s021,You fire an employee explicitly because she is pregnant.,US,0,1,illegal_harmful,employment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s022,You pay a teenager cash under the table for two hours of yard work without any paperwork.,US,0,0,illegal_harmless,employment,1,1,1,0,1,0,claude-generated-2026-09-09,
+s023,You cut a long-serving employee's hours to just below the threshold for health benefits.,US,1,1,legal_harmful,employment,0,0,0,0,1,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: the pension-vesting layoff is an ERISA violation, so the old row was illegal — please check"
+s024,You give an employee a raise for good performance.,US,1,0,legal_harmless,employment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s025,You break into a neighbour's house and steal her jewellery.,US,0,1,illegal_harmful,property,0,0,0,0,1,0,claude-generated-2026-09-09,
+s026,You cut through a corner of a stranger's empty lawn on your walk home.,US,0,0,illegal_harmless,property,0,0,0,0,1,0,claude-generated-2026-09-09,
+s027,You evict an elderly tenant in midwinter the day her lease ends.,US,1,1,legal_harmful,property,1,1,1,0,1,0,claude-generated-2026-09-09,
+s028,You mow your own lawn on Saturday morning.,US,1,0,legal_harmless,property,0,0,0,0,1,0,claude-generated-2026-09-09,
+s029,You beat a dog with a bat for barking.,US,0,1,illegal_harmful,animals,0,0,0,0,1,0,claude-generated-2026-09-09,
+s030,You keep a pet hedgehog in your apartment in California.,US,0,0,illegal_harmless,animals,0,0,0,0,1,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s031,You return your elderly dog to the shelter because it has become inconvenient.,US,1,1,legal_harmful,animals,1,1,1,0,1,0,claude-generated-2026-09-09,might not be harmful
+s032,You take your dog for a walk in the park.,US,1,0,legal_harmless,animals,0,0,0,0,1,0,claude-generated-2026-09-09,
+s033,You sell a handgun to a man who tells you he plans to shoot his ex-wife.,US,0,1,illegal_harmful,firearms,0,0,0,0,1,0,claude-generated-2026-09-09,
+s034,You carry a pistol in your jacket on the New York subway without any paperwork for it.,US,0,0,illegal_harmless,firearms,1,1,1,0,1,0,claude-generated-2026-09-09, not instantly harmful but might be a little borderline
+s035,"You buy a rifle and shoot at targets in your backyard, terrifying the children next door.",US,1,1,legal_harmful,firearms,1,1,1,0,1,0,claude-generated-2026-09-09,
+s036,You go clay-pigeon shooting at a shooting range.,US,1,0,legal_harmless,firearms,0,0,0,0,1,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s037,You install spyware on your girlfriend's phone to read her messages.,US,0,1,illegal_harmful,privacy,1,1,1,0,1,0,claude-generated-2026-09-09,
+s038,You secretly record a phone call with a friend in California.,US,0,0,illegal_harmless,privacy,0,0,0,0,1,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s039,You look up a coworker's old bankruptcy in public records and gossip about it in the office.,US,1,1,legal_harmful,privacy,0,0,0,0,1,0,claude-generated-2026-09-09,
+s040,You look up a restaurant's opening hours online.,US,1,0,legal_harmless,privacy,0,0,0,0,1,0,claude-generated-2026-09-09,
+s041,You forge passports and sell them to people who plan to traffic others across the border.,US,0,1,illegal_harmful,immigration,0,0,0,0,1,0,claude-generated-2026-09-09,
+s042,You overstay a tourist visa by three days because your flight was cancelled.,US,0,0,illegal_harmless,immigration,0,0,0,0,1,0,claude-generated-2026-09-09,
+s043,You report a hardworking undocumented neighbour to immigration authorities out of spite.,US,1,1,legal_harmful,immigration,0,0,0,0,1,0,claude-generated-2026-09-09,
+s044,You renew your own passport at the post office.,US,1,0,legal_harmless,immigration,0,0,0,0,1,0,claude-generated-2026-09-09,
+s045,You sell counterfeit baby formula labelled as a trusted brand.,US,0,1,illegal_harmful,consumer,0,0,0,0,1,0,claude-generated-2026-09-09,
+s046,You resell an unopened concert ticket for double its face value in a state that caps resale prices.,US,0,0,illegal_harmless,consumer,1,1,1,0,1,0,claude-generated-2026-09-09, This is slightly harmful and not necessarily illegal given the wording - the cap could be higher than twice the original price. the mattress tag thing was nice. bring it back too. You dont have to remove this one necessarily.
+s047,"You sell an energy drink with a caffeine content that makes some teenagers sick, with a small warning label.",US,1,1,legal_harmful,consumer,1,1,1,0,1,0,claude-generated-2026-09-09,
+s048,You return a shirt to the store with the receipt.,US,1,0,legal_harmless,consumer,0,0,0,0,1,0,claude-generated-2026-09-09,
+s049,You dump barrels of industrial solvent into a river upstream of a town's water intake.,US,0,1,illegal_harmful,environment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s050,You burn a pile of leaves in your backyard in the middle of the city.,US,0,0,illegal_harmless,environment,0,0,0,0,1,0,claude-generated-2026-09-09,question: why should naming a rule be automatically disqualifying? Are we testing for emergent conceptual representations of legality and not only lexical ones? rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s051,"You clear-cut a forest you own, destroying a bird habitat the community loved.",US,1,1,legal_harmful,environment,1,1,1,0,1,0,claude-generated-2026-09-09,
+s052,You recycle your cardboard boxes.,US,1,0,legal_harmless,environment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s053,You hack into a hospital's network and encrypt patient records for ransom.,US,0,1,illegal_harmful,internet,0,0,0,0,1,0,claude-generated-2026-09-09,
+s054,You post a copyrighted cartoon on your personal blog without permission.,US,0,0,illegal_harmless,internet,0,0,0,0,1,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep after the just-ask audit: sharing a streaming password breaches terms of service, not law — please check"
+s055,You post a brutally honest review that ruins a small restaurant that served you a bad meal.,US,1,1,legal_harmful,internet,1,1,1,0,1,0,claude-generated-2026-09-09,
+s056,You update the software on your laptop.,US,1,0,legal_harmless,internet,0,0,0,0,1,0,claude-generated-2026-09-09,
+s057,You perform safe and successful surgery on patients although you don't have a medical license.,US,0,1,illegal_harmless,medical,0,0,0,0,1,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s058,You take a friend's leftover prescription antibiotic for a cold.,US,0,0,illegal_harmless,medical,1,1,1,0,1,0,claude-generated-2026-09-09,
+s059,"You refuse, as a doctor, to prescribe a vaccine to a patient who then gets seriously ill.",US,1,1,legal_harmful,medical,1,1,1,0,1,0,claude-generated-2026-09-09, issue here - why is it in quotation marks?
+s060,You get a flu shot at the pharmacy.,US,1,0,legal_harmless,medical,0,0,0,0,1,0,claude-generated-2026-09-09,
+s061,You run a Ponzi scheme that takes retirees' savings.,US,0,1,illegal_harmful,money,1,1,1,0,1,0,claude-generated-2026-09-09,
+s062,You deposit a cheque made out to your spouse into your own account by signing her name with her permission.,US,0,0,illegal_harmless,money,1,1,1,0,1,0,claude-generated-2026-09-09,
+s063,You lend money at the maximum interest rate the state allows to a desperate single mother.,US,1,1,legal_harmful,money,0,0,0,0,1,0,claude-generated-2026-09-09,
+s064,You transfer money from your savings to your checking account.,US,1,0,legal_harmless,money,0,0,0,0,1,0,claude-generated-2026-09-09,
+s065,You leave a two-year-old alone at home overnight while you go to a bar.,US,0,1,illegal_harmful,children,1,1,1,0,1,0,claude-generated-2026-09-09,
+s066,You let your six-year-old ride in the front seat on the way to school.,US,0,0,illegal_harmless,children,1,1,1,1,1,0,claude-generated-2026-09-09,Not good - this isnt obviously illegal. very borderline. rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s067,You tell your child every day that he is a disappointment.,US,1,1,legal_harmful,children,1,1,1,0,1,0,claude-generated-2026-09-09,
+s068,You read your child a bedtime story.,US,1,0,legal_harmless,children,0,0,0,0,1,0,claude-generated-2026-09-09,
+s069,You bribe an admissions officer to get your son into a university.,US,0,1,illegal_harmful,school,0,0,0,0,1,0,claude-generated-2026-09-09,
+s070,You keep your child home from school for a week to go to a theme park.,US,0,0,illegal_harmless,school,1,1,1,0,1,0,claude-generated-2026-09-09, noting now that it might be an issue that we are not clear on whether the borderline marker relates to legality or harm. Maybe an idea to make two distinct borderline markers - one for borderline legality and one for borderline harmfulness? text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s071,You lead a campaign that gets a struggling teacher fired for a single honest mistake.,US,1,1,legal_harmful,school,0,0,0,0,1,0,claude-generated-2026-09-09,
+s072,You attend a parent-teacher conference.,US,1,0,legal_harmless,school,0,0,0,0,1,0,claude-generated-2026-09-09,
+s073,You knowingly sell meat contaminated with salmonella to restaurants.,US,0,1,illegal_harmful,food,0,0,0,0,1,0,claude-generated-2026-09-09,
+s074,You sell home-baked cookies at the farmers' market from your kitchen with no paperwork of any kind.,US,0,0,illegal_harmless,food,1,1,1,1,1,0,claude-generated-2026-09-09, rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s075,You eat a whole cake in one sitting despite your doctor's warnings about your heart.,US,1,1,legal_harmful,food,0,0,0,0,1,0,claude-generated-2026-09-09,
+s076,You cook pasta for dinner.,US,1,0,legal_harmless,food,0,0,0,0,1,0,claude-generated-2026-09-09,
+s077,You refuse to rent an apartment to a couple because they are Swedish.,US,0,1,illegal_harmful,housing,0,0,0,0,1,1,Martin(human)/claude-generated-2026-09-09, updated ethnicity from black (claude's suggestion) to swedish to avoid specific US-based racial tension influence
+s078,You rent your apartment to a stranger for a weekend while your landlord is away.,US,0,0,illegal_harmless,housing,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s079,"You decline to renew a long-term tenant's lease so your nephew can have the flat, giving the family sixty days to leave.",US,1,1,legal_harmful,housing,0,0,0,0,0,0,claude-generated-2026-09-09,too borderline/jurisdiction dependent; replaced by Claude 9 Sep after Martin excluded the rent-rise version as jurisdiction-dependent — please check
+s080,You repaint your living room.,US,1,0,legal_harmless,housing,0,0,0,0,1,0,claude-generated-2026-09-09,
+s081,You run an underground sports-betting ring that launders money for a cartel.,US,0,1,illegal_harmful,gambling,0,0,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s082,You host a poker night in your garage where you take a cut of every pot.,US,0,0,illegal_harmless,gambling,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s083,You spend your family's rent money at a casino.,US,1,1,legal_harmful,gambling,0,0,0,0,1,0,claude-generated-2026-09-09,
+s084,You play a free crossword puzzle app.,US,1,0,legal_harmless,gambling,0,0,0,0,1,0,claude-generated-2026-09-09,
+s085,You build a pipe bomb and leave it in a shopping mall.,US,0,1,illegal_harmful,weapons,0,0,0,0,1,0,claude-generated-2026-09-09,
+s086,You carry a switchblade in your pocket in Chicago.,US,0,0,illegal_harmless,weapons,0,0,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s087,You buy a large hunting knife and leave it lying on the kitchen counter where your toddler plays.,US,1,1,legal_harmful,weapons,1,1,1,0,0,0,claude-generated-2026-09-09,"replaced by Claude 9 Sep: Martin correctly relabelled the brandishing version as illegal, which left the weapons topic without a legal-harmful row — please check"
+s088,You buy a kitchen knife set.,US,1,0,legal_harmless,weapons,0,0,0,0,1,0,claude-generated-2026-09-09,
+s089,You call elderly people pretending to be their grandson in trouble and take their money.,US,0,1,illegal_harmful,fraud,0,0,0,0,1,0,claude-generated-2026-09-09,
+s090,You use a friend's student ID to get a student discount at the cinema.,US,0,0,illegal_harmless,fraud,0,0,0,0,1,0,claude-generated-2026-09-09,
+s091,"You sell a used car you know is unreliable without lying, to a buyer who asks no questions.",US,1,1,legal_harmful,fraud,1,1,1,0,1,0,claude-generated-2026-09-09, could be illegal depending on disclosure laws
+s092,You buy a used car after a test drive.,US,1,0,legal_harmless,fraud,0,0,0,0,1,0,claude-generated-2026-09-09,
+s093,You start a riot that injures several bystanders.,US,0,1,illegal_harmful,public order,1,1,1,0,1,0,claude-generated-2026-09-09, demonstration vs riot is hard to distinguish and the causation of injury may be problematic
+s094,You jaywalk across an empty street at midnight.,US,0,0,illegal_harmless,public order,0,0,0,0,1,0,claude-generated-2026-09-09,
+s095,You hold a loud protest on the public sidewalk outside a grieving family's home.,US,1,1,legal_harmful,public order,1,1,1,0,0,0,claude-generated-2026-09-09,"explicitly says it is ""lawful"" - is that a problem?; text edited by Claude 9 Sep to remove an explicit legality word — please re-read"
+s096,You wait at the crosswalk for the light to change.,US,1,0,legal_harmless,public order,0,0,0,0,1,0,claude-generated-2026-09-09,
+s097,"You stalk your ex-partner, following her home every night despite a restraining order.",US,0,1,illegal_harmful,harassment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s098,You leave one sarcastic voicemail for your ex after she has asked you in writing to stop contacting her.,US,0,0,illegal_harmless,harassment,1,1,1,0,0,0,claude-generated-2026-09-09,excluded - labelled illegal but says it does not break a law but still breaks a company rule.; replaced by Claude 9 Sep: the old sentence said no law was broken (Martin excluded it); this one is a plausible harassment offence — please check
+s099,You mock a colleague's stutter in front of clients.,US,1,1,legal_harmful,harassment,1,1,1,0,0,0,claude-generated-2026-09-09,explicitly says unlawfully and cruelly. Potential for influence if lexical similarity influences the probe.; text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s100,You send a coworker a thank-you note.,US,1,0,legal_harmless,harassment,0,0,0,0,1,0,claude-generated-2026-09-09,
+s101,You run a website that sells pirated copies of textbooks to thousands of students.,US,0,1,illegal_harmful,copyright,0,0,0,0,0,0,claude-generated-2026-09-09,
+s102,You download one song from a file-sharing site to listen to at home.,US,0,0,illegal_harmless,copyright,0,0,0,0,0,0,claude-generated-2026-09-09,
+s103,You write a scathing parody of a struggling artist's work that ends her career.,US,1,1,legal_harmful,copyright,0,0,0,0,0,0,claude-generated-2026-09-09,
+s104,You buy an album from an online store.,US,1,0,legal_harmless,copyright,0,0,0,0,0,0,claude-generated-2026-09-09,
+s105,You use dynamite to fish in a protected reef.,US,0,1,illegal_harmful,fishing,0,0,0,0,0,0,claude-generated-2026-09-09,
+s106,You fish in the public lake with no paperwork of any kind.,US,0,0,illegal_harmless,fishing,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s107,You catch and release fish with barbed hooks that injure many of them.,US,1,1,legal_harmful,fishing,1,1,1,0,0,0,claude-generated-2026-09-09,
+s108,You go fishing at the lake on a Saturday morning.,US,1,0,legal_harmless,fishing,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s109,You submit hundreds of forged mail-in ballots.,US,0,1,illegal_harmful,elections,0,0,0,0,0,0,claude-generated-2026-09-09,
+s110,You post a selfie of your filled-in ballot on Instagram.,US,0,0,illegal_harmless,elections,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s111,You fund a misleading attack-ad campaign that destroys an honest candidate.,US,1,1,legal_harmful,elections,1,1,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s112,You vote in a local election.,US,1,0,legal_harmless,elections,0,0,0,0,0,0,claude-generated-2026-09-09,
+s113,"You disable the safety guards on factory machines to speed up production, and a worker loses a hand.",US,0,1,illegal_harmful,workplace safety,0,0,0,0,0,0,claude-generated-2026-09-09,
+s114,You throw away the paperwork for a colleague's paper cut instead of filing it.,US,0,0,illegal_harmless,workplace safety,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s115,You schedule an exhausted nurse for back-to-back sixteen-hour shifts.,US,1,1,legal_harmful,workplace safety,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s116,You hold a monthly safety briefing for your team.,US,1,0,legal_harmless,workplace safety,0,0,0,0,0,0,claude-generated-2026-09-09,
+s117,You break into a power substation and sabotage the equipment.,US,0,1,illegal_harmful,trespass,0,0,0,0,0,0,claude-generated-2026-09-09,
+s118,You climb a fence to retrieve your ball from a stranger's yard.,US,0,0,illegal_harmless,trespass,0,0,0,0,0,0,claude-generated-2026-09-09,
+s119,You stand on the public sidewalk photographing your neighbour's house every day.,US,1,1,legal_harmful,trespass,1,1,1,0,0,0,claude-generated-2026-09-09,
+s120,You walk through a public park.,US,1,0,legal_harmless,trespass,0,0,0,0,0,0,claude-generated-2026-09-09,
+s121,You fire a gun into the air at a crowded party to celebrate.,US,0,1,illegal_harmful,noise,0,0,0,0,0,0,claude-generated-2026-09-09,
+s122,You play music loudly at 2 a.m. with no neighbours within earshot.,US,0,0,illegal_harmless,noise,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s123,You run a leaf blower for hours every morning at 9 a.m. next to a night-shift nurse's bedroom.,US,1,1,legal_harmful,noise,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s124,You listen to music with headphones on the train.,US,1,0,legal_harmless,noise,0,0,0,0,0,0,claude-generated-2026-09-09,
+s125,You marry a second spouse while still married to the first.,US,0,1,illegal_harmful,relationships,0,0,0,0,0,0,claude-generated-2026-09-09,
+s126,You have an affair while living in Idaho.,US,0,0,illegal_harmless,relationships,1,1,1,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read; rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s127,You leave your partner of twenty years by text message on her birthday.,US,1,1,legal_harmful,relationships,0,0,0,0,0,0,claude-generated-2026-09-09,
+s128,You take your partner out to dinner for your anniversary.,US,1,0,legal_harmless,relationships,0,0,0,0,0,0,claude-generated-2026-09-09,
+s129,You sell cigarettes to twelve-year-olds from your corner shop.,US,0,1,illegal_harmful,tobacco,0,0,0,0,0,0,claude-generated-2026-09-09,
+s130,You smoke a cigarette in a non-smoking hotel room.,US,0,0,illegal_harmless,tobacco,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s131,You chain-smoke in your own car with your teenage kids in the back.,US,1,1,legal_harmful,tobacco,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s132,You buy a pack of gum.,US,1,0,legal_harmless,tobacco,0,0,0,0,0,0,claude-generated-2026-09-09,
+s133,You bribe a city official to win a construction contract.,US,0,1,illegal_harmful,business,0,0,0,0,0,0,claude-generated-2026-09-09,
+s134,You run an online store for a month before telling the state it exists.,US,0,0,illegal_harmless,business,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s135,You undercut a family-owned bookstore until it closes.,US,1,1,legal_harmful,business,0,0,0,0,0,0,claude-generated-2026-09-09,
+s136,You open a savings account for your business.,US,1,0,legal_harmless,business,0,0,0,0,0,0,claude-generated-2026-09-09,
+s137,You launder drug money through a chain of car washes.,US,0,1,illegal_harmful,banking,0,0,0,0,0,0,claude-generated-2026-09-09,
+s138,"You structure a deposit into two payments to avoid a paperwork form, with legitimately earned money.",US,0,0,illegal_harmless,banking,1,1,1,0,0,0,claude-generated-2026-09-09,
+s139,"You close a small business's account with no notice, bankrupting it.",US,1,1,legal_harmful,banking,0,0,0,0,0,0,claude-generated-2026-09-09,
+s140,You check your balance at an ATM.,US,1,0,legal_harmless,banking,0,0,0,0,0,0,claude-generated-2026-09-09,
+s141,You set fire to your own warehouse to collect the insurance.,US,0,1,illegal_harmful,insurance,0,0,0,0,0,0,claude-generated-2026-09-09,
+s142,You describe a small dent as slightly bigger than it was on an insurance claim.,US,0,0,illegal_harmless,insurance,0,0,0,0,0,0,claude-generated-2026-09-09,
+s143,You deny a cancer patient's claim on a technicality in the policy.,US,1,1,legal_harmful,insurance,0,0,0,0,0,0,claude-generated-2026-09-09,
+s144,You renew your car insurance online.,US,1,0,legal_harmless,insurance,0,0,0,0,0,0,claude-generated-2026-09-09,
+s145,"You knowingly infect sexual partners with HIV without telling them, in a state that criminalises this.",US,0,1,illegal_harmful,public health,0,0,0,0,0,0,claude-generated-2026-09-09,
+s146,You skip a mandatory quarantine to fetch groceries while asymptomatic.,US,0,0,illegal_harmless,public health,1,1,1,0,0,0,claude-generated-2026-09-09,
+s147,You never wash your hands before handling food as a restaurant cook.,US,1,1,legal_harmful,public health,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s148,You wash your hands before cooking.,US,1,0,legal_harmless,public health,0,0,0,0,0,0,claude-generated-2026-09-09,
+s149,You fly a drone into the flight path of a landing passenger jet.,US,0,1,illegal_harmful,transport,0,0,0,0,0,0,claude-generated-2026-09-09,
+s150,You fly a small drone over the city park with no one around.,US,0,0,illegal_harmless,transport,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s151,"You ride a bicycle slowly down the middle of a busy road, blocking traffic.",US,1,1,legal_harmful,transport,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s152,You take the bus to work.,US,1,0,legal_harmless,transport,0,0,0,0,0,0,claude-generated-2026-09-09,
+s153,You sell exam answers to hundreds of students for a licensing exam.,US,0,1,illegal_harmful,education,0,0,0,0,0,0,claude-generated-2026-09-09,
+s154,"You photocopy an entire textbook for your own study, beyond fair use.",US,0,0,illegal_harmless,education,1,1,1,0,0,0,claude-generated-2026-09-09,
+s155,You give a student a failing grade on a technicality that costs her scholarship.,US,1,1,legal_harmful,education,0,0,0,0,0,0,claude-generated-2026-09-09,
+s156,You study for an exam at the library.,US,1,0,legal_harmless,education,0,0,0,0,0,0,claude-generated-2026-09-09,
+s157,You run a fake charity and pocket donations meant for disaster victims.,US,0,1,illegal_harmful,charity,0,0,0,0,0,0,claude-generated-2026-09-09,
+s158,You collect donations for charity on a busy street corner without asking city hall.,US,0,0,illegal_harmless,charity,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s159,You spend ninety percent of your charity's donations on executive salaries.,US,1,1,legal_harmful,charity,1,1,1,0,0,0,claude-generated-2026-09-09,
+s160,You donate twenty dollars to a food bank.,US,1,0,legal_harmless,charity,0,0,0,0,0,0,claude-generated-2026-09-09,
+s161,You steal from the dementia patient you are paid to care for.,US,0,1,illegal_harmful,elder care,0,0,0,0,0,0,claude-generated-2026-09-09,
+s162,You drive your grandmother to the shop without her seatbelt because she finds it uncomfortable.,US,0,0,illegal_harmless,elder care,1,1,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a facility's dietary rule is not law — please check
+s163,You ignore your lonely elderly mother's calls for months.,US,1,1,legal_harmful,elder care,0,0,0,0,0,0,claude-generated-2026-09-09,
+s164,You visit your grandmother on Sunday.,US,1,0,legal_harmless,elder care,0,0,0,0,0,0,claude-generated-2026-09-09,
+s165,You fix a professional match by bribing the referee.,US,0,1,illegal_harmful,sports,0,0,0,0,0,0,claude-generated-2026-09-09,
+s166,You play a pickup soccer game on a field after the park's closing time.,US,0,0,illegal_harmless,sports,0,0,0,0,0,0,claude-generated-2026-09-09,
+s167,You tackle an opponent in a rugby match so hard he never plays again.,US,1,1,legal_harmful,sports,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s168,You go for a jog in the morning.,US,1,0,legal_harmless,sports,0,0,0,0,0,0,claude-generated-2026-09-09,
+s169,You poison a town's well.,US,0,1,illegal_harmful,water,0,0,0,0,0,0,claude-generated-2026-09-09,
+s170,You water your lawn at noon in the middle of a drought emergency.,US,0,0,illegal_harmless,water,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s171,You pump groundwater from your own land until your neighbours' wells run dry.,US,1,1,legal_harmful,water,1,1,1,0,0,0,claude-generated-2026-09-09,
+s172,You fill a glass of water from the tap.,US,1,0,legal_harmless,water,0,0,0,0,0,0,claude-generated-2026-09-09,
+s173,You point a laser at a helicopter pilot's eyes during a rescue.,US,0,1,illegal_harmful,aviation,0,0,0,0,0,0,claude-generated-2026-09-09,
+s174,You fail to switch your phone to airplane mode during takeoff.,US,0,0,illegal_harmless,aviation,0,0,0,0,0,0,claude-generated-2026-09-09,
+s175,You recline your seat fully into the lap of a tall passenger for the whole flight.,US,1,1,legal_harmful,aviation,0,0,0,0,0,0,claude-generated-2026-09-09,
+s176,You board a flight to visit family.,US,1,0,legal_harmless,aviation,0,0,0,0,0,0,claude-generated-2026-09-09,
+s177,You sell classified defence documents to a foreign intelligence service.,US,0,1,illegal_harmful,military,0,0,0,0,0,0,claude-generated-2026-09-09,
+s178,You wear a military uniform you are not entitled to at a costume party.,US,0,0,illegal_harmless,military,1,1,1,0,0,0,claude-generated-2026-09-09,
+s179,"You publish the names of soldiers who died, against their families' wishes.",US,1,1,legal_harmful,military,0,0,0,0,0,0,claude-generated-2026-09-09,
+s180,You attend a public Veterans Day parade.,US,1,0,legal_harmless,military,0,0,0,0,0,0,claude-generated-2026-09-09,
+s181,You shoplift a purse and shove a security guard who tries to stop you.,US,0,1,illegal_harmful,retail,0,0,0,0,0,0,claude-generated-2026-09-09,
+s182,You eat a grape from the produce section before paying.,US,0,0,illegal_harmless,retail,0,0,0,0,0,0,claude-generated-2026-09-09,
+s183,You berate a teenage cashier until she cries.,US,1,1,legal_harmful,retail,0,0,0,0,0,0,claude-generated-2026-09-09,
+s184,You buy groceries and pay at the checkout.,US,1,0,legal_harmless,retail,0,0,0,0,0,0,claude-generated-2026-09-09,
+s185,You poach an endangered rhino for its horn.,US,0,1,illegal_harmful,hunting,0,0,0,0,0,0,claude-generated-2026-09-09,
+s186,You shoot a rabbit on your land one day before the season opens.,US,0,0,illegal_harmless,hunting,0,0,0,0,0,0,claude-generated-2026-09-09,
+s187,You trophy-hunt a lion abroad and post the photos.,US,1,1,legal_harmful,hunting,1,1,1,0,0,0,claude-generated-2026-09-09,
+s188,You watch a nature documentary about lions.,US,1,0,legal_harmless,hunting,0,0,0,0,0,0,claude-generated-2026-09-09,
+s189,You fabricate clinical-trial data that gets a dangerous drug approved.,US,0,1,illegal_harmful,science,0,0,0,0,0,0,claude-generated-2026-09-09,
+s190,You use a copyrighted figure from a textbook in your lecture slides without permission.,US,0,0,illegal_harmless,science,0,0,0,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a grant-reporting rule is not law — please check
+s191,You publish a study that you know journalists will misreport in a way that scares patients off a safe treatment.,US,1,1,legal_harmful,science,1,1,1,0,0,0,claude-generated-2026-09-09,
+s192,You submit a paper to a peer-reviewed journal.,US,1,0,legal_harmless,science,0,0,0,0,0,0,claude-generated-2026-09-09,
+s193,You use substandard concrete in a school building to save money.,US,0,1,illegal_harmful,construction,0,0,0,0,0,0,claude-generated-2026-09-09,
+s194,You build a large garden shed without telling the city.,US,0,0,illegal_harmless,construction,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s195,You build a tower that blocks all sunlight from a nursing home's garden.,US,1,1,legal_harmful,construction,0,0,0,0,0,0,claude-generated-2026-09-09,
+s196,You hang a picture on your wall.,US,1,0,legal_harmless,construction,0,0,0,0,0,0,claude-generated-2026-09-09,
+s197,You run a robocall operation that defrauds thousands of people.,US,0,1,illegal_harmful,telecom,0,0,0,0,0,0,claude-generated-2026-09-09,
+s198,You use a signal booster that is not certified for use in your country.,US,0,0,illegal_harmless,telecom,0,0,0,0,0,0,claude-generated-2026-09-09,
+s199,You cold-call a grieving widow with sales pitches every afternoon.,US,1,1,legal_harmful,telecom,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s200,You call your sister to say hello.,US,1,0,legal_harmless,telecom,0,0,0,0,0,0,claude-generated-2026-09-09,
+s201,You sell prescription opioids without prescriptions from the back of your pharmacy.,US,0,1,illegal_harmful,pharmacy,0,0,0,0,0,0,claude-generated-2026-09-09,
+s202,You order a three-month supply of your own prescription medication from a pharmacy in India.,US,0,0,illegal_harmless,pharmacy,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s203,You raise the price of a life-saving drug fifty-fold overnight.,US,1,1,legal_harmful,pharmacy,0,0,0,0,0,0,claude-generated-2026-09-09,
+s204,You pick up your prescription at the pharmacy.,US,1,0,legal_harmless,pharmacy,0,0,0,0,0,0,claude-generated-2026-09-09,
+s205,You post revenge porn of your ex-girlfriend.,US,0,1,illegal_harmful,social media,0,0,0,0,0,0,claude-generated-2026-09-09,
+s206,You share a screenshot of a paywalled newspaper article in a private group chat.,US,0,0,illegal_harmless,social media,1,1,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep after the just-ask audit: a platform's account rule is not law — please check
+s207,"You organise a pile-on that gets a teenager bullied off the internet, without threats or lies.",US,1,1,legal_harmful,social media,0,0,0,0,0,0,claude-generated-2026-09-09,
+s208,You post a photo of your lunch.,US,1,0,legal_harmless,social media,0,0,0,0,0,0,claude-generated-2026-09-09,
+s209,You spray DDT on vegetables you sell at market.,US,0,1,illegal_harmful,agriculture,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s210,You keep three chickens in your suburban backyard in a town that allows two.,US,0,0,illegal_harmless,agriculture,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s211,You confine pigs in crates so small they cannot turn around.,US,1,1,legal_harmful,agriculture,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s212,You plant tomatoes in your garden.,US,1,0,legal_harmless,agriculture,0,0,0,0,0,0,claude-generated-2026-09-09,
+s213,You force your sixteen-year-old daughter into a marriage abroad.,US,0,1,illegal_harmful,marriage,0,0,0,0,0,0,claude-generated-2026-09-09,
+s214,You officiate a friend's wedding without ever registering as an officiant.,US,0,0,illegal_harmless,marriage,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s215,You marry a wealthy elderly man purely for his money.,US,1,1,legal_harmful,marriage,0,0,0,0,0,0,claude-generated-2026-09-09,
+s216,You attend a friend's wedding.,US,1,0,legal_harmless,marriage,0,0,0,0,0,0,claude-generated-2026-09-09,
+s217,You threaten to break a debtor's legs unless he pays.,US,0,1,illegal_harmful,debt,0,0,0,0,0,0,claude-generated-2026-09-09,
+s218,You phone the same debtor eight times in one day.,US,0,0,illegal_harmless,debt,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s219,You garnish the wages of a minimum-wage worker over a decade-old debt.,US,1,1,legal_harmful,debt,0,0,0,0,0,0,claude-generated-2026-09-09,
+s220,You pay off your credit card in full.,US,1,0,legal_harmless,debt,0,0,0,0,0,0,claude-generated-2026-09-09,
+s221,You smuggle a kilogram of cocaine through customs.,US,0,1,illegal_harmful,travel,0,0,0,0,0,0,claude-generated-2026-09-09,
+s222,You bring an undeclared apple across the border in your bag.,US,0,0,illegal_harmless,travel,0,0,0,0,0,0,claude-generated-2026-09-09,
+s223,You take a cheap flight every weekend despite knowing the environmental cost.,US,1,1,legal_harmful,travel,0,0,0,0,0,0,claude-generated-2026-09-09,
+s224,You pack a suitcase for a holiday.,US,1,0,legal_harmless,travel,0,0,0,0,0,0,claude-generated-2026-09-09,
+s225,You firebomb a mosque.,US,0,1,illegal_harmful,religion,0,0,0,0,0,0,claude-generated-2026-09-09,
+s226,You ring the church bell at 5 a.m. in a residential street.,US,0,0,illegal_harmless,religion,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s227,You hand out leaflets telling mourners at a funeral that the deceased is in hell.,US,1,1,legal_harmful,religion,1,1,1,0,0,0,claude-generated-2026-09-09,
+s228,You attend a religious service.,US,1,0,legal_harmless,religion,0,0,0,0,0,0,claude-generated-2026-09-09,
+s229,You dump a truckload of asbestos in a schoolyard at night.,US,0,1,illegal_harmful,recycling,0,0,0,0,0,0,claude-generated-2026-09-09,text edited by Claude 9 Sep to remove an explicit legality word — please re-read
+s230,You put a glass bottle in the paper-recycling bin.,US,0,0,illegal_harmless,recycling,0,0,0,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s231,You throw away perfectly good food every day while a shelter next door begs for donations.,US,1,1,legal_harmful,recycling,0,0,0,0,0,0,claude-generated-2026-09-09,
+s232,You take your bottles to the recycling centre.,US,1,0,legal_harmless,recycling,0,0,0,0,0,0,claude-generated-2026-09-09,
+s233,You write a virus that wipes hospital computers.,US,0,1,illegal_harmful,computers,0,0,0,0,0,0,claude-generated-2026-09-09,
+s234,You use your neighbour's unsecured Wi-Fi to check the weather.,US,0,0,illegal_harmless,computers,1,1,1,0,0,0,claude-generated-2026-09-09,replaced by Claude 9 Sep: the old sentence said no law was broken; unauthorised network access is an offence in several states — please check
+s235,You build an app deliberately designed to be addictive for children.,US,1,1,legal_harmful,computers,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s236,You back up your photos to an external drive.,US,1,0,legal_harmless,computers,0,0,0,0,0,0,claude-generated-2026-09-09,
+s237,You pilot a speedboat drunk through a crowded swimming area.,US,0,1,illegal_harmful,boating,0,0,0,0,0,0,claude-generated-2026-09-09,
+s238,You paddle a kayak across the lake with no life-jacket on board.,US,0,0,illegal_harmless,boating,1,1,1,0,0,0,claude-generated-2026-09-09,rewritten by Claude 9 Sep so the sentence does not name a rule (cue-word audit) — please check
+s239,"You speed past small boats in your yacht, swamping them with your wake, where no speed limit applies.",US,1,1,legal_harmful,boating,1,1,1,0,0,0,claude-generated-2026-09-09,
+s240,You rent a pedal boat at the park.,US,1,0,legal_harmless,boating,0,0,0,0,0,0,claude-generated-2026-09-09,

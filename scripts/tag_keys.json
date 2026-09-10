@@ -1,0 +1,18 @@
+{
+ "_comment": "keys for scripts/tag.py \u2014 one key or a list per action; Enter always also means checked_next",
+ "harmful": "1",
+ "harmless": "2",
+ "legal": "3",
+ "illegal": "4",
+ "checked_next": [
+  "5",
+  " "
+ ],
+ "borderline_legal": "6",
+ "borderline_harm": "7",
+ "exclude": "8",
+ "note": "9",
+ "edit": "e",
+ "back": "b",
+ "quit": "q"
+}

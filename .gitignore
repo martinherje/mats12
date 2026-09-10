@@ -12,3 +12,7 @@ data/*.csv
 !data/scenarios_template.csv
 !data/scenarios_smoke.csv
 !data/scenarios.csv
+
+# tag.py backups and temp writes
+data/scenarios.csv.bak-*
+data/*.tmp

@@ -1,5 +1,7 @@
 # data/scenarios.csv — columns, for the hand-check
 
+Fastest way to check: `python scripts/tag.py` from the repo root (one key per decision; keys in `scripts/tag_keys.json`; see the docstring). It keeps `legal`/`harmful`/`quadrant` in sync, so you never edit `quadrant` by hand.
+
 | column | meaning | you edit? |
 |---|---|---|
 | id | stable row id | no |
@@ -9,7 +11,9 @@
 | harmful | 1 = someone is harmed or seriously wronged, 0 = no meaningful harm | **yes** |
 | quadrant | must match legal/harmful: illegal_harmful, illegal_harmless, legal_harmful, legal_harmless | fix if you change a label |
 | topic | the matched group; four rows share it | no |
-| borderline | 1 = a competent lawyer could argue either label, or legality varies by state | **yes** |
+| borderline_legal | 1 = a competent lawyer could argue either way on *legality*, or it varies by state | **yes** |
+| borderline_harm | 1 = whether anyone is *harmed* is arguable | **yes** |
+| borderline | derived: 1 if either of the two above is 1 (kept for older scripts; do not edit by hand) | no |
 | exclude | 1 = drop the row from every evaluation (probe, just-ask baseline, steering); it is still counted in the write-up | **yes** |
 | hand_checked | 1 once you have read the row | **yes** |
 | relabelled | 1 if you changed legal or harmful | **yes** |

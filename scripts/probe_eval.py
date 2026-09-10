@@ -63,7 +63,8 @@ df["legal"] = df["legal"].astype(int); df["harmful"] = df["harmful"].astype(int)
 assert "exclude" in df.columns, "activations were extracted from a CSV without the exclude column — re-run extract_activations.py on the current scenarios.csv"
 keep = df["exclude"].astype(int).to_numpy() == 0
 if a.drop_borderline:
-    keep &= df["borderline"].astype(int).to_numpy() == 0
+    bcol = f"borderline_{'legal' if a.target == 'legal' else 'harm'}"   # axis-specific flag (tag.py); falls back to the old single flag
+    keep &= df[bcol if bcol in df.columns else "borderline"].astype(int).to_numpy() == 0
 CUE = re.compile(r"\b(?:illegal|illegally|unlawful|lawful|legal|legally|prohibit\w*|banned|ban|in violation of|violat\w*|required|require\w*|permit\w*|licen[cs]e\w*|law|rule|rules|ordinance|restriction\w*|forbid\w*|prosecut\w*|breach\w*)\b", re.I)
 if a.drop_cue_rows:
     keep &= ~df["text"].astype(str).str.contains(CUE, regex=True).to_numpy()

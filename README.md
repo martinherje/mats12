@@ -46,6 +46,7 @@ Conventions: raw answers are never overwritten (a run name is used once); every 
 **The design in two sentences.** A probe trained on the easy corners (illegal-harmful vs legal-harmless) cannot tell legality from not-harm, because there they are the same label. So the legality probe is trained inside one harm stratum and tested on the other, on held-out topics, with layer and regularisation chosen on validation topics and a permutation null that repeats the selection (`scripts/probe_eval.py`); factorial directions and their angle come from the same script.
 
 **Scripts, in pipeline order:** `validate_scenarios.py` → `extract_activations.py` (two conditions: bare, and prompted with `--template chat --generation-prompt --instruction …`) → `probe_eval.py` (the headline; four designs × two conditions, plus `--drop-cue-rows`) → `ask_model.py` (just-ask baseline, invalid answers scored separately) → `steer_eval.py` (stretch: logit-shift steering with random controls). `train_probe.py` remains as an exploratory layer sweep; it is not the headline evaluation.
+- `scripts/tag.py` — the one-keystroke hand-check tool (keys in `scripts/tag_keys.json`; works on Mac and Windows).
 
 **Dataset:** `data/scenarios.csv`, 240 candidates, 60 topics × 4 quadrants, US law, Claude-generated 9 Sep, `hand_checked=0` throughout until you check them.
 
