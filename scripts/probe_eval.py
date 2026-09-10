@@ -62,6 +62,7 @@ a = p.parse_args()
 rng = np.random.default_rng(a.seed)
 
 z = np.load(ROOT / "data/processed" / f"acts_{a.run}.npz"); acts = z["acts"].astype(np.float32)
+assert np.isfinite(acts).all(), "activations contain inf/nan (fp16 overflow?) — re-extract with the fp32 build of extract_activations.py"
 cols = {k[4:]: z[k] for k in z.files if k.startswith("col_")}
 df = pd.DataFrame({k: v for k, v in cols.items()})
 df["legal"] = df["legal"].astype(int); df["harmful"] = df["harmful"].astype(int)

@@ -87,7 +87,7 @@ for i in tqdm(range(0, len(texts), a.batch_size), desc="extract"):
         pooled = (hs * m).sum(2) / lens.view(-1, 1, 1).to(hs.dtype)
     pooled = pooled.float().cpu().numpy().astype(np.float32)   # fp32 on disk: Qwen residual streams have massive activations that can overflow fp16
     if acts is None:
-        acts = np.zeros((len(df), pooled.shape[1], pooled.shape[2]), dtype=np.float16)
+        acts = np.zeros((len(df), pooled.shape[1], pooled.shape[2]), dtype=np.float32)   # was float16 until 10 Sep evening; values were finite on every run so far, but fp32 is the intent
     acts[i:i + len(batch)] = pooled
     n_tokens[i:i + len(batch)] = lens.cpu().numpy()
 
