@@ -52,7 +52,7 @@ ax.set_title(f"The 2×2 cross: train inside one stratum, test on the other, on t
 fig.tight_layout(); fig.savefig(ROOT / "figures" / f"cross_{a.run}.png", dpi=150); plt.close(fig)
 
 # 3. checks
-fig, axes = plt.subplots(1, 3, figsize=(11, 3.6))
+fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 for j, (cond, name, col) in enumerate(conds):
     r = J(cond, "L_h2nh")
     if not r: continue
@@ -62,8 +62,8 @@ for j, (cond, name, col) in enumerate(conds):
     fa = r["factorial"]; ks = ["dlegal_auroc_within_harmless"] + [f"dlegal_minus_harm_top{k}_auroc_within_harmless" for k in (1, 2, 3)]
     axes[1].plot(range(4), [fa.get(k, np.nan) for k in ks], "o-", color=col, label=name)
     axes[2].bar(j, r["test_cross_auroc"], width=0.6, color=col, alpha=0.8, label=f"probe, {name}")
-axes[0].axhline(1, color="gray", ls="--", lw=0.8); axes[0].set_ylim(0, 1.05); axes[0].set_title("Check sets: fraction called legal (not flagged illegal)\n(never trained on; expected 100%)", fontsize=9); axes[0].legend(fontsize=7)
-axes[1].axhline(0.5, color="gray", ls="--", lw=0.8); axes[1].set_ylim(0.3, 1.0); axes[1].set_xticks(range(4)); axes[1].set_xticklabels(["as is", "top-1\nharm out", "top-2", "top-3"]); axes[1].set_title("Illegality direction within the harmless stratum\n(held-out topics; AUROC after projecting harm out)", fontsize=9); axes[1].legend(fontsize=7)
+axes[0].axhline(1, color="gray", ls="--", lw=0.8); axes[0].set_ylim(0, 1.05); axes[0].set_title("Check sets: share not flagged illegal\n(never trained on; expected 100%)", fontsize=9); axes[0].legend(fontsize=7)
+axes[1].axhline(0.5, color="gray", ls="--", lw=0.8); axes[1].set_ylim(0.3, 1.0); axes[1].set_xticks(range(4)); axes[1].set_xticklabels(["as is", "top-1\nharm out", "top-2", "top-3"]); axes[1].set_title("Illegality direction, harmless stratum\n(held-out; AUROC after projecting harm out)", fontsize=9); axes[1].legend(fontsize=7)
 # fair baseline from the ask file
 try:
     ask = [json.loads(l) for l in (ROOT / "data/raw" / f"ask_{a.run}_legal.jsonl").open()]
@@ -74,7 +74,7 @@ try:
         rows = [q for q in ask if q["topic"] in r["split"]["test_topics"] and int(q["harmful"]) == 0 and str(q.get("set", "main")) == "main" and int(q.get("exclude", 0)) == 0 and q.get("yes_minus_no_logit") is not None]
         au = roc_auc_score([int(q["legal"]) for q in rows], [-q["yes_minus_no_logit"] for q in rows])
         axes[2].bar(2.5, au, width=0.6, color="gray", alpha=0.8, label="model's own Yes/No logit, same rows")
-except Exception as e: axes[2].text(0.5, 0.9, f"(no just-ask file: {e})", fontsize=7, transform=axes[2].transAxes)
-axes[2].axhline(0.5, color="gray", ls="--", lw=0.8); axes[2].set_ylim(0, 1.05); axes[2].set_xticks([0.5, 2.5]); axes[2].set_xticklabels(["probe (bare, prompted)", "just ask"]); axes[2].set_title("Fair baseline on the headline's test rows\n(AUROC, legal vs illegal, harmless stratum)", fontsize=9); axes[2].legend(fontsize=7)
+except Exception: axes[2].text(0.5, 0.92, "just-ask baseline not run yet", fontsize=8, ha="center", transform=axes[2].transAxes)
+axes[2].axhline(0.5, color="gray", ls="--", lw=0.8); axes[2].set_ylim(0, 1.05); axes[2].set_xticks([0.5, 2.5]); axes[2].set_xticklabels(["probe (bare, prompted)", "just ask"]); axes[2].set_title("Fair baseline, headline test rows\n(AUROC, illegal vs legal, harmless stratum)", fontsize=9); axes[2].legend(fontsize=7)
 fig.suptitle(f"Checks{sup}", fontsize=10); fig.tight_layout(); fig.savefig(ROOT / "figures" / f"checks_{a.run}.png", dpi=150); plt.close(fig)
 print("wrote", [f"figures/{n}_{a.run}.png" for n in ("cosine_by_layer", "cross", "checks")])
