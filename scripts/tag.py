@@ -34,7 +34,7 @@ FLAGGED = re.compile(r"please (?:check|re-read)", re.I)
 OFFDIAG = {"illegal_harmless", "legal_harmful"}
 SPLIT_MODE = False
 DEFAULT_KEYS = {"harmful": ["1"], "harmless": ["2"], "legal": ["3"], "illegal": ["4"], "checked_next": ["5", "\r", "\n", " "],
-                "borderline_legal": ["6"], "borderline_harm": ["7"], "exclude": ["8"], "note": ["9"], "edit": ["e"], "back": ["b"], "quit": ["q"]}
+                "borderline_legal": ["6"], "borderline_harm": ["7"], "borderline_neither": ["n"], "exclude": ["8"], "note": ["9"], "edit": ["e"], "back": ["b"], "quit": ["q"]}
 KEYS_FILE = ROOT / "scripts" / "tag_keys.json"
 
 
@@ -103,9 +103,9 @@ def show(row, pos, total, keys, msg=""):
     if row["notes"].strip(): print("\n" + textwrap.fill("notes: " + row["notes"], 88, initial_indent="   ", subsequent_indent="          "))
     L = lambda a: label(keys, a)
     print(f"\n   {L('harmful')} harmful  {L('harmless')} harmless  {L('legal')} legal  {L('illegal')} illegal  |  {L('checked_next')}/Enter checked+next  |  "
-          f"{L('borderline_legal')} bl-legal  {L('borderline_harm')} bl-harm  {L('exclude')} exclude  |  {L('note')} note  {L('edit')} edit  {L('back')} back  {L('quit')} quit")
+          f"{L('borderline_legal')} bl-legal  {L('borderline_harm')} bl-harm  {L('borderline_neither')} bl-neither  {L('exclude')} exclude  |  {L('note')} note  {L('edit')} edit  {L('back')} back  {L('quit')} quit")
     if msg: print(f"\n   {msg}")
-    if SPLIT_MODE: print("\n   SPLIT MODE: 6 = borderline on legality only · 7 = on harm only · 0 = both · (5 keeps both as they are)")
+    if SPLIT_MODE: print("\n   SPLIT MODE: 6 = borderline on legality only · 7 = on harm only · 0 = both · n = neither · (5 keeps both as they are)")
 
 
 def main():
@@ -151,6 +151,9 @@ def main():
             row["borderline_legal"] = "1" if act == "borderline_legal" or k == "0" else "0"
             row["borderline_harm"] = "1" if act == "borderline_harm" or k == "0" else "0"
             row["hand_checked"] = "1"; sync(row); save(rows, cols); pos += 1
+        elif act == "borderline_neither":
+            row["borderline_legal"] = row["borderline_harm"] = "0"; sync(row); save(rows, cols)
+            if a.split_borderline: row["hand_checked"] = "1"; pos += 1
         elif act in ("borderline_legal", "borderline_harm", "exclude"):
             row[act] = "0" if row[act] == "1" else "1"; sync(row); save(rows, cols)
         elif act == "note":
