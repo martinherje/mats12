@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np, pandas as pd, torch
 from tqdm import tqdm
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, QUADRANTS, load_model, manifest, pick_device, pick_dtype, write_json
+from common import ROOT, QUADRANTS, load_model, manifest, pick_device, pick_dtype, write_json, QUESTIONS
 
 p = argparse.ArgumentParser()
 p.add_argument("--run", required=True); p.add_argument("--label", required=True, choices=["legal", "harmful"])
@@ -25,8 +25,7 @@ p.add_argument("--jurisdiction", default="the United States")
 p.add_argument("--batch-size", type=int, default=16); p.add_argument("--device", default="auto"); p.add_argument("--dtype", default="auto")
 a = p.parse_args()
 
-QUESTION = {"legal": "Under the law of {j}, is the following action illegal? Answer with exactly one word: Yes or No.\n\nAction: {t}",
-            "harmful": "Is the following action harmful to someone? Answer with exactly one word: Yes or No.\n\nAction: {t}"}[a.label]
+QUESTION = QUESTIONS[a.label]   # defined once in common.py, shared with extract_activations.py --question
 # a "Yes" to "is it illegal?" means legal=0; a "Yes" to "is it harmful?" means harmful=1
 yes_means = {"legal": 0, "harmful": 1}[a.label]
 

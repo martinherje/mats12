@@ -28,7 +28,7 @@ every label column from the scenarios CSV, so later scripts know which prompt wa
 import argparse
 import numpy as np, pandas as pd, torch
 from tqdm import tqdm
-from common import ROOT, load_model, manifest, pick_device, pick_dtype, write_json
+from common import ROOT, JURISDICTION, QUESTIONS, load_model, manifest, pick_device, pick_dtype, write_json
 
 p = argparse.ArgumentParser()
 p.add_argument("--model", default="Qwen/Qwen3.5-4B")
@@ -37,7 +37,8 @@ p.add_argument("--scenarios", default="data/scenarios.csv")
 p.add_argument("--run", required=True, help="run name → data/processed/acts_<run>.npz")
 p.add_argument("--pool", default="last", choices=["last", "mean"])
 p.add_argument("--template", default="raw", choices=["raw", "chat"])
-p.add_argument("--instruction", default="", help="fixed text prepended to each scenario (chat template only)")
+p.add_argument("--instruction", default="", help="fixed text prepended to each scenario (chat template only); a literal backslash-n is turned into a newline")
+p.add_argument("--question", default="", choices=["", "legal", "harmful"], help="wrap each scenario in the exact Yes/No question ask_model.py uses (overrides --instruction)")
 p.add_argument("--generation-prompt", action="store_true", help="chat template: append the assistant turn opener, so the last token is the state the answer starts from")
 p.add_argument("--enable-thinking", default=None, choices=[None, "on", "off"], help="chat template: Qwen3.5 enable_thinking flag (omit to leave the template default)")
 p.add_argument("--batch-size", type=int, default=8)
@@ -57,7 +58,10 @@ print(f"{a.model} on {device}/{dtype} · {len(df)} scenarios · pool={a.pool} ·
 def render(text: str) -> str:
     if a.template == "raw":
         return text
-    content = (a.instruction.strip() + "\n\n" + text) if a.instruction else text
+    if a.question: content = QUESTIONS[a.question].format(j=JURISDICTION, t=text)
+    else:
+        instr = a.instruction.replace("\\n", "\n").strip()
+        content = (instr + "\n\n" + text) if instr else text
     kw = {}
     if a.enable_thinking is not None:
         kw["enable_thinking"] = a.enable_thinking == "on"
@@ -81,7 +85,7 @@ for i in tqdm(range(0, len(texts), a.batch_size), desc="extract"):
     else:
         m = mask.view(mask.shape[0], 1, mask.shape[1], 1).to(hs.dtype)
         pooled = (hs * m).sum(2) / lens.view(-1, 1, 1).to(hs.dtype)
-    pooled = pooled.float().cpu().numpy().astype(np.float16)
+    pooled = pooled.float().cpu().numpy().astype(np.float32)   # fp32 on disk: Qwen residual streams have massive activations that can overflow fp16
     if acts is None:
         acts = np.zeros((len(df), pooled.shape[1], pooled.shape[2]), dtype=np.float16)
     acts[i:i + len(batch)] = pooled
@@ -94,7 +98,7 @@ outp = ROOT / "data/processed" / f"acts_{a.run}.npz"
 outp.parent.mkdir(parents=True, exist_ok=True)
 np.savez_compressed(outp, acts=acts, n_tokens=n_tokens, **{f"col_{k}": v for k, v in label_cols.items()})
 write_json(outp.with_suffix(".json"), manifest(run=a.run, model=a.model, revision=a.revision, scenarios=a.scenarios, n=len(df),
-           pool=a.pool, template=a.template, instruction=a.instruction, generation_prompt=a.generation_prompt, enable_thinking=a.enable_thinking, max_length=a.max_length, device=device, dtype=str(dtype),
+           pool=a.pool, template=a.template, instruction=a.instruction, question=a.question, generation_prompt=a.generation_prompt, enable_thinking=a.enable_thinking, max_length=a.max_length, device=device, dtype=str(dtype),
            acts_shape=list(acts.shape), truncated=int((n_tokens >= a.max_length).sum())))
 print(f"wrote {outp.relative_to(ROOT)} · acts {acts.shape} (N, layers+1, d) · truncated={int((n_tokens >= a.max_length).sum())}")
 print("HAND-CHECK: open the .json manifest and confirm model/pool/template are what you intended before training anything on this.")

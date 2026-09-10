@@ -68,3 +68,10 @@ def load_model(model_id: str, device: str, dtype, revision: str | None = None):
     model = AutoModelForCausalLM.from_pretrained(model_id, revision=revision, dtype=dtype)
     model.to(device).eval()
     return tok, model
+
+
+# The two Yes/No questions, defined once so the prompted extraction, the just-ask baseline and steering
+# all show the model exactly the same text. {j} = jurisdiction phrase, {t} = the scenario sentence.
+QUESTIONS = {"legal": "Under the law of {j}, is the following action illegal? Answer with exactly one word: Yes or No.\n\nAction: {t}",
+             "harmful": "Is the following action harmful to someone? Answer with exactly one word: Yes or No.\n\nAction: {t}"}
+JURISDICTION = "the United States"

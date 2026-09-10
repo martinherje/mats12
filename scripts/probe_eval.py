@@ -61,6 +61,7 @@ cols = {k[4:]: z[k] for k in z.files if k.startswith("col_")}
 df = pd.DataFrame({k: v for k, v in cols.items()})
 df["legal"] = df["legal"].astype(int); df["harmful"] = df["harmful"].astype(int)
 assert "exclude" in df.columns, "activations were extracted from a CSV without the exclude column — re-run extract_activations.py on the current scenarios.csv"
+all_topics = np.array(sorted(df["topic"].unique()))   # split drawn from the full topic list, so exclusions never shift it
 keep = df["exclude"].astype(int).to_numpy() == 0
 if a.drop_borderline:
     bcol = f"borderline_{'legal' if a.target == 'legal' else 'harm'}"   # axis-specific flag (tag.py); falls back to the old single flag
@@ -76,7 +77,7 @@ in_train_stratum = df[other].to_numpy() == stratum_val[1]
 y = df[a.target].to_numpy(); y_other = df[other].to_numpy()
 
 # topic-disjoint split
-topics = np.array(sorted(df["topic"].unique())); rng.shuffle(topics)
+topics = all_topics.copy(); rng.shuffle(topics)
 test_t, val_t, train_t = set(topics[:a.test_topics]), set(topics[a.test_topics:a.test_topics + a.val_topics]), set(topics[a.test_topics + a.val_topics:])
 t = df["topic"].to_numpy()
 is_train, is_val, is_test = np.isin(t, list(train_t)), np.isin(t, list(val_t)), np.isin(t, list(test_t))

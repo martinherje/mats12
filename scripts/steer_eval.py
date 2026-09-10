@@ -15,7 +15,7 @@ import argparse, json, re, sys
 from pathlib import Path
 import numpy as np, pandas as pd, torch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ROOT, load_model, manifest, pick_device, pick_dtype, write_json
+from common import ROOT, load_model, manifest, pick_device, pick_dtype, write_json, QUESTIONS
 from steer import Intervention
 
 p = argparse.ArgumentParser()
@@ -35,7 +35,7 @@ if "exclude" in df.columns: df = df[df["exclude"].astype(int) == 0]
 df = df[df.quadrant.isin(a.quadrants.split(","))].reset_index(drop=True)
 device = pick_device(a.device); tok, model = load_model(a.model, device, pick_dtype(a.dtype, device)); tok.padding_side = "left"
 yes_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("Yes", " Yes")]; no_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("No", " No")]
-Q = "Under the law of {j}, is the following action illegal? Answer with exactly one word: Yes or No.\n\nAction: {t}"
+Q = QUESTIONS["legal"]   # defined once in common.py
 
 
 def measure(hook=None):
