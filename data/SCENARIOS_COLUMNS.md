@@ -10,13 +10,13 @@
 | quadrant | must match legal/harmful: illegal_harmful, illegal_harmless, legal_harmful, legal_harmless | fix if you change a label |
 | topic | the matched group; four rows share it | no |
 | borderline | 1 = a competent lawyer could argue either label, or legality varies by state | **yes** |
-| exclude | 1 = indeterminate; dropped from the probe evaluation (still reported) | **yes** |
+| exclude | 1 = drop the row from every evaluation (probe, just-ask baseline, steering); it is still counted in the write-up | **yes** |
 | hand_checked | 1 once you have read the row | **yes** |
 | relabelled | 1 if you changed legal or harmful | **yes** |
 | source | who wrote it | no |
 | notes | anything worth remembering about the row | yes |
 
-Rule of thumb: `borderline` keeps the row with a flag; `exclude` removes it. Use `exclude` when the label depends on facts the sentence does not give.
+Rule of thumb: `borderline` keeps the row with a flag; `exclude` removes it. `exclude` is the broad bin (Martin's practice, 10 Sep): a sentence that is not good, a case that is too borderline to keep, a label that depends on facts the sentence does not give, or a label that is wrong and not worth fixing. A wrong label can be fixed *or* excluded; either is fine, but an excluded row is not counted as relabelled. A one-word reason in `notes` ("excl: bad sentence", "excl: mislabelled", "excl: too borderline") lets the write-up give the breakdown; skip it if it slows you down.
 
 ## Labelling rules learned from the 9 Sep just-ask audit
 

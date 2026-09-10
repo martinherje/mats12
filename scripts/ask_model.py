@@ -31,6 +31,9 @@ QUESTION = {"legal": "Under the law of {j}, is the following action illegal? Ans
 yes_means = {"legal": 0, "harmful": 1}[a.label]
 
 df = pd.read_csv(ROOT / a.scenarios)
+if "exclude" in df.columns:
+    n_ex = int(df["exclude"].astype(int).sum()); df = df[df["exclude"].astype(int) == 0].reset_index(drop=True)
+    print(f"dropped {n_ex} rows with exclude=1 (same rows the probe evaluation drops); {len(df)} remain")
 device = pick_device(a.device); tok, model = load_model(a.model, device, pick_dtype(a.dtype, device)); tok.padding_side = "left"
 yes_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("Yes", " Yes")]; no_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("No", " No")]
 raw = ROOT / "data/raw" / f"ask_{a.run}_{a.label}.jsonl"
