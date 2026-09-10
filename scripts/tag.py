@@ -1,6 +1,11 @@
 """
 tag.py — one-keystroke hand-check of data/scenarios.csv.
 
+One file for every pass. Which CSV it edits, in order of preference:
+  1. --csv PATH on the command line;  2. the CSV constant below if you set it;
+  3. the newest scenarios*.csv in the same folder as this script (it prints the list and which one it picked);
+  4. data/scenarios.csv in the repo.
+
 Run from the repo root:      uv run python scripts/tag.py
 Revisit borderline rows:     uv run python scripts/tag.py --borderline
 Split old borderline flags:  uv run python scripts/tag.py --split-borderline   (6 = legality only, 7 = harm only, 0 = both; each advances)
@@ -11,8 +16,10 @@ Every row, checked or not:   uv run python scripts/tag.py --all
 Shows one sentence at a time and waits for a key. Default keys:
   1 harmful      2 harmless      3 legal      4 illegal
   5 (or Enter/space) mark hand-checked and go to the next row
-  6 toggle borderline_legal     7 toggle borderline_harm     8 toggle exclude
+  6 toggle borderline_legal     7 toggle borderline_harm     0 both on     n neither     8 toggle exclude
   9 add a note      e edit the sentence      b back one row      q save and quit
+Modes: (none) = unchecked rows, flagged first;  --borderline = every borderline row;
+  --split-borderline = rows with both borderline flags, where 6/7/0/n set and advance;  --all;  --ids s001,s002
 Keys are read from scripts/tag_keys.json (edit it; several keys per action are fine; the file is
 in git, so the same binding works on every machine). Works on macOS, Linux and Windows
 (plain `python scripts/tag.py` from the repo root; no extra packages).
@@ -27,14 +34,14 @@ import argparse, csv, os, re, shutil, sys, textwrap, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CSV = ROOT / "data" / "scenarios.csv"
+CSV = None   # set to Path(r"C:\\Users\\me\\Downloads\\scenarios.csv") to pin a file; otherwise see the docstring
 QUAD = {("0", "1"): "illegal_harmful", ("0", "0"): "illegal_harmless", ("1", "1"): "legal_harmful", ("1", "0"): "legal_harmless"}
 CLAUDE_PROMPT = re.compile(r"\s*;?\s*(?:text edited by Claude[^;]*?please re-read|rewritten by Claude[^;]*?please check|replaced by Claude[^;]*?please check)\s*;?\s*", re.I)
 FLAGGED = re.compile(r"please (?:check|re-read)", re.I)
 OFFDIAG = {"illegal_harmless", "legal_harmful"}
 SPLIT_MODE = False
 DEFAULT_KEYS = {"harmful": ["1"], "harmless": ["2"], "legal": ["3"], "illegal": ["4"], "checked_next": ["5", "\r", "\n", " "],
-                "borderline_legal": ["6"], "borderline_harm": ["7"], "borderline_neither": ["n"], "exclude": ["8"], "note": ["9"], "edit": ["e"], "back": ["b"], "quit": ["q"]}
+                "borderline_legal": ["6"], "borderline_harm": ["7"], "borderline_both": ["0"], "borderline_neither": ["n"], "exclude": ["8"], "note": ["9"], "edit": ["e"], "back": ["b"], "quit": ["q"]}
 KEYS_FILE = ROOT / "scripts" / "tag_keys.json"
 
 
@@ -95,7 +102,7 @@ def sync(row):
 
 def show(row, pos, total, keys, msg=""):
     os.system("cls" if os.name == "nt" else "clear")
-    print(f"row {pos + 1}/{total}   {row['id']}   topic: {row['topic']}\n")
+    print(f"row {pos + 1}/{total}   {row['id']}   topic: {row['topic']}   set: {row.get('set', 'main')}\n")
     print(textwrap.fill(row["text"], 88, initial_indent="   ", subsequent_indent="   "), "\n")
     leg = "LEGAL" if row["legal"] == "1" else "ILLEGAL"; har = "HARMFUL" if row["harmful"] == "1" else "harmless"
     flags = [n for n, c in (("borderline_legal", "borderline_legal"), ("borderline_harm", "borderline_harm"), ("EXCLUDE", "exclude"), ("checked", "hand_checked"), ("relabelled", "relabelled")) if row[c] == "1"]
@@ -103,7 +110,7 @@ def show(row, pos, total, keys, msg=""):
     if row["notes"].strip(): print("\n" + textwrap.fill("notes: " + row["notes"], 88, initial_indent="   ", subsequent_indent="          "))
     L = lambda a: label(keys, a)
     print(f"\n   {L('harmful')} harmful  {L('harmless')} harmless  {L('legal')} legal  {L('illegal')} illegal  |  {L('checked_next')}/Enter checked+next  |  "
-          f"{L('borderline_legal')} bl-legal  {L('borderline_harm')} bl-harm  {L('borderline_neither')} bl-neither  {L('exclude')} exclude  |  {L('note')} note  {L('edit')} edit  {L('back')} back  {L('quit')} quit")
+          f"{L('borderline_legal')} bl-legal  {L('borderline_harm')} bl-harm  {L('borderline_both')} both  {L('borderline_neither')} neither  {L('exclude')} exclude  |  {L('note')} note  {L('edit')} edit  {L('back')} back  {L('quit')} quit")
     if msg: print(f"\n   {msg}")
     if SPLIT_MODE: print("\n   SPLIT MODE: 6 = borderline on legality only · 7 = on harm only · 0 = both · n = neither · (5 keeps both as they are)")
 
@@ -117,6 +124,20 @@ def main():
     global CSV, SPLIT_MODE
     SPLIT_MODE = a.split_borderline
     if a.csv: CSV = Path(a.csv).expanduser().resolve()
+    elif CSV is None:
+        here = Path(__file__).resolve().parent
+        cands = sorted(here.glob("scenarios*.csv"), key=lambda q: q.stat().st_mtime, reverse=True)
+        if cands:
+            print("CSV files next to this script, newest first:")
+            for q in cands:
+                try:
+                    with q.open(encoding="utf-8-sig", newline="") as f: rr = list(csv.DictReader(f))
+                    print(f"  {q.name:34s} {len(rr)} rows · unchecked {sum(r.get('hand_checked') != '1' for r in rr)} · both-borderline {sum(r.get('borderline_legal') == '1' and r.get('borderline_harm') == '1' for r in rr)}")
+                except Exception as e: print(f"  {q.name:34s} (unreadable: {e})")
+            CSV = cands[0]
+        else:
+            CSV = ROOT / "data" / "scenarios.csv"
+    print(f"editing: {CSV}")
     rows, cols = load()
     shutil.copy(CSV, CSV.with_name(f"scenarios.csv.bak-{time.strftime('%Y%m%d-%H%M%S')}"))
     orig = {r["id"]: (r["legal"], r["harmful"]) for r in rows}
@@ -147,13 +168,14 @@ def main():
         elif act == "checked_next" or k in ("\r", "\n"):
             row["hand_checked"] = "1"; row["notes"] = CLAUDE_PROMPT.sub("; ", row["notes"]).strip(" ;")
             sync(row); save(rows, cols); pos += 1
-        elif a.split_borderline and (act in ("borderline_legal", "borderline_harm") or k == "0"):
-            row["borderline_legal"] = "1" if act == "borderline_legal" or k == "0" else "0"
-            row["borderline_harm"] = "1" if act == "borderline_harm" or k == "0" else "0"
+        elif a.split_borderline and act in ("borderline_legal", "borderline_harm", "borderline_both", "borderline_neither"):
+            row["borderline_legal"] = "1" if act in ("borderline_legal", "borderline_both") else "0"
+            row["borderline_harm"] = "1" if act in ("borderline_harm", "borderline_both") else "0"
             row["hand_checked"] = "1"; sync(row); save(rows, cols); pos += 1
+        elif act == "borderline_both":
+            row["borderline_legal"] = row["borderline_harm"] = "1"; sync(row); save(rows, cols)
         elif act == "borderline_neither":
             row["borderline_legal"] = row["borderline_harm"] = "0"; sync(row); save(rows, cols)
-            if a.split_borderline: row["hand_checked"] = "1"; pos += 1
         elif act in ("borderline_legal", "borderline_harm", "exclude"):
             row[act] = "0" if row[act] == "1" else "1"; sync(row); save(rows, cols)
         elif act == "note":

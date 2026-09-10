@@ -15,5 +15,6 @@
  "edit": "e",
  "back": "b",
  "quit": "q",
- "borderline_neither": "n"
+ "borderline_neither": "n",
+ "borderline_both": "0"
 }
