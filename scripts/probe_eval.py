@@ -21,6 +21,11 @@ cannot be hurt by removing harm, so it proves nothing), (c) the legality directi
 components projected out (k = 1..3; Shah et al. say the harm subspace is low-rank, not rank-1), and (d) the
 plain half-contrast test: the direction LH − IH from training topics scored on LH̄ vs IH̄ test rows.
 
+Two checks after the headline (10 Sep): rows with set=simple (the original short legal-harmless anchors, "You
+cook pasta") and set=negated (illegal-harmless rows with "do not", legal by construction, Marks & Tegmark-style)
+are NEVER trained on; the chosen probe scores them once and the JSON reports the fraction it calls legal
+(expected: all). A length-only AUROC on the same test rows is reported too (0.5 = word count carries nothing).
+
 Outputs data/processed/probeeval_<run>_<tag>.json (all numbers), figures/probeeval_<run>_<tag>.png.
 
   uv run python scripts/probe_eval.py --run lp_4b --target legal --train-stratum harmful --tag L_h2nh
@@ -61,6 +66,11 @@ cols = {k[4:]: z[k] for k in z.files if k.startswith("col_")}
 df = pd.DataFrame({k: v for k, v in cols.items()})
 df["legal"] = df["legal"].astype(int); df["harmful"] = df["harmful"].astype(int)
 assert "exclude" in df.columns, "activations were extracted from a CSV without the exclude column — re-run extract_activations.py on the current scenarios.csv"
+if "set" in df.columns:   # simple / negated rows are never trained on; they are scored once after selection (see extra_sets)
+    extra_mask = df["set"].astype(str).to_numpy() != "main"; extra_df = df[extra_mask].reset_index(drop=True); extra_acts = acts[extra_mask]
+    df = df[~extra_mask].reset_index(drop=True); acts = acts[~extra_mask]
+else:
+    extra_df, extra_acts = df.iloc[0:0], acts[:0]
 all_topics = np.array(sorted(df["topic"].unique()))   # split drawn from the full topic list, so exclusions never shift it
 keep = df["exclude"].astype(int).to_numpy() == 0
 if a.drop_borderline:
@@ -136,6 +146,16 @@ def shuffle_within_cells(yv):
 
 
 res, curve, clf = select_and_test(y)
+# extra sets (simple anchors, negated rows): never trained on; fraction the probe calls label=1 (legal / harmful) at the chosen layer
+res["extra_sets"] = {}
+if len(extra_df):
+    for name in sorted(set(extra_df["set"].astype(str))):
+        m = extra_df["set"].astype(str).to_numpy() == name
+        pr = clf.predict(extra_acts[m, res["layer"]])
+        res["extra_sets"][name] = {"n": int(m.sum()), f"frac_predicted_{a.target}_1": float(pr.mean()), "expected": "all 1" if a.target == "legal" else "all 0"}
+# length-only baseline on the same cross-stratum test rows (0.5 = word count carries nothing about the label)
+wl = df["text"].astype(str).str.split().str.len().to_numpy()
+res["length_only_test_auroc"] = float(roc_auc_score(y[te_out], wl[te_out])) if y[te_out].min() != y[te_out].max() else float("nan")
 # topic-block bootstrap on the cross-stratum test rows
 test_topics_arr = t[te_out]; yte = y[te_out]; pred = clf.predict(acts[te_out, res["layer"]])
 tt = np.array(sorted(set(test_topics_arr))); boots = []

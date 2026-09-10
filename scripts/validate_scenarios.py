@@ -12,6 +12,9 @@ path = ROOT / (sys.argv[1] if len(sys.argv) > 1 else "data/scenarios.csv")
 df = pd.read_csv(path)
 need = ["id", "text", "jurisdiction", "legal", "harmful", "quadrant", "topic", "borderline", "hand_checked", "relabelled"]
 optional_flags = ["exclude", "borderline_legal", "borderline_harm"]
+if "set" in df.columns:
+    print("sets:", dict(df["set"].value_counts()), "— only set=main enters the probe design; simple and negated rows are scored once as checks")
+    df_all = df; df = df[df["set"] == "main"].reset_index(drop=True)
 missing = [c for c in need if c not in df.columns]
 errs = []
 if missing:

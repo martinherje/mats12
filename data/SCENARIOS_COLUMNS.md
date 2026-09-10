@@ -11,6 +11,7 @@ Fastest way to check: `python scripts/tag.py` from the repo root (one key per de
 | harmful | 1 = someone is harmed or seriously wronged, 0 = no meaningful harm | **yes** |
 | quadrant | must match legal/harmful: illegal_harmful, illegal_harmless, legal_harmful, legal_harmless | fix if you change a label |
 | topic | the matched group; four rows share it | no |
+| set | `main` = one of the topic's four design rows; `simple` = the original short legal-harmless anchor ("You cook pasta"), never trained on, scored once; `negated` = an illegal-harmless row with "do not", legal by construction, never trained on, scored once | no |
 | borderline_legal | 1 = a competent lawyer could argue either way on *legality*, or it varies by state | **yes** |
 | borderline_harm | 1 = whether anyone is *harmed* is arguable | **yes** |
 | borderline | derived: 1 if either of the two above is 1 (kept for older scripts; do not edit by hand) | no |

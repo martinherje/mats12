@@ -33,6 +33,10 @@ for cond, cond_name in COND:
         pn = r.get("perm_null") or {"acc_p95": r["perm_null_test_cross_acc"]["p95"], "n": r["perm_null_test_cross_acc"]["n"], "shuffles_beaten_acc": None}
         beat = f"; beat {pn['shuffles_beaten_acc']}/{pn['n']} shuffles" if pn.get("shuffles_beaten_acc") is not None else ""
         print(f"    got {r['test_cross_acc']:.0%} right (likely range {lo:.0%}–{hi:.0%}), AUROC {r.get('test_cross_auroc', float('nan')):.2f}; shuffled labels would get up to {pn['acc_p95']:.0%}{beat}.  → {verdict(r)}")
+        if "length_only_test_auroc" in r: print(f"    Word count alone on the same test rows: AUROC {r['length_only_test_auroc']:.2f} (0.5 = length carries nothing).")
+        for name, ex in (r.get("extra_sets") or {}).items():
+            k = [k for k in ex if k.startswith("frac_predicted_")][0]
+            print(f"    Check set '{name}' ({ex['n']} rows, never trained on, expected {ex['expected']}): the probe calls {ex[k]:.0%} of them {k.split('_')[2]}=1.")
         fa = r["factorial"]
         if tag == "L_h2nh":
             print(f"    The legality and harm directions sit at cosine {fa['cos_dlegal_dharm']:+.2f} (0 = unrelated, ±1 = the same line).")
