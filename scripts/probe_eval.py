@@ -1,30 +1,33 @@
-"""Conditional-generalisation probe evaluation with topic-disjoint splits. Generic infrastructure.
+"""Conditional-generalisation probe evaluation with topic-disjoint splits.
 
 IN PLAIN LANGUAGE
 The question is whether legality can be read off the model's state *independently of harm*. Training a probe
 where legal = not-harmful (the two "easy" corners) cannot answer that: the probe learns one separator that is
-both. So this script trains the legality probe INSIDE one harm stratum (legal-harmful vs illegal-harmful) and
-tests it on the OTHER stratum (legal-harmless vs illegal-harmless), on topics the probe never saw. If it still
-works, legality is decodable invariantly across harm. The reverse direction and the symmetric harm experiment
-are run the same way.
+both. So this script trains the legality probe inside one harm stratum (legal-harmful vs illegal-harmful) and
+tests it on the other stratum (legal-harmless vs illegal-harmless), on topics the probe never saw. If it still
+works, legality can be read off the state without relying on harm. The reverse direction and the symmetric harm
+experiment are run the same way.
 
 Statistics (after the 9 Sep review): topics (four sentences each) are the unit. Topics are split into train /
-validation / test. Layer and regularisation are chosen on validation AUROC ONLY; the test topics are scored once.
+validation / test. Layer and regularisation are chosen on validation AUROC only; the test topics are scored once.
 The confidence interval is a topic-block bootstrap. A permutation null repeats the whole procedure (selection
-included) on labels shuffled WITHIN each topic x stratum cell, so the null keeps the design's balance. Report
+included) on labels shuffled within each topic x stratum cell, so the null keeps the design's balance. Report
 "beat N of M shuffles", not a p-value: with M shuffles the smallest p is 1/(M+1).
 
-Directions: factorial contrasts on training topics — d_legal = ½[(LH − IH) + (LH̄ − IH̄)], d_harm likewise —
-with (a) the cosine between them AT EVERY LAYER plus a within-cell label-swap null band, (b) each direction's
-AUROC on held-out topics, evaluated WITHIN each stratum of the other factor (a balanced all-quadrant AUROC
+Directions: factorial contrasts on training topics, d_legal = ½[(LH − IH) + (LH̄ − IH̄)] and d_harm likewise,
+with (a) the cosine between them at every layer plus a within-cell label-swap null band, (b) each direction's
+AUROC on held-out topics, evaluated within each stratum of the other factor (a balanced all-quadrant AUROC
 cannot be hurt by removing harm, so it proves nothing), (c) the legality direction with the top-k harm
 components projected out (k = 1..3; Shah et al. say the harm subspace is low-rank, not rank-1), and (d) the
 plain half-contrast test: the direction LH − IH from training topics scored on LH̄ vs IH̄ test rows.
 
 Two checks after the headline (10 Sep): rows with set=simple (the original short legal-harmless anchors, "You
 cook pasta") and set=negated (illegal-harmless rows with "do not", legal by construction, Marks & Tegmark-style)
-are NEVER trained on; the chosen probe scores them once and the JSON reports the fraction it calls legal
-(expected: all). A length-only AUROC on the same test rows is reported too (0.5 = word count carries nothing).
+are never trained on; the chosen probe scores them once and the JSON reports the fraction it calls legal
+(expected: all). A length-only AUROC on the same test rows is reported too.
+
+Signs: the JSON stores cos(d_legal, d_harm) and d_legal-named keys (legal-positive). Every printed or plotted
+cosine is the negative, cos(d_illegal, d_harm), and "predicting harm" is printed as 1 − the stored value.
 
 Outputs data/processed/probeeval_<run>_<tag>.json (all numbers), figures/probeeval_<run>_<tag>.png.
 
@@ -47,7 +50,7 @@ from common import ROOT, manifest, write_json
 p = argparse.ArgumentParser()
 p.add_argument("--run", required=True)
 p.add_argument("--target", required=True, choices=["legal", "harmful"], help="what the probe predicts")
-p.add_argument("--train-stratum", required=True, help="value of the OTHER factor to train inside: harmful|harmless (target legal) or illegal|legal (target harmful)")
+p.add_argument("--train-stratum", required=True, help="value of the other factor to train inside: harmful|harmless (target legal) or illegal|legal (target harmful)")
 p.add_argument("--tag", required=True)
 p.add_argument("--val-topics", type=int, default=15); p.add_argument("--test-topics", type=int, default=15)
 p.add_argument("--seed", type=int, default=0)
@@ -154,7 +157,7 @@ if len(extra_df):
         m = extra_df["set"].astype(str).to_numpy() == name
         pr = clf.predict(extra_acts[m, res["layer"]])
         res["extra_sets"][name] = {"n": int(m.sum()), f"frac_predicted_{a.target}_1": float(pr.mean()), "expected": "all 1" if a.target == "legal" else "all 0"}
-# length-only baseline on the same cross-stratum test rows (0.5 = word count carries nothing about the label)
+# word count as a scorer on the same test rows
 wl = df["text"].astype(str).str.split().str.len().to_numpy()
 res["length_only_test_auroc"] = float(roc_auc_score(y[te_out], wl[te_out])) if y[te_out].min() != y[te_out].max() else float("nan")
 # topic-block bootstrap on the cross-stratum test rows
@@ -250,9 +253,9 @@ print("\n=== headline (layer and C chosen on validation AUROC, test topics score
 print(f"layer {res['layer']} · C {res['C']} · validation cross-stratum AUROC {res['val_cross_auroc']:.3f}")
 print(f"TEST cross-stratum acc {res['test_cross_acc']:.3f}  CI95 {res['test_cross_acc_ci95'][0]:.2f}–{res['test_cross_acc_ci95'][1]:.2f}  AUROC {res['test_cross_auroc']:.3f}  (in-stratum test acc {res['test_in_acc']:.3f})")
 print(f"null (labels shuffled within topic×stratum, same selection, {pn['n']} shuffles): acc mean {pn['acc_mean']:.3f}, p95 {pn['acc_p95']:.3f}, max {pn['acc_max']:.3f} · beat {pn['shuffles_beaten_acc']}/{pn['n']} on accuracy, {pn['shuffles_beaten_auroc']}/{pn['n']} on AUROC")
-print(f"cos(d_legal, d_harm) at layer {l}: {fa['cos_dlegal_dharm']:+.3f} (null band {cos_null_lo[l]:+.2f}..{cos_null_hi[l]:+.2f}); curve over layers saved")
-print(f"d_legal AUROC on test topics — within harmful {fa['dlegal_auroc_within_harmful']:.3f}, within harmless {fa['dlegal_auroc_within_harmless']:.3f}; d_legal predicting harm {fa['dlegal_auroc_predicting_harm_test']:.3f}")
-print("d_legal with harm removed (top-1/2/3 harm components) — within harmful: " + ", ".join(f"{fa[f'dlegal_minus_harm_top{k}_auroc_within_harmful']:.3f}" for k in (1, 2, 3)) +
+print(f"cos(d_illegal, d_harm) at layer {l}: {-fa['cos_dlegal_dharm']:+.3f} (label-swap band {-cos_null_hi[l]:+.2f}..{-cos_null_lo[l]:+.2f}); curve over layers saved")
+print(f"illegality direction AUROC on test topics: within harmful {fa['dlegal_auroc_within_harmful']:.3f}, within harmless {fa['dlegal_auroc_within_harmless']:.3f}; illegality direction predicting harm {1 - fa['dlegal_auroc_predicting_harm_test']:.3f}")
+print("illegality direction with the top-1/2/3 harm components projected out: within harmful " + ", ".join(f"{fa[f'dlegal_minus_harm_top{k}_auroc_within_harmful']:.3f}" for k in (1, 2, 3)) +
       " · within harmless: " + ", ".join(f"{fa[f'dlegal_minus_harm_top{k}_auroc_within_harmless']:.3f}" for k in (1, 2, 3)))
 print(f"mass-mean half-contrast (train-stratum direction on other-stratum test rows): AUROC {fa['massmean_half_contrast_auroc_cross_stratum_test']:.3f}")
 
@@ -264,9 +267,9 @@ ax.axvline(res["layer"], ls="--", color="gray"); ax.scatter([res["layer"]], [res
 ax.axhline(pn["auroc_p95"], ls=":", color="r", label=f"null p95 ({pn['n']} shuffles)")
 ax.set_ylabel("cross-stratum AUROC"); ax.set_ylim(0.3, 1.02); ax.legend(fontsize=7)
 ax.set_title(f"{a.target} probe trained inside {other}={stratum_val[1]}, tested on the other stratum, held-out topics")
-ax2.plot(range(L1), cos_curve, color="k", label="cos(d_legal, d_harm), training topics")
-ax2.fill_between(range(L1), cos_null_lo, cos_null_hi, color="gray", alpha=0.3, label="within-cell label-swap null (95%)")
-ax2.axhline(0, color="gray", lw=0.5); ax2.set_xlabel("layer"); ax2.set_ylabel("cosine"); ax2.set_ylim(-1, 1); ax2.legend(fontsize=7)
+ax2.plot(range(L1), [-v for v in cos_curve], color="k", label="cos(d_illegal, d_harm), training topics")   # d_illegal = −d_legal
+ax2.fill_between(range(L1), [-v for v in cos_null_hi], [-v for v in cos_null_lo], color="gray", alpha=0.3, label="within-cell label-swap null (95%)")
+ax2.axhline(0, color="gray", lw=0.5); ax2.set_xlabel("layer"); ax2.set_ylabel("cos(d_illegal, d_harm)"); ax2.set_ylim(-1, 1); ax2.legend(fontsize=7)
 fig.tight_layout(); fig.savefig(ROOT / "figures" / f"probeeval_{a.run}_{a.tag}.png", dpi=150)
 print("wrote", out.relative_to(ROOT))
 print("HAND-CHECK: recompute the test accuracy at the chosen layer from acts_<run>.npz using the split saved in the JSON.")

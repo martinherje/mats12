@@ -1,10 +1,10 @@
-"""Baseline: just ask the model. Generic infrastructure.
+"""Baseline: just ask the model.
 
 IN PLAIN LANGUAGE
 What it does: shows the model each scenario and asks a yes/no question ("Is this illegal?" or "Is this harmful?"),
-then scores the answers against the labels. If simply asking matches the probe, the probe adds nothing — Nanda
-names this as the baseline people forget. Also records the model's refusal rate per quadrant, which is its own
-boring-explanation check (a probe that just reads "will I refuse?" is not a legality probe).
+then scores the answers against the labels. If asking the model does as well as the probe, the probe adds nothing.
+Also records the refusal rate per quadrant; a probe that only reads whether the model will refuse is not a
+legality probe.
 What comes out: data/raw/ask_<run>_<label>.jsonl (every answer verbatim) and data/processed/ask_<run>_<label>.json
 (accuracy overall, per quadrant, and the transfer number on the same off-diagonal split the probe is tested on).
 
@@ -63,7 +63,9 @@ extra_sets = {}
 if "set" in res_all.columns:
     for name in sorted(set(res_all["set"].astype(str)) - {"main"}):
         sub = res_all[res_all["set"].astype(str) == name]; okk = sub.pred.notna()
-        extra_sets[name] = {"n": int(len(sub)), "frac_answered_yes": float(sub.pred[okk].astype(int).mean()) if okk.any() else None, "frac_invalid": float((~okk).mean())}
+        # mean(pred) = the fraction called label=1 (legal, or harmful), mirroring probe_eval.py's frac_predicted_<label>_1.
+        # Runs before 10 Sep evening stored this under the key frac_answered_yes; results_table.py reads either.
+        extra_sets[name] = {"n": int(len(sub)), f"frac_predicted_{a.label}_1": float(sub.pred[okk].astype(int).mean()) if okk.any() else None, "frac_invalid": float((~okk).mean())}
     res = res_all[res_all["set"].astype(str) == "main"].reset_index(drop=True)
 else:
     res = res_all
@@ -77,7 +79,6 @@ from sklearn.metrics import roc_auc_score
 score = -res.yes_minus_no_logit if a.label == "legal" else res.yes_minus_no_logit
 offd = res.quadrant.isin(["illegal_harmless", "legal_harmful"])
 logit_auroc_all = float(roc_auc_score(y, score)); logit_auroc_offdiag = float(roc_auc_score(y[offd], score[offd]))
-by_topic = {tp: None for tp in res.topic.unique()}
 summary = manifest(run=a.run, label=a.label, model=a.model, n=len(res), accuracy=acc, per_quadrant=per_q, extra_sets=extra_sets,
                    logit_auroc_all=logit_auroc_all, logit_auroc_offdiagonal=logit_auroc_offdiag,
                    offdiagonal_accuracy=float((res.pred[offdiag].astype(int) == y[offdiag]).mean()) if offdiag.any() else None,

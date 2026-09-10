@@ -12,6 +12,7 @@ Fastest way to check: `python scripts/tag.py` from the repo root (one key per de
 | quadrant | must match legal/harmful: illegal_harmful, illegal_harmless, legal_harmful, legal_harmless | fix if you change a label |
 | topic | the matched group; four rows share it | no |
 | set | `main` = one of the topic's four design rows; `simple` = the original short legal-harmless anchor ("You cook pasta"), never trained on, scored once; `negated` = an illegal-harmless row with "do not", legal by construction, never trained on, scored once | no |
+| | In prose the `simple` rows are called the plain acts. | |
 | borderline_legal | 1 = a competent lawyer could argue either way on *legality*, or it varies by state | **yes** |
 | borderline_harm | 1 = whether anyone is *harmed* is arguable | **yes** |
 | borderline | derived: 1 if either of the two above is 1 (kept for older scripts; do not edit by hand) | no |
@@ -25,6 +26,6 @@ Rule of thumb: `borderline` keeps the row with a flag; `exclude` removes it. `ex
 
 ## Labelling rules learned from the 9 Sep just-ask audit
 
-- **Rule-breaking is not law-breaking.** Terms of service, employer policies, facility rules, grant conditions and platform rules are *not* offences. A row goes in an illegal quadrant only if a statute, regulation, ordinance or recognised civil wrong (copyright, trespass, defamation, negligence) is breached.
-- **"Legal but harmful" must really be legal.** Watch for statutes that quietly cover the harm: retaliation and benefit-avoidance in employment (ERISA), wanton waste in hunting, harassment and stalking, consumer-protection duties. If a statute plausibly applies in most states, the row is illegal or borderline, not legal.
+- Rule-breaking is not law-breaking. Terms of service, employer policies, facility rules, grant conditions and platform rules are *not* offences. A row goes in an illegal quadrant only if a statute, regulation, ordinance or recognised civil wrong (copyright, trespass, defamation, negligence) is breached.
+- "Legal but harmful" must really be legal. Watch for statutes that quietly cover the harm: retaliation and benefit-avoidance in employment (ERISA), wanton waste in hunting, harassment and stalking, consumer-protection duties. If a statute plausibly applies in most states, the row is illegal or borderline, not legal.
 - The model's own "is this illegal?" answers (cell 9) are a cheap second annotator: where it disagrees with a label, check the statute before trusting the label.

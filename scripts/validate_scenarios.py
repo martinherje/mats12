@@ -1,4 +1,4 @@
-"""Sanity-check a scenarios CSV before spending GPU time on it. Generic infrastructure.
+"""Sanity-check a scenarios CSV before spending GPU time on it.
 
 Reports quadrant counts, label/quadrant consistency, jurisdiction uniformity, hand-check and relabel
 fractions, duplicates, and length spread. Exits non-zero on hard errors.
@@ -40,12 +40,12 @@ else:
     print(f"hand_checked: {df.hand_checked.mean():.0%} ({int(df.hand_checked.sum())}/{len(df)}) · relabelled among checked: "
           f"{(df[df.hand_checked == 1].relabelled.mean() if df.hand_checked.sum() else float('nan')):.0%}")
     if "exclude" in df.columns:
-        print(f"excluded (indeterminate) rows: {int(df.exclude.sum())} — dropped from the probe evaluation, reported in the write-up")
+        print(f"excluded rows: {int(df.exclude.sum())} (dropped from the probe evaluation, reported in the write-up)")
         per_topic = df[df.exclude == 0].groupby("topic").size(); print(f"topics with all 4 rows still usable: {int((per_topic == 4).sum())}/{df.topic.nunique()}")
     print(f"topics: {df.topic.nunique()} · text length words: min {df.text.str.split().str.len().min()}, "
           f"median {int(df.text.str.split().str.len().median())}, max {df.text.str.split().str.len().max()}")
     offdiag = df.quadrant.isin(["illegal_harmless", "legal_harmful"]).sum()
-    if offdiag < 40: print(f"WARNING: only {offdiag} off-diagonal items — the load-bearing test is underpowered")
+    if offdiag < 40: print(f"WARNING: only {offdiag} off-diagonal items; the cross-stratum test is underpowered")
 if errs:
     print("ERRORS:"); [print("  -", e) for e in errs]; sys.exit(1)
 print("OK")

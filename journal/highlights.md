@@ -1,12 +1,12 @@
 # Highlights doc (running)
 
-Nanda-process running doc: hypotheses as they form, key graphs as they land, dead ends as they die. Append-only, timestamped. This becomes the spine of the write-up.
+Running doc: hypotheses, key graphs and dead ends, appended in the order they happened, with dates. The write-up is built from it.
 
 ## Hypotheses
 
-### What I expect to find — written down before the real run (10 Sep 2026)
-
 Plain-language version. Fill in the blanks in your own words; once cell 6 has run on the 4B model, this block is frozen and gets quoted in the write-up as the prediction made in advance.
+
+### What I expect to find — written down before the real run (10 Sep 2026)
 
 **The question in one line.** Does the model know the difference between "against the law" and "hurts someone", or does it only know the second and use it for both?
 
@@ -35,3 +35,13 @@ Plain-language version. Fill in the blanks in your own words; once cell 6 has ru
 ## Dead ends / pivots
 
 ## Things to not forget in the limitations section
+
+2026-09-10, after the run (facts, from `data/processed/probeeval_lp_4b*.json`, `ask_lp_4b_legal.json` and the team's 10 Sep recomputation; the ones marked (agent) are not yet recomputed by Martin):
+
+- In the prompted condition the label-swap band is itself about ±0.8 to 0.9 from layer 17 on, so "outside the band" there is a thin statement; the sign, positive at every layer from 14, carries more. The neutral-question control, cut on 10 Sep, is what would separate a legality-specific merge from a collapse onto the answer axis.
+- The model's own Yes−No logit on the 30 headline test rows scores 0.81; the probe scores 0.74 (agent).
+- The bare headline probe calls 27 of 60 plain acts illegal.
+- The harmful stratum is length-imbalanced: illegal-harmful rows average 11.2 words, legal-harmful 13.9; word count alone reaches 0.79 on the reverse test's rows, against the probe's 0.71. Not corrected.
+- The harm probe sorts illegal-harmless from legal-harmless at 0.61 bare and 0.74 prompted (agent), so the harmless stratum is not harm-flat.
+- At prompted layer 26 the plain mean-difference direction scores the reverse test's rows at 0.41 where the logistic probe scores 0.91. Unexplained.
+- The labels are one annotator's; the model disagrees with the illegal-harmless label on 65% of those rows (it calls them legal).

@@ -9,3 +9,5 @@ Clock rules in README. Target ~16 h, hard cap 20, +2 for exec summary. ≤5 h re
 | 2026-09-10 | ~13:30–15:30 | ~1.0 | Hand-check of the remaining rows with tag.py, all 240 done ("1 hour effective work time max") — Martin's estimate | yes |
 
 Running total: ~3.0 / 20 (reconstructed from Martin's own estimates and commit times, not Toggl; say so in the doc)
+
+Incomplete: no entries yet for the 10 Sep run, table, figures, write-up. To be reconstructed by Martin and labelled reconstructed.

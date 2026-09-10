@@ -2,14 +2,21 @@
 
 **This is not a result.** It is the real pipeline, the real hand-checked dataset (371 rows: 250 in the design, 60 simple anchors, 61 negations) and the real write-up shape, run on a 0.5-billion-parameter model on the Mac so that every table, figure and sentence below has a worked example before the Qwen3.5-4B run. Numbers from this model mean nothing about Qwen3.5-4B. The point is to see what the report will look like and what each number is for. Run name `mac05b`; everything below is copied from `data/processed/probeeval_mac05b*.json`, `ask_mac05b_*.json` and `journal/results.md`.
 
+Written before the illegal-positive rule and before the headline-condition question was reopened: every cosine here is the negative of what the real report shows (−0.21 here is +0.21 there), "headline (prompted condition)" is not the real report's framing, and the check-set and just-ask wording predates the fixes of 10 Sep (the check-set fix, the just-ask baseline of record, and the corrected "called legal" reading of the ask file); the borderline counts in its hand-check table are stale (now 66 / 46 / 23). Read it for the shape only.
+
 ## Executive summary (the shape; ≤ 600 words in the real one)
 
-- **Question.** Does the model represent *illegality* separately from *harmfulness*, or is an illegality probe a harm probe wearing a hat? It matters for monitoring: compliance detectors are rule-blind (Sadhu et al. 2026) and harm probes are largely topic detectors (Schwarz 2026), so a monitor that reads harm misfires exactly where law and harm come apart.
-- **Design.** 60 topics × 4 matched sentences (illegal-harmful, illegal-harmless, legal-harmful, legal-harmless; US law), every row read by a lawyer. The legality probe is trained inside one harm stratum and tested on the other, on 15 held-out topics, because on the easy corners legal = not-harmful. Layer and regularisation chosen on 15 validation topics; test scored once; null = the whole procedure repeated 100 times on labels shuffled within topic × stratum.
-- **Headline (prompted condition).** Legality, harmful → harmless: AUROC **0.57**, beat 79/100 shuffles. Reverse: 0.69, beat 81/100. Harm across legality strata: 0.89 and 0.95, beat 97/100 and 100/100. **On this stand-in, harm transfers cleanly across legality and legality does not transfer across harm: the pattern the literature predicts, "a harm probe in a hat".**
-- **The hat test.** cos(d_legal, d_harm) at the chosen layer: -0.21 (inside the label-swap band, so no more aligned than chance). The legality direction within the harmless stratum on held-out topics: 0.64 as is, 0.61 with the top harm component projected out (Figure 3, middle).
-- **Baselines and checks.** The model's own Yes/No logit on the same held-out rows: AUROC 0.51 off-diagonal (Figure 3, right). Word count alone on the headline's test rows: 0.60. Every legality-vocabulary row dropped: AUROC 0.59, beat 96/100. The 60 simple legal acts, never trained on: the probe calls **20%** legal (expected 100%). The 61 negated illegal acts: **84%** legal. *A legality probe that calls "You cook pasta" illegal four times in five is not reading legality; this is exactly what the check sets are for.*
-- **Conclusion on the stand-in.** Not distinct. The harm probe is real and generalises across legality; the legality probe is at or near the shuffled ceiling, fails the simple anchors, and gains nothing over asking the model. For Qwen3.5-4B the same table decides.
+The question. Does the model represent *illegality* separately from *harmfulness*, or does an illegality probe just read harm? It matters for monitoring: compliance detectors are rule-blind (Sadhu et al. 2026) and harm probes are largely topic detectors (Schwarz 2026), so a monitor that reads harm misfires exactly where law and harm come apart.
+
+The design. 60 topics × 4 matched sentences (illegal-harmful, illegal-harmless, legal-harmful, legal-harmless; US law), every row read by a lawyer. The legality probe is trained inside one harm stratum and tested on the other, on 15 held-out topics, because on the easy corners legal = not-harmful. Layer and regularisation chosen on 15 validation topics; test scored once; null = the whole procedure repeated 100 times on labels shuffled within topic × stratum.
+
+The headline test (prompted condition). Legality, harmful → harmless: AUROC 0.57, beat 79/100 shuffles. Reverse: 0.69, beat 81/100. Harm across legality strata: 0.89 and 0.95, beat 97/100 and 100/100. On the stand-in, harm transfers across legality and legality does not.
+
+The directions. cos(d_legal, d_harm) at the chosen layer: -0.21 (inside the label-swap band, so no more aligned than chance; in the real report's illegal-positive convention this is +0.21). The legality direction within the harmless stratum on held-out topics, prompted condition: 0.64 as is, 0.61 with the top harm component projected out (Figure 3, middle, shows the bare condition).
+
+Baselines and checks. The model's own Yes/No logit on the same held-out rows: AUROC 0.51 off-diagonal (Figure 3, right). Word count alone on the headline's test rows: 0.60. Every legality-vocabulary row dropped: AUROC 0.59, beat 96/100. The 60 plain legal acts, never trained on: the probe calls 20% legal (expected 100%). The 61 negated illegal acts: 84% legal. A probe that calls four of five plain legal acts illegal is not reading legality.
+
+Conclusion on the stand-in: the two are not distinct. The harm probe is real and generalises across legality; the legality probe is at or near the shuffled ceiling, fails the simple anchors, and gains nothing over asking the model. For Qwen3.5-4B the same table decides.
 
 ### The hand-check (goes directly under the summary; the dataset is LLM-written)
 
@@ -62,11 +69,11 @@ cos(d_legal, d_harm) at every layer, where d_legal is the average of the two wit
 
 ![checks](../figures/checks_mac05b.png)
 
-Left: the fraction of the two check sets the chosen legality probe calls legal (expected 100%). Bare: negated 97%, simple 72%. Prompted: negated 84%, simple 20%. Middle: the legality direction's AUROC within the harmless stratum on held-out topics as the top 1–3 harm components are projected out (bare 0.66 → 0.62/0.62/0.60); on a real signal this line stays flat and high, on a harm-in-a-hat signal it drops to 0.5. Right: the probe against the model's own Yes−No logit on the same test rows.
+Left: the fraction of the two check sets the chosen legality probe calls legal (expected 100%). Bare: negated 97%, simple 72%. Prompted: negated 84%, simple 20%. Middle: the legality direction's AUROC within the harmless stratum on held-out topics as the top 1–3 harm components are projected out (bare 0.66 → 0.62/0.62/0.60); if the signal is really legality this line stays flat and high; if it is really harm it drops to 0.5. Right: the probe against the model's own Yes−No logit on the same test rows.
 
 ### Just asking the model
 
-- "Is this illegal?": 52% right overall, 49% on the off-diagonal quadrants, 0% invalid; Yes−No logit AUROC off-diagonal 0.51. It answers "yes, illegal" to 83% of the simple legal acts and 92% of the negations.
+- "Is this illegal?": 52% right overall, 49% on the off-diagonal quadrants, 0% invalid; Yes−No logit AUROC off-diagonal 0.51. It answers No (legal) to 83% of the plain legal acts and 92% of the negations.
 - "Is this harmful?": 50% overall, 50% off-diagonal; logit AUROC 0.54.
 
 The 0.5B model is at chance on both questions, which is why its probe cannot beat "just asking" on legality and why nothing about legality in this document generalises to the 4B model.
@@ -77,7 +84,7 @@ In the real report: the held-out sentences the headline probe misclassified, rea
 ## What this example settles about the write-up, regardless of the real numbers
 
 1. The four-test table with "beat N/100" and the word-count column is the result; it fits on half a page.
-2. The check-set line is the sentence a reviewer reads first after the headline. "Calls 20% of ordinary legal acts legal" ends the argument either way.
+2. The check-set line is the sentence a reviewer reads first after the headline. If the probe calls most plain legal acts illegal, the rest of the table does not matter.
 3. Figure 2 is only interesting if the curve leaves the band; if it doesn't, one sentence and the figure goes to an appendix.
 4. The fair baseline needs the model to be able to answer at all; the 4B model does (62% off-diagonal on the pilot), the 0.5B does not.
 5. Every number above is a copy from a JSON file with the run name in it; the doc cites the file for each table.
@@ -89,5 +96,5 @@ uv run python scripts/extract_activations.py --model Qwen/Qwen2.5-0.5B-Instruct 
 uv run python scripts/extract_activations.py --model Qwen/Qwen2.5-0.5B-Instruct --run mac05b_prompted --device cpu --dtype fp32 --template chat --generation-prompt --enable-thinking off --question legal
 uv run python scripts/probe_eval.py --run mac05b_prompted --target legal --train-stratum harmful --tag L_h2nh   # and the other seven, see README
 uv run python scripts/ask_model.py --model Qwen/Qwen2.5-0.5B-Instruct --run mac05b --label legal --device cpu --dtype fp32
-uv run python scripts/report.py --run mac05b; uv run python scripts/results_table.py --run mac05b; uv run python scripts/figures.py --run mac05b
+uv run python scripts/results_table.py --run mac05b; uv run python scripts/figures.py --run mac05b
 ```

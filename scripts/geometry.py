@@ -1,12 +1,12 @@
-"""geometry.py — the Geometry-of-Truth picture: every sentence as a point in the plane spanned by the harm
-direction (x) and the legality direction (y), at the probe's chosen layer.
+"""geometry.py — every sentence as a point in the plane spanned by the harm direction (x) and the illegality
+direction (y), at the probe's chosen layer.
 
 IN PLAIN LANGUAGE
 Two arrows are computed from the training topics only: d_harm (harmful minus harmless, averaged over both
 legality strata) and d_illegal (illegal minus legal, averaged over both harm strata). Every sentence's state is
 projected onto both. If the model keeps the two concepts apart, the four quadrants sit in four corners: harm
-separates left from right, legality separates bottom from top, and the corners form a rectangle. If legality
-is harm in a hat, the points fall on one diagonal line and the "legal" axis adds nothing. Held-out topics are
+separates left from right, legality separates bottom from top, and the corners form a rectangle. If the legality
+direction is really the harm direction, the points fall on one diagonal line and the second axis adds nothing. Held-out topics are
 drawn solid, training topics faint; the plain acts (set=simple) and the negations (set=negated) are drawn as
 hollow markers so you can see where sentences the probe never trained on land. The angle between the arrows
 is printed in the title. Note the axes are the two directions themselves, so the picture is 2-D by
@@ -58,4 +58,4 @@ ax.legend(fontsize=7, loc="best"); fig.tight_layout()
 out = ROOT / "figures" / f"geometry_{a.run}_L{layer}.png"; fig.savefig(out, dpi=150)
 tm = {name: (float(px[(yl == lq) & (yh == hq) & is_test].mean()), float(py[(yl == lq) & (yh == hq) & is_test].mean())) for name, lq, hq, _ in QUADS}
 print(f"layer {layer} · cos(d_illegal, d_harm) {cos:+.2f} · held-out quadrant means (harm axis, illegality axis):"); [print(f"  {k:18s} {v[0]:+.2f}, {v[1]:+.2f}") for k, v in tm.items()]
-print("Four corners = two concepts; a single diagonal = one concept wearing two names."); print(f"wrote {out.relative_to(ROOT)}")
+print(f"wrote {out.relative_to(ROOT)}")

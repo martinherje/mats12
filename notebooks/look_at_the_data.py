@@ -1,32 +1,33 @@
 # %% [markdown]
 # # Look at the data: what a probe sees, and how the two-axes picture is made
 #
-# Open this file in VS Code. Each `# %%` block is a cell: hover it and click **Run Cell**
+# Open this file in VS Code. Each `# %%` block is a cell: hover it and click Run Cell
 # (or put the cursor in it and press Shift+Enter). Outputs appear in the Interactive window
 # on the right. Everything is read from files in this repo; nothing is fabricated in between.
 #
-# Files used (stand-in run on the 0.5B model, made on this Mac):
-#   data/processed/acts_mac05b.npz                 the model's internal states + the labels
-#   data/processed/probeeval_mac05b_L_h2nh.json    the headline evaluation's output
-#   scripts/geometry.py                            the script that draws the two-axes figure
-# For the real run, change RUN to "lp_4b" once the two files from Colab are in data/processed/.
+# Files used (the Qwen3.5-4B run of record, lp_4b):
+#   acts_lp_4b.npz on the Drive mount (ACTS_DIR)      the model's internal states + the labels
+#   data/processed/probeeval_lp_4b_L_h2nh.json        the headline evaluation's output
+#   scripts/geometry.py                               the script that draws the two-axes figure
+# For the 0.5B stand-in made on this Mac, set RUN = "mac05b"; its acts file is in data/processed/.
 
 # %%
-RUN = "mac05b"          # "lp_4b" for the real Qwen3.5-4B run
-LAYER = None            # None = the layer the headline probe chose; or a number, e.g. 20
-
 import json
 from pathlib import Path
 import numpy as np, pandas as pd
+RUN = "lp_4b"           # "mac05b" for the 0.5B stand-in
+LAYER = None            # None = the layer the headline probe chose; or a number, e.g. 20
+ACTS_DIR = Path.home() / "Library/CloudStorage/GoogleDrive-mherje@live.com/My Drive/mats12_runs/data/processed"   # where acts_lp_4b.npz lives
 ROOT = Path(__file__).resolve().parents[1] if "__file__" in dir() else Path.cwd().parents[0] if Path.cwd().name == "notebooks" else Path.cwd()
-z = np.load(ROOT / "data/processed" / f"acts_{RUN}.npz")
+acts_path = (ACTS_DIR if (ACTS_DIR / f"acts_{RUN}.npz").exists() else ROOT / "data/processed") / f"acts_{RUN}.npz"
+z = np.load(acts_path); print("reading", acts_path)
 acts = z["acts"]
 print("array of model states:", acts.shape, "= (sentences, layers, numbers per state), stored as", acts.dtype)
 print("largest magnitude anywhere:", float(np.abs(acts.astype(np.float32)).max()), "(half-precision overflows at 65504)")
 
 # %% [markdown]
 # ## 1. One sentence, one layer = one row of numbers
-# The probe never sees the words. It sees this row.
+# The probe sees this row of numbers, not the words.
 
 # %%
 i = 0                                   # sentence index; try 1, 2, 3 ...
@@ -60,13 +61,13 @@ print("test (held-out topics, other stratum): accuracy", round(ev["test_cross_ac
 print("shuffled-label null:", ev["perm_null"])
 print("word count alone on the same rows, AUROC:", round(ev["length_only_test_auroc"], 3))
 print("check sets:", ev["extra_sets"])
-print("cos(d_legal, d_harm) at the chosen layer:", round(ev["factorial"]["cos_dlegal_dharm"], 3))
+print("cos(d_illegal, d_harm) at the chosen layer:", round(-ev["factorial"]["cos_dlegal_dharm"], 3), "(the JSON stores the legal-positive value; the sign is flipped here)")
 print("test topics:", ev["split"]["test_topics"])
 
 # %% [markdown]
 # ## 4. The two arrows, step by step (this is what scripts/geometry.py does)
-# **Harm arrow** = mean(harmful) − mean(harmless), computed inside the illegal rows and inside the legal rows, then averaged, so legality cancels.
-# **Legality arrow** = mean(legal) − mean(illegal), inside harmful and inside harmless, averaged, so harm cancels.
+# Harm arrow = mean(harmful) − mean(harmless), computed inside the illegal rows and inside the legal rows, then averaged, so legality cancels.
+# Illegality arrow = mean(illegal) − mean(legal), inside harmful and inside harmless, averaged, so harm cancels.
 # Training topics only, so the held-out topics never touch the arrows.
 
 # %%
@@ -84,27 +85,27 @@ def arrow(target, other):
         d += 0.5 * (X[m1].mean(0) - X[m0].mean(0))
     return d / np.linalg.norm(d)                       # length 1
 
-d_harm = arrow(yh, yl); d_legal = arrow(yl, yh)
+d_harm = arrow(yh, yl); d_illegal = -arrow(yl, yh)      # arrow(yl, yh) points toward legal; the illegality arrow is its negative
 print("harm arrow, first 6 of", len(d_harm), ":", np.round(d_harm[:6], 4))
-print("legality arrow, first 6:", np.round(d_legal[:6], 4))
-print("angle between them, as a cosine (0 = unrelated, ±1 = same line):", round(float(d_harm @ d_legal), 3))
+print("illegality arrow, first 6:", np.round(d_illegal[:6], 4))
+print("angle between them, as a cosine:", round(float(d_harm @ d_illegal), 3))
 
 # %% [markdown]
-# ## 5. Every sentence as a point: x = along the harm arrow, y = along the legality arrow
+# ## 5. Every sentence as a point: x = along the harm arrow, y = along the illegality arrow
 # A dot product with a unit arrow is "how far along that arrow the point sits".
 
 # %%
 mu = X[is_train].mean(0)                               # centre on the training cloud
-px = (X - mu) @ d_harm; py = (X - mu) @ d_legal
+px = (X - mu) @ d_harm; py = (X - mu) @ d_illegal
 px = px / px[is_train].std(); py = py / py[is_train].std()   # same units on both axes
-pts = pd.DataFrame({"id": df["id"], "quadrant": df["quadrant"], "set": df["set"], "x_harm": np.round(px, 2), "y_legal": np.round(py, 2)})
+pts = pd.DataFrame({"id": df["id"], "quadrant": df["quadrant"], "set": df["set"], "x_harm": np.round(px, 2), "y_illegal": np.round(py, 2)})
 print(pts[is_test].head(8).to_string(index=False))
-print("\nheld-out quadrant means (x_harm, y_legal):")
-print(pts[is_test].groupby("quadrant")[["x_harm", "y_legal"]].mean().round(2))
+print("\nheld-out quadrant means (x_harm, y_illegal):")
+print(pts[is_test].groupby("quadrant")[["x_harm", "y_illegal"]].mean().round(2))
 
 # %% [markdown]
 # ## 6. The picture
-# Four corners = two concepts. One diagonal = one concept with two names.
+# If the model keeps the two apart, the four quadrants sit in four corners; if not, they fall on one diagonal.
 
 # %%
 import matplotlib.pyplot as plt
@@ -118,11 +119,11 @@ for name, mk in (("simple", "o"), ("negated", "^")):
     m = (df["set"] == name).to_numpy()
     ax.scatter(px[m], py[m], s=30, facecolor="none", edgecolor="k", marker=mk, label=name + " (never trained on)")
 ax.axhline(0, color="gray", lw=0.6); ax.axvline(0, color="gray", lw=0.6)
-ax.set_xlabel("← harmless   along the harm arrow   harmful →"); ax.set_ylabel("← illegal   along the legality arrow   legal →")
-ax.set_title(f"{RUN}, layer {layer}, cos = {float(d_harm @ d_legal):+.2f}"); ax.legend(fontsize=7)
+ax.set_xlabel("← harmless   along the harm arrow   harmful →"); ax.set_ylabel("← legal   along the illegality arrow   illegal →")
+ax.set_title(f"{RUN}, layer {layer}, cos(d_illegal, d_harm) = {float(d_harm @ d_illegal):+.2f}"); ax.legend(fontsize=7)
 out = ROOT / "figures" / f"look_{RUN}_L{layer}.png"; fig.savefig(out, dpi=150); print("saved", out)
 plt.show(block=False)          # shows inline in the VS Code interactive window; does not block when run as a script
 
 # %% [markdown]
 # The same figure, produced by the repo script (so you can check they agree):
-# `uv run python scripts/geometry.py --run mac05b` → `figures/geometry_mac05b_L23.png`.
+# `uv run python scripts/geometry.py --run lp_4b` → `figures/geometry_lp_4b_L25.png`.

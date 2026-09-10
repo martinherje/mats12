@@ -2,10 +2,10 @@
 
 This is the single statement of the design. The step-by-step is the vault run sheet (`plans/applications/MATS 12 - Run Sheet (legality probe).md`); the execution is `notebooks/legality_probe_colab.ipynb`; the hand-check columns are explained in `data/SCENARIOS_COLUMNS.md`; the *why* is the vault spec (`MATS 12 - Project Spec (Legality Probe)`). Earlier versions of this sheet are archived in `design-questions-legality-probe-archive.md`.
 
-Answer the numbered decisions below in a sentence each, copy the answers into `highlights.md` under "Initial hypothesis" with the date, start Toggl. That is the clock's starting gun.
+Answer the numbered decisions below in a sentence each, copy the answers into `highlights.md` under "Initial hypothesis" with the date, start Toggl. The clock starts when that is done.
 
 ## The question
-Does Qwen3.5-4B represent *illegality* as a concept distinct from *harmfulness*, or is a legality probe just a harm probe wearing a hat?
+Does Qwen3.5-4B represent *illegality* as a concept distinct from *harmfulness*, or does an illegality probe just read harm?
 
 ## The design (fixed unless you change it here)
 - **Data.** `data/scenarios.csv`: 240 sentences, 60 topics × 4 quadrants (illegal-harmful, illegal-harmless, legal-harmful, legal-harmless), one per quadrant per topic, second person, US law (federal or most states, as of 2025). Written by Claude on 9 Sep; every row starts `hand_checked=0`.
@@ -45,6 +45,7 @@ Does Qwen3.5-4B represent *illegality* as a concept distinct from *harmfulness*,
 - **Storage and split:** activations stored fp32; the topic split is drawn from the full topic list before any exclusion.
 - **Minimal rule (Martin):** one test, one null, one baseline, one figure; steering, the neutral-question condition, nested CV, bag-of-words and split-half extras are cut. The causal-steering scaffold lives on branch `steering-scaffold`, unmerged.
 - **Wording:** the projected-out direction is "orthogonal to the between-stratum harm contrast", not "harm removed"; the 43 rows rewritten after the pilot are disclosed as such; the hand-check counts and six random rows sit under the executive summary.
+- **10 Sep evening, after the run:** the reported core is one test (illegality, harmful → harmless) run in both conditions, one null (the AUROC beat-count, as pre-registered), one baseline (the model's own logit on the same 30 rows), one two-panel figure; the harm projection is reported at k = 1 only; the half-contrast and the no-cue rerun are one clause each; steering ran once on the prompted condition and is not reported. The top-1..3 projection, the three-condition cosine and the 240-row count above are superseded by this line.
 
 ## Boring explanations, named in advance
 - The probe reads legality *words* → no-cue rerun.

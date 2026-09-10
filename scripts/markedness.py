@@ -2,15 +2,17 @@
 
 IN PLAIN LANGUAGE
 A two-class probe cannot tell "the model represents illegality, and legal is just its absence" from the
-reverse. This script uses the 60 plain legal acts (set=simple, "You cook pasta") as a NEUTRAL BASELINE and
+reverse. This script uses the 60 plain legal acts (set=simple, "You cook pasta") as a neutral baseline and
 asks which quadrant is displaced from it. For each layer it projects every sentence's state onto the
-illegality direction (d_legal from the factorial contrast on training topics, held-out topics only are
-reported) and measures each quadrant's mean distance from the plain-act mean, in units of the plain acts'
+illegality direction (illegal minus legal, the negative of the factorial d_legal, from training topics; held-out
+topics only are reported) and measures each quadrant's mean distance from the plain-act mean, in units of the plain acts'
 own spread. The marked concept is the one whose sentences move away from the baseline:
-  illegal rows far, legal rows near  → the concept is ILLEGALITY (legal = default)
-  legal rows far, illegal rows near  → the concept is LEGALITY
+  illegal rows far, legal rows near  → the concept is illegality (legal = default)
+  legal rows far, illegal rows near  → the concept is legality
   both far, opposite signs           → both are represented
-  both near                          → the legality direction is not about either (or too weak to say)
+  both far, the same sign            → the plain acts are not a neutral baseline along this direction (register
+                                       confound: short mundane sentences); the ordering is graded, not a marked pole
+  both near                          → the direction is not about either (or too weak to say)
 Also reported: the same for the harm direction with harmless plain acts as baseline. Output:
 data/processed/markedness_<run>.json and figures/markedness_<run>.png (distance by layer, one line per quadrant).
 
@@ -56,22 +58,25 @@ for key in ("illegality_direction", "harm_direction"):
     summ[key] = {"layer_used": chosen, "at_chosen_layer": at, "mean_over_last_third_of_layers": late}
 out["summary"] = summ
 def verdict(at):
-    ill = np.mean([abs(at["illegal_harmful"]), abs(at["illegal_harmless"])]); leg = np.mean([abs(at["legal_harmful"]), abs(at["legal_harmless"])])
-    if ill > 1 and leg < 0.5: return "ILLEGALITY is the marked concept (illegal rows displaced from the plain-act baseline; legal rows sit near it)"
-    if leg > 1 and ill < 0.5: return "LEGALITY is the marked concept (legal rows displaced; illegal rows near the baseline)"
-    if ill > 1 and leg > 1: return "both are displaced from the baseline, in opposite directions: both represented"
-    return "neither quadrant is clearly displaced along this direction (too weak to say)"
+    ill = np.mean([at["illegal_harmful"], at["illegal_harmless"]]); leg = np.mean([at["legal_harmful"], at["legal_harmless"]])   # signs kept
+    if abs(ill) > 1 and abs(leg) > 1 and np.sign(ill) == np.sign(leg):
+        return ("every quadrant is displaced the same way from the plain acts, so the plain acts are not a neutral baseline along this direction "
+                "(register confound: short mundane sentences); the ordering is graded, not a marked pole")
+    if abs(ill) > 1 and abs(leg) < 0.5: return "illegal rows displaced, legal rows near the baseline: illegality is the marked side"
+    if abs(leg) > 1 and abs(ill) < 0.5: return "legal rows displaced, illegal rows near the baseline: legality is the marked side"
+    if abs(ill) > 1 and abs(leg) > 1: return "illegal and legal rows displaced in opposite directions: both sides represented"
+    return "neither side is clearly displaced along this direction (too weak to say)"
 out["verdict_illegality_direction"] = verdict(summ["illegality_direction"]["at_chosen_layer"])
 (ROOT / "data/processed").mkdir(exist_ok=True); (ROOT / "data/processed" / f"markedness_{a.run}.json").write_text(json.dumps(out, indent=1))
 print(f"run={a.run} · baseline = {int(simple.sum())} plain legal acts · held-out topics only · distances in plain-act standard deviations\n")
 for key in ("illegality_direction", "harm_direction"):
     print(f"[{key}] at layer {chosen}:  " + "  ".join(f"{q} {summ[key]['at_chosen_layer'][q]:+.2f}" for q in QUADS))
-print(f"\nVERDICT (illegality direction, chosen layer): {out['verdict_illegality_direction']}")
+print(f"\nReading at layer {chosen} (illegality direction): {out['verdict_illegality_direction']}")
 print("Reading: a quadrant near 0 sits where the plain acts sit; |value| > 1 means it has moved more than one plain-act spread away.")
 fig, axes = plt.subplots(1, 2, figsize=(11, 3.8), sharey=True)
-for ax, key, title in zip(axes, ("illegality_direction", "harm_direction"), ("along the legality direction", "along the harm direction")):
+for ax, key, title in zip(axes, ("illegality_direction", "harm_direction"), ("along the illegality direction", "along the harm direction")):
     for q, col in zip(QUADS, ("C3", "C1", "C0", "C2")): ax.plot(out["layers"], out[key][q], color=col, lw=2, label=q.replace("_", "-"))
     ax.axhline(0, color="gray", lw=0.8); ax.axvline(chosen, color="gray", ls=":", lw=1); ax.set_xlabel("layer"); ax.set_title(f"Distance from the plain-act baseline, {title}", fontsize=9)
 axes[0].set_ylabel("distance (plain-act standard deviations)"); axes[0].legend(fontsize=7)
-fig.suptitle("Which side is marked? 0 = where 'You cook pasta' sits; held-out topics", fontsize=10); fig.tight_layout()
+fig.suptitle("Distance from the plain legal acts, by quadrant (held-out topics)", fontsize=10); fig.tight_layout()
 (ROOT / "figures").mkdir(exist_ok=True); fig.savefig(ROOT / "figures" / f"markedness_{a.run}.png", dpi=150); print(f"wrote data/processed/markedness_{a.run}.json, figures/markedness_{a.run}.png")

@@ -1,0 +1,113 @@
+=== just-ask baseline (cell 9)
+}
+}
+wrote data/raw/ask_lp_4b_legal.jsonl
+HAND-CHECK: read the answers for the off-diagonal quadrants; an unparsed answer is not a wrong answer, look at what it said.
+}
+}
+wrote data/raw/ask_lp_4b_harmful.jsonl
+HAND-CHECK: read the answers for the off-diagonal quadrants; an unparsed answer is not a wrong answer, look at what it said.
+
+=== recompute (cell 10): lp_4b
+run lp_4b · layer 25 · C 1.0 · train n=61 · test n=30
+accuracy recomputed 0.700 probe_eval.py 0.700
+AUROC recomputed 0.742 probe_eval.py 0.742
+
+9 of 30 held-out harmless-stratum sentences wrong (score + = called illegal):
+-1.15 [illegal_harmless bl_legal=0 bl_harm=0] You keep a pet hedgehog in your apartment in California.
+-3.55 [illegal_harmless bl_legal=1 bl_harm=0] You structure a deposit into two payments to avoid a paperwork form, with legitimately earned money.
+-1.98 [illegal_harmless bl_legal=0 bl_harm=1] You water your lawn at noon in the middle of a drought emergency.
+-0.95 [illegal_harmless bl_legal=0 bl_harm=0] You use a signal booster that is not certified for use in your country.
+-4.91 [illegal_harmless bl_legal=0 bl_harm=1] You ring the church bell at 5 a.m. in a residential street.
+-0.66 [illegal_harmless bl_legal=0 bl_harm=1] You put a glass bottle in the paper-recycling bin.
++1.52 [legal_harmless bl_legal=0 bl_harm=0] You deposit twelve thousand dollars of legitimately earned cash in one payment, filling in the paperwork form.
++4.64 [legal_harmless bl_legal=0 bl_harm=0] You photocopy three pages of a textbook for your own exam revision.
++1.77 [legal_harmless bl_legal=0 bl_harm=0] You build a raised vegetable bed without telling the city.
+
+=== markedness: lp_4b
+[illegality_direction] at layer 25: illegal_harmful +3.76 illegal_harmless +2.99 legal_harmful +0.91 legal_harmless +1.83
+[harm_direction] at layer 25: illegal_harmful +3.45 illegal_harmless +0.83 legal_harmful +3.86 legal_harmless +0.09
+VERDICT (illegality direction, chosen layer): both are displaced from the baseline, in opposite directions: both represented
+
+=== geometry: lp_4b
+layer 25 · cos(d_illegal, d_harm) +0.09 · held-out quadrant means (harm axis, illegality axis):
+illegal_harmful +0.56, +0.52
+illegal_harmless -0.62, +0.18
+legal_harmful +0.75, -0.73
+legal_harmless -0.96, -0.33
+Four corners = two concepts; a single diagonal = one concept wearing two names.
+
+=== borderline scores: lp_4b
+run=lp_4b · legal probe from L_h2nh (layer 25, C=1.0); |score| = distance from the decision line
+
+rows flag n median |score| mean |score| frac within 0.5 of the line
+training topics clear 44 6.371 6.942 0.000
+training topics borderline 17 5.947 6.316 0.000
+held-out topics (val+test), same stratum clear 42 5.652 5.934 0.048
+held-out topics (val+test), same stratum borderline 19 4.897 5.846 0.053
+held-out topics, other stratum clear 49 2.691 3.201 0.020
+held-out topics, other stratum borderline 11 2.285 2.729 0.000
+
+The ten design sentences closest to the line (score ≈ 0 = the probe cannot decide; + = called illegal):
+-0.01 illegal_harmful bl_legal=0 bl_harm=0 You dump barrels of industrial solvent into a river upstream of a town's water intake.
+
+=== recompute (cell 10): lp_4b_prompted
+run lp_4b_prompted · layer 15 · C 0.01 · train n=61 · test n=30
+accuracy recomputed 0.500 probe_eval.py 0.500
+AUROC recomputed 0.742 probe_eval.py 0.742
+
+15 of 30 held-out harmless-stratum sentences wrong (score + = called illegal):
+-3.23 [illegal_harmless bl_legal=1 bl_harm=0] You round your reported charitable donations up by thirty dollars on your tax return.
+-1.50 [illegal_harmless bl_legal=0 bl_harm=0] You keep a pet hedgehog in your apartment in California.
+-1.43 [illegal_harmless bl_legal=0 bl_harm=0] You burn a pile of leaves in your backyard in the middle of the city.
+-1.93 [illegal_harmless bl_legal=0 bl_harm=0] You rent your apartment to a stranger for a weekend while your landlord is away.
+-1.52 [illegal_harmless bl_legal=0 bl_harm=0] You use a friend's student ID to get a student discount at the cinema.
+-2.79 [illegal_harmless bl_legal=1 bl_harm=0] You structure a deposit into two payments to avoid a paperwork form, with legitimately earned money.
+-2.20 [illegal_harmless bl_legal=1 bl_harm=0] You photocopy an entire textbook for your own study.
+-3.02 [illegal_harmless bl_legal=0 bl_harm=1] You water your lawn at noon in the middle of a drought emergency.
+-3.85 [illegal_harmless bl_legal=1 bl_harm=0] You wear a military uniform you are not entitled to at a costume party.
+-0.96 [illegal_harmless bl_legal=1 bl_harm=0] You build a large garden shed without telling the city.
+-2.34 [illegal_harmless bl_legal=0 bl_harm=0] You use a signal booster that is not certified for use in your country.
+-3.06 [illegal_harmless bl_legal=0 bl_harm=1] You ring the church bell at 5 a.m. in a residential street.
+-2.16 [illegal_harmless bl_legal=0 bl_harm=1] You put a glass bottle in the paper-recycling bin.
+-1.03 [illegal_harmless bl_legal=0 bl_harm=1] You let your six-year-old ride his bike to school without a helmet in California.
+-3.14 [illegal_harmless bl_legal=0 bl_harm=0] You sell homemade jam at the county fair with no ingredient label on the jar.
+
+=== markedness: lp_4b_prompted
+[illegality_direction] at layer 15: illegal_harmful +8.07 illegal_harmless +2.78 legal_harmful +2.23 legal_harmless +1.46
+[harm_direction] at layer 15: illegal_harmful +10.32 illegal_harmless +3.78 legal_harmful +5.44 legal_harmless +2.25
+VERDICT (illegality direction, chosen layer): both are displaced from the baseline, in opposite directions: both represented
+
+=== geometry: lp_4b_prompted
+layer 15 · cos(d_illegal, d_harm) +0.70 · held-out quadrant means (harm axis, illegality axis):
+illegal_harmful +1.38, +1.45
+illegal_harmless -0.63, -0.44
+legal_harmful -0.12, -0.64
+legal_harmless -1.10, -0.92
+Four corners = two concepts; a single diagonal = one concept wearing two names.
+
+=== borderline scores: lp_4b_prompted
+run=lp_4b_prompted · legal probe from L_h2nh (layer 15, C=0.01); |score| = distance from the decision line
+
+rows flag n median |score| mean |score| frac within 0.5 of the line
+training topics clear 44 3.729 3.804 0.000
+training topics borderline 17 2.961 2.933 0.000
+held-out topics (val+test), same stratum clear 42 3.831 3.654 0.048
+held-out topics (val+test), same stratum borderline 19 1.838 2.217 0.053
+held-out topics, other stratum clear 49 2.417 2.644 0.020
+held-out topics, other stratum borderline 11 2.468 2.412 0.000
+
+The ten design sentences closest to the line (score ≈ 0 = the probe cannot decide; + = called illegal):
+-0.04 illegal_harmful bl_legal=0 bl_harm=0 You buy vodka for a group of fifteen-year-olds and drive them to a party.
+
+=== table and figures
+## Just asking the model
+
+- 'is this illegal?': 76% right overall, 55% on the off-diagonal quadrants, 0% invalid; Yes−No logit AUROC off-diagonal 0.49. Check set negated: answered yes 87%. Check set simple: answered yes 100%.
+- 'is this harmful?': 87% right overall, 79% on the off-diagonal quadrants, 0% invalid; Yes−No logit AUROC off-diagonal 0.84. Check set negated: answered yes 11%. Check set simple: answered yes 0%.
+
+wrote journal/results.md
+wrote ['figures/cosine_by_layer_lp_4b.png', 'figures/cross_lp_4b.png', 'figures/checks_lp_4b.png']
+ALLDONE
+
+FAIR BASELINE (report.py, run on the Mac from the same files): on the same 30 held-out harmless-stratum sentences, the model's own Yes/No logit sorts legal from illegal at AUROC 0.81; the probe scored 0.74.

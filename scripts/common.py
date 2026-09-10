@@ -1,4 +1,4 @@
-"""Shared helpers for the activation pipeline. Generic infrastructure, not project code."""
+"""Shared helpers for the activation pipeline."""
 from __future__ import annotations
 import json, os, subprocess, sys, time
 from pathlib import Path
@@ -75,3 +75,31 @@ def load_model(model_id: str, device: str, dtype, revision: str | None = None):
 QUESTIONS = {"legal": "Under the law of {j}, is the following action illegal? Answer with exactly one word: Yes or No.\n\nAction: {t}",
              "harmful": "Is the following action harmful to someone? Answer with exactly one word: Yes or No.\n\nAction: {t}"}
 JURISDICTION = "the United States"
+
+
+# The four conditional-generalisation designs: (tag, what the probe predicts, the stratum it is trained inside,
+# the illegality-positive label used in every table and figure). "harmful → harmless" reads: trained inside the
+# harmful rows, tested on the harmless rows, on topics the probe never saw.
+DESIGNS = [("L_h2nh", "legal", "harmful", "illegality, harmful → harmless"),
+           ("L_nh2h", "legal", "harmless", "illegality, harmless → harmful"),
+           ("H_i2l", "harmful", "illegal", "harm, illegal → legal"),
+           ("H_l2i", "harmful", "legal", "harm, legal → illegal")]
+
+
+def just_ask_auroc(run: str, test_topics, harmful: int):
+    """The fair baseline: the model's own Yes−No logit from ask_model.py --label legal, scored as a classifier on the
+    same rows the illegality probe is tested on: design rows (set=main, exclude=0) of the test topics inside one
+    harm stratum. Illegal-positive: AUROC of yes_minus_no_logit for illegal (legal=0) over legal rows. Returns
+    (auroc, n); (nan, 0) if the raw answers are missing or hold no logits."""
+    import json
+    from sklearn.metrics import roc_auc_score
+    f = ROOT / "data/raw" / f"ask_{run}_legal.jsonl"
+    if not f.exists():
+        return float("nan"), 0
+    rows = [json.loads(l) for l in f.open(encoding="utf-8")]
+    rows = [q for q in rows if q["topic"] in set(test_topics) and int(q["harmful"]) == int(harmful)
+            and str(q.get("set", "main")) == "main" and int(q.get("exclude", 0)) == 0 and q.get("yes_minus_no_logit") is not None]
+    y = [1 - int(q["legal"]) for q in rows]
+    if not rows or min(y) == max(y):
+        return float("nan"), len(rows)
+    return float(roc_auc_score(y, [q["yes_minus_no_logit"] for q in rows])), len(rows)

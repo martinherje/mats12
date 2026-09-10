@@ -1,4 +1,4 @@
-"""Generic environment check — not project code, outside the clock.
+"""Environment check, outside the clock.
 
 Loads a model, runs one forward pass with hidden states, and prints what the probe pipeline
 will see: number of layers, residual width, dtype, memory, wall time. Writes a JSON record to
@@ -9,7 +9,7 @@ Pod (24 GB): uv run python scripts/gpu_smoke.py                    # Qwen/Qwen3.
 
 IN PLAIN LANGUAGE
 What it does: loads the model once and runs a single sentence through it, to confirm the GPU, the memory
-budget and the model's shape (layers, width) before any real run. If this works, everything else can.
+budget and the model's shape (layers, width) before any real run.
 """
 import argparse, time
 import torch

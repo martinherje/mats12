@@ -1,80 +1,64 @@
-"""figures.py — the write-up figures, from data/processed/*.json only.
+"""figures.py — the one write-up figure, figures/fig1_<run>.png, from data/processed/*.json only.
 
 IN PLAIN LANGUAGE
-Three pictures, each answering one question:
-  1. cosine_by_layer_<run>.png   Do the illegality and harm directions share a line? cos(d_illegal, d_harm) at every
-     layer, bare and prompted, with the label-swap null band (inside the band = no more aligned than chance).
-  2. cross_<run>.png             The 2x2 cross. For each of the four tests and both conditions: the cross-stratum
-     test AUROC (dot with its bootstrap interval on accuracy shown as text), the null's 95th percentile (grey bar),
-     and "beat N/100" printed on the bar. Word count alone is the hollow marker.
-  3. checks_<run>.png            The checks: fraction of the simple anchors and the negated rows the probe calls
-     legal (expected 100%), the harm-projected legality AUROC within the harmless stratum for top-1/2/3 removed,
-     and the fair baseline (model's Yes/No logit vs probe) on the same rows.
-Nothing is computed here beyond reading numbers out of the JSON files.
+Two panels. A: the four probes (illegality trained inside the harmful rows and tested on the harmless rows,
+the reverse, and the same two for harm) in both conditions, as AUROC on the other stratum on topics the probe
+never saw; the grey range from 0.5 is the 95th percentile of 100 runs of the same procedure with labels shuffled
+within topic and stratum. B: cos(d_illegal, d_harm) at every layer, bare and prompted, each with the 95% band the
+same cosine takes when the legality labels are swapped within each cell. A curve inside the band is no more aligned than
+chance; +1 means the two directions coincide. Nothing is computed here beyond reading numbers out of the JSON files;
+the cosine is stored legal-positive and is negated (d_illegal = −d_legal), so the band's ends swap too.
 
   uv run python scripts/figures.py --run lp_4b
 """
-import argparse, json
+import argparse, json, sys
 from pathlib import Path
 import numpy as np, matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
-ROOT = Path(__file__).resolve().parents[1]
-DESIGNS = [("L_h2nh", "legality\nharmful → harmless"), ("L_nh2h", "legality\nharmless → harmful"), ("H_i2l", "harm\nillegal → legal"), ("H_l2i", "harm\nlegal → illegal")]
-p = argparse.ArgumentParser(); p.add_argument("--run", required=True); p.add_argument("--title", default=""); a = p.parse_args()
-conds = [(a.run, "bare sentence", "k"), (f"{a.run}_prompted", "inside 'is this illegal?'", "C3")]
-J = lambda cond, tag: json.loads((ROOT / "data/processed" / f"probeeval_{cond}_{tag}.json").read_text()) if (ROOT / "data/processed" / f"probeeval_{cond}_{tag}.json").exists() else None
-(ROOT / "figures").mkdir(exist_ok=True); sup = f" — {a.title}" if a.title else ""
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import ROOT, DESIGNS
 
-# 1. cosine by layer
-fig, ax = plt.subplots(figsize=(8, 4))
-for cond, name, col in conds:
-    r = J(cond, "L_h2nh")
-    if not r: continue
-    c = r["cosine_curve"]; ax.plot(c["layers"], [-v for v in c["cos_dlegal_dharm"]], color=col, lw=2, label=name)   # d_illegal = −d_legal, so the sign flips
-    ax.fill_between(c["layers"], [-v for v in c["null_hi"]], [-v for v in c["null_lo"]], color=col, alpha=0.12, label=f"label-swap null 95% ({name.split()[0]})")
-    ax.axvline(r["layer"], color=col, ls=":", lw=1)
-ax.axhline(0, color="gray", lw=0.6); ax.set_ylim(-1, 1); ax.set_xlabel("layer"); ax.set_ylabel("cos(d_illegal, d_harm)   (+1 = same line, same way)")
-ax.set_title(f"Do illegality and harm share a direction?{sup}\n(dotted = the layer each probe chose on validation topics)"); ax.legend(fontsize=8, loc="lower left")
-fig.tight_layout(); fig.savefig(ROOT / "figures" / f"cosine_by_layer_{a.run}.png", dpi=150); plt.close(fig)
+p = argparse.ArgumentParser(); p.add_argument("--run", required=True); p.add_argument("--title", default="", help="accepted for compatibility; the caption names the model"); a = p.parse_args()
+conds = [(a.run, "bare sentence", "#000000", "o"), (f"{a.run}_prompted", "inside 'Is this illegal? Yes or No'", "#0072B2", "s")]
+J = lambda cond, tag: (lambda f: json.loads(f.read_text()) if f.exists() else None)(ROOT / "data/processed" / f"probeeval_{cond}_{tag}.json")
+ticks = [label.replace(", ", "\n").replace(" → ", " →\n") for _, _, _, label in DESIGNS]
+(ROOT / "figures").mkdir(exist_ok=True)
 
-# 2. the cross
-fig, ax = plt.subplots(figsize=(9, 4.8)); x = np.arange(len(DESIGNS)); w = 0.36
-for j, (cond, name, col) in enumerate(conds):
-    for i, (tag, lab) in enumerate(DESIGNS):
+plt.rcParams.update({"font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8, "legend.fontsize": 7.5, "xtick.labelsize": 7.5, "ytick.labelsize": 7.5})
+fig, (axA, axB) = plt.subplots(1, 2, figsize=(7.0, 3.1), gridspec_kw={"width_ratios": [1.15, 1.0]})
+
+# A. the cross: AUROC on the other stratum, held-out topics; grey = shuffled-label 95th percentile, drawn from 0.5
+x = np.arange(len(DESIGNS)); w = 0.34
+for j, (cond, name, col, mk) in enumerate(conds):
+    for i, (tag, _, _, _) in enumerate(DESIGNS):
         r = J(cond, tag)
         if not r: continue
         pn = r["perm_null"]; xx = x[i] + (j - 0.5) * w
-        ax.bar(xx, pn["auroc_p95"], width=w * 0.9, color="lightgray", edgecolor="gray", label="null AUROC 95th pct (100 shuffles)" if (i, j) == (0, 0) else None)
-        ax.plot(xx, r["test_cross_auroc"], "o", color=col, ms=9, label=f"test AUROC, {name}" if i == 0 else None)
-        ax.plot(xx, r.get("length_only_test_auroc", np.nan), "D", mfc="none", mec=col, ms=6, label="word count alone" if (i, j) == (0, 0) else None)
-        ax.text(xx, 0.05, f"beat\n{pn['shuffles_beaten_acc']}/{pn['n']}", ha="center", va="bottom", fontsize=7, color="dimgray")
-ax.axhline(0.5, color="gray", lw=0.6, ls="--"); ax.set_xticks(x); ax.set_xticklabels([l for _, l in DESIGNS], fontsize=9); ax.set_ylim(0, 1.08); ax.set_ylabel("cross-stratum test AUROC (held-out topics)")
-ax.set_title(f"The 2×2 cross: train inside one stratum, test on the other, on topics never seen{sup}", fontsize=10); ax.legend(fontsize=7, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=4, frameon=False)
-fig.tight_layout(); fig.savefig(ROOT / "figures" / f"cross_{a.run}.png", dpi=150); plt.close(fig)
+        axA.bar(xx, pn["auroc_p95"] - 0.5, bottom=0.5, width=w * 0.85, color="#d9d9d9", edgecolor="none",
+                label=f"shuffled labels, 95th pct of {pn['n']}" if (i, j) == (0, 0) else None)
+        axA.plot(xx, r["test_cross_auroc"], mk, color=col, ms=6.5, label=name if i == 0 else None, zorder=5)
+axA.axhline(0.5, color="gray", lw=0.6); axA.set_ylim(0.45, 1.02); axA.set_xlim(-0.6, len(DESIGNS) - 0.4)
+axA.set_xticks(x); axA.set_xticklabels(ticks, fontsize=7)
+axA.set_ylabel("AUROC, other stratum, unseen topics")
+axA.set_title("A. Trained in one harm (or legality) stratum,\ntested in the other on unseen topics", loc="left")
+for s in ("top", "right"): axA.spines[s].set_visible(False)
 
-# 3. checks
-fig, axes = plt.subplots(1, 3, figsize=(12, 4))
-for j, (cond, name, col) in enumerate(conds):
+# B. cosine by layer, illegality-positive (d_illegal = -d_legal, so the stored curve and band are negated and the band's ends swap)
+n_layers = 32
+for cond, name, col, mk in conds:
     r = J(cond, "L_h2nh")
     if not r: continue
-    ex = r.get("extra_sets") or {}; names = sorted(ex); vals = [ex[n][[k for k in ex[n] if k.startswith("frac_predicted_")][0]] for n in names]
-    axes[0].bar(np.arange(len(names)) + (j - 0.5) * 0.36, vals, width=0.33, color=col, alpha=0.8, label=name)
-    axes[0].set_xticks(range(len(names))); axes[0].set_xticklabels([f"{n}\n(n={ex[n]['n']})" for n in names])
-    fa = r["factorial"]; ks = ["dlegal_auroc_within_harmless"] + [f"dlegal_minus_harm_top{k}_auroc_within_harmless" for k in (1, 2, 3)]
-    axes[1].plot(range(4), [fa.get(k, np.nan) for k in ks], "o-", color=col, label=name)
-    axes[2].bar(j, r["test_cross_auroc"], width=0.6, color=col, alpha=0.8, label=f"probe, {name}")
-axes[0].axhline(1, color="gray", ls="--", lw=0.8); axes[0].set_ylim(0, 1.05); axes[0].set_title("Check sets: share not flagged illegal\n(never trained on; expected 100%)", fontsize=9); axes[0].legend(fontsize=7)
-axes[1].axhline(0.5, color="gray", ls="--", lw=0.8); axes[1].set_ylim(0.3, 1.0); axes[1].set_xticks(range(4)); axes[1].set_xticklabels(["as is", "top-1\nharm out", "top-2", "top-3"]); axes[1].set_title("Illegality direction, harmless stratum\n(held-out; AUROC after projecting harm out)", fontsize=9); axes[1].legend(fontsize=7)
-# fair baseline from the ask file
-try:
-    ask = [json.loads(l) for l in (ROOT / "data/raw" / f"ask_{a.run}_legal.jsonl").open()]
-    from sklearn.metrics import roc_auc_score
-    for j, (cond, name, col) in enumerate(conds[:1]):
-        r = J(cond, "L_h2nh") or J(conds[1][0], "L_h2nh")
-        if not r: continue
-        rows = [q for q in ask if q["topic"] in r["split"]["test_topics"] and int(q["harmful"]) == 0 and str(q.get("set", "main")) == "main" and int(q.get("exclude", 0)) == 0 and q.get("yes_minus_no_logit") is not None]
-        au = roc_auc_score([int(q["legal"]) for q in rows], [-q["yes_minus_no_logit"] for q in rows])
-        axes[2].bar(2.5, au, width=0.6, color="gray", alpha=0.8, label="model's own Yes/No logit, same rows")
-except Exception: axes[2].text(0.5, 0.92, "just-ask baseline not run yet", fontsize=8, ha="center", transform=axes[2].transAxes)
-axes[2].axhline(0.5, color="gray", ls="--", lw=0.8); axes[2].set_ylim(0, 1.05); axes[2].set_xticks([0.5, 2.5]); axes[2].set_xticklabels(["probe (bare, prompted)", "just ask"]); axes[2].set_title("Fair baseline, headline test rows\n(AUROC, illegal vs legal, harmless stratum)", fontsize=9); axes[2].legend(fontsize=7)
-fig.suptitle(f"Checks{sup}", fontsize=10); fig.tight_layout(); fig.savefig(ROOT / "figures" / f"checks_{a.run}.png", dpi=150); plt.close(fig)
-print("wrote", [f"figures/{n}_{a.run}.png" for n in ("cosine_by_layer", "cross", "checks")])
+    c = r["cosine_curve"]; L = c["layers"]; n_layers = L[-1]
+    cos = [-v for v in c["cos_dlegal_dharm"]]; lo = [-v for v in c["null_hi"]]; hi = [-v for v in c["null_lo"]]
+    axB.fill_between(L, lo, hi, color=col, alpha=0.10, lw=0)
+    axB.plot(L, cos, color=col, lw=1.8, label=name)
+axB.axhline(0, color="gray", lw=0.6); axB.set_ylim(-1, 1); axB.set_xlim(0, n_layers); axB.set_xticks([l for l in (0, 8, 16, 24, 32, 40, 48) if l <= n_layers])
+axB.set_xlabel("layer"); axB.set_ylabel("cos(d_illegal, d_harm)")
+axB.set_title("B. cos(d_illegal, d_harm) by layer\n(+1 = the two directions coincide)", loc="left")
+axB.text(n_layers - 0.5, -0.62, "shaded: 95% band from\nlabel-swapped directions", ha="right", va="top", fontsize=6.5, color="dimgray")
+for s in ("top", "right"): axB.spines[s].set_visible(False)
+
+h, l = axA.get_legend_handles_labels()
+fig.legend(h, l, loc="lower center", ncol=3, frameon=False, handlelength=1.2, columnspacing=1.6, bbox_to_anchor=(0.5, 0.0))
+fig.tight_layout(w_pad=1.2, rect=[0, 0.07, 1, 1])
+out = ROOT / "figures" / f"fig1_{a.run}.png"; fig.savefig(out, dpi=220); plt.close(fig)
+print("wrote", out.relative_to(ROOT))

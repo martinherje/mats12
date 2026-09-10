@@ -1,4 +1,4 @@
-"""Extract residual-stream activations for every scenario at every layer. Generic infrastructure.
+"""Extract residual-stream activations for every scenario at every layer.
 
 Reads a scenarios CSV (schema: data/scenarios_template.csv), runs each text through the model,
 pools the hidden state at each layer, and saves one .npz with the activations plus every label
@@ -10,19 +10,15 @@ Template: raw   = the scenario text as-is (default)
           chat  = wrapped in the model's chat template as a user turn, no generation prompt
                   (use --instruction to prepend a fixed instruction inside the user turn)
 
-Example (pod):
-  uv run python scripts/extract_activations.py --scenarios data/scenarios.csv --run v1_last_raw
 Example (Mac pipeline check):
   uv run python scripts/extract_activations.py --model Qwen/Qwen2.5-0.5B-Instruct \
       --scenarios data/scenarios_smoke.csv --run smoke
 
 IN PLAIN LANGUAGE
 What it does: runs each prompt through the model once and saves the model's internal state (the residual
-stream) at one token position, for every layer. Think of it as taking a snapshot of what the model is
-"thinking" the moment before it starts writing.
-Which position: with --generation-prompt, the snapshot is the state the answer starts from, which is the
-most natural place to look for a decision that has already been made.
-What comes out: data/processed/acts_<run>.npz — a block of numbers shaped (prompts, layers+1, width) — plus
+stream) at one token position, for every layer.
+Which position: the last token of the text; with --generation-prompt, the position the answer is generated from.
+What comes out: data/processed/acts_<run>.npz, a block of numbers shaped (prompts, layers+1, width), plus
 every label column from the scenarios CSV, so later scripts know which prompt was which.
 """
 import argparse
