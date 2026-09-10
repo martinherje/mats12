@@ -4,6 +4,7 @@ tag.py — one-keystroke hand-check of data/scenarios.csv.
 Run from the repo root:      uv run python scripts/tag.py
 Revisit borderline rows:     uv run python scripts/tag.py --borderline
 Specific rows:               uv run python scripts/tag.py --ids s057,s058
+A CSV somewhere else:        python scripts/tag.py --csv "C:\Users\me\Downloads\scenarios.csv"
 Every row, checked or not:   uv run python scripts/tag.py --all
 
 Shows one sentence at a time and waits for a key. Default keys:
@@ -107,7 +108,10 @@ def show(row, pos, total, keys, msg=""):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--all", action="store_true"); p.add_argument("--borderline", action="store_true"); p.add_argument("--ids")
+    p.add_argument("--csv", help="path to the CSV (default: data/scenarios.csv in the repo)")
     a = p.parse_args()
+    global CSV
+    if a.csv: CSV = Path(a.csv).expanduser().resolve()
     rows, cols = load()
     shutil.copy(CSV, CSV.with_name(f"scenarios.csv.bak-{time.strftime('%Y%m%d-%H%M%S')}"))
     orig = {r["id"]: (r["legal"], r["harmful"]) for r in rows}
