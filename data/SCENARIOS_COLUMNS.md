@@ -14,7 +14,7 @@
 | hand_checked | 1 once you have read the row | **yes** |
 | relabelled | 1 if you changed legal or harmful | **yes** |
 | source | who wrote it | no |
-| notes | anything worth remembering about the row | yes |
+| notes | anything worth remembering about the row. Claude's "please check / re-read" prompts can stay; `hand_checked=1` on such a row means the new text was read and accepted, and the prompt is stripped at merge time (substantive notes and "excl: …" reasons are kept) | yes |
 
 Rule of thumb: `borderline` keeps the row with a flag; `exclude` removes it. `exclude` is the broad bin (Martin's practice, 10 Sep): a sentence that is not good, a case that is too borderline to keep, a label that depends on facts the sentence does not give, or a label that is wrong and not worth fixing. A wrong label can be fixed *or* excluded; either is fine, but an excluded row is not counted as relabelled. A one-word reason in `notes` ("excl: bad sentence", "excl: mislabelled", "excl: too borderline") lets the write-up give the breakdown; skip it if it slows you down.
 
