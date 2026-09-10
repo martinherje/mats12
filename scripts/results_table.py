@@ -31,7 +31,9 @@ for cond, cname in ((a.run, "bare"), (f"{a.run}_prompted", "prompted")):
             checks.append(f"- {cname}, {label}: check set **{name}** ({ex['n']} rows, never trained on, expected {ex['expected']}): the probe calls {ex[k]:.0%} of them {k.split('_')[2]}=1.")
     nc = ROOT / "data/processed" / f"probeeval_{cond}_L_h2nh_nocue.json"
     if nc.exists():
-        r = json.loads(nc.read_text()); checks.append(f"- {cname}: headline design with every legality-vocabulary row dropped ({r['n_rows']} rows kept): AUROC {r['test_cross_auroc']:.2f}, beat {r['perm_null']['shuffles_beaten_acc']}/{r['perm_null']['n']}.")
+        r = json.loads(nc.read_text())
+        if "perm_null" not in r: checks.append(f"- {cname}: no-cue rerun file is from an older run format (stale?) — rerun it"); continue
+        checks.append(f"- {cname}: headline design with every legality-vocabulary row dropped ({r['n_rows']} rows kept): AUROC {r['test_cross_auroc']:.2f}, beat {r['perm_null']['shuffles_beaten_acc']}/{r['perm_null']['n']}.")
 out.append("\n## Checks\n"); out.extend(checks or ["- (none run yet)"])
 out.append("\n## Just asking the model\n")
 for lab, q in (("legal", "is this illegal?"), ("harmful", "is this harmful?")):

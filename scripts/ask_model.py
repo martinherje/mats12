@@ -37,8 +37,8 @@ if "set" not in df.columns: df["set"] = "main"
 device = pick_device(a.device); tok, model = load_model(a.model, device, pick_dtype(a.dtype, device)); tok.padding_side = "left"
 yes_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("Yes", " Yes")]; no_ids = [tok.encode(w, add_special_tokens=False)[0] for w in ("No", " No")]
 raw = ROOT / "data/raw" / f"ask_{a.run}_{a.label}.jsonl"
-if raw.exists():
-    raise SystemExit(f"{raw} exists; choose a new --run")
+if raw.exists():   # never overwrite raw answers silently: keep the old file under a timestamped name
+    import time; bak = raw.with_name(raw.name + f".bak-{time.strftime('%Y%m%d-%H%M%S')}"); raw.rename(bak); print(f"existing {raw.name} moved to {bak.name}")
 rows = []
 for i in tqdm(range(0, len(df), a.batch_size), desc=f"ask {a.label}"):
     batch = df.iloc[i:i + a.batch_size]
