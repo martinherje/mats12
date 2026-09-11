@@ -100,3 +100,34 @@ Moved out of the summary into the body (so nothing is lost): the reverse-test an
 
 - Fig 1: `figures/fig1_lp_4b.png` (two panels: the cross, and the cosine by layer with both bands).
 - Never: anything from run `lp` (no suffix), `chk9`, `*.pilot-20260909`, or `mac05b`; never the per-design `probeeval_*.png` (their bottom panel is legal-positive).
+
+## Candidate key finding, added 11 Sep 16:30 (Martin: "a key finding"): the model's stated answer is harm-gated
+
+From `data/raw/ask_lp_4b_legal.jsonl` (all 244 design rows; agent-computed until Martin re-runs the command below). Mean Yes−No logit for "is this illegal?", and the share of rows where the model answers Yes:
+
+| quadrant | mean Yes−No logit | says "illegal" |
+|---|---|---|
+| illegal, harmful | +3.82 | 97% |
+| illegal, harmless | −0.98 | 34% |
+| legal, harmful | −0.99 | 25% |
+| legal, harmless | −3.46 | 3% |
+
+Illegality moves the model's answer by about 2.5 logits; harm moves it by about the same; the model says "illegal" only when both are present. An illegal harmless act and a legal harmful act sit at the same place on its answer axis. Within each stratum the graded score still ranks illegal above legal (AUROC 0.83 among harmless rows, 0.95 among harmful), so the distinction is computed and then discarded at the decision. This is the activation result (cos +0.70 at the answer position, four corners while reading) seen from the output side, and it is the sentence that connects the two: representation apart, decision merged, with harm weighted like illegality.
+
+Where it goes: page 1, after the fair baseline, one paragraph and this table (or the two middle rows in prose). Caveat to state: one question wording, one model, the argmax over the two answer tokens as "the answer".
+
+Recompute (the number Martin owns):
+```
+uv run python -c "
+import json, numpy as np
+from sklearn.metrics import roc_auc_score
+rows=[json.loads(l) for l in open('data/raw/ask_lp_4b_legal.jsonl')]
+m=[r for r in rows if r.get('set','main')=='main' and int(r.get('exclude',0))==0]
+for q in ('illegal_harmful','illegal_harmless','legal_harmful','legal_harmless'):
+    rs=[r for r in m if r['quadrant']==q]; s=np.array([r['yes_minus_no_logit'] for r in rs])
+    print(q, 'mean logit %+.2f' % s.mean(), 'said illegal %.0f%%' % (100*np.mean([r['pred']==0 for r in rs])))
+for st,name in ((0,'harmless'),(1,'harmful')):
+    rs=[r for r in m if int(r['harmful'])==st]; y=[1-int(r['legal']) for r in rs]; s=[r['yes_minus_no_logit'] for r in rs]
+    print('within', name, 'rows: logit AUROC %.2f' % roc_auc_score(y,s))"
+```
+Expected: +3.82 / −0.98 / −0.99 / −3.46; 97% / 34% / 25% / 3%; AUROC 0.83 and 0.95.

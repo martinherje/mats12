@@ -201,3 +201,7 @@ Log line: "Token counts in the activations file equal a fresh tokenisation on th
 
 - `~/mats12/notebooks/verify_by_hand.py` — the checker; generic over the four designs and both conditions; `--acts-dir` reads the Drive mount directly. Copy in `team/verify_by_hand.py`.
 - `team/verify_outputs_lp_4b.txt` — its full output for all eight designs, including every test sentence with its score.
+
+## Step 6 (added 11 Sep 16:30) — the harm-gated answer
+
+The command and expected output are at the end of `journal/writeup-skeleton.md` under "Candidate key finding". Log line: "Per-quadrant mean of the model's Yes−No logit and its stated answers, recomputed from the raw answers file; the two middle quadrants tie at −0.98 / −0.99."
