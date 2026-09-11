@@ -173,7 +173,7 @@ One clause to include: the pooled off-diagonal logit AUROC of 0.49 stored in the
 
 ### 3.7 Checks and baselines (250 words)
 
-The shuffle null, the label-swap band, the topic-block bootstrap, word count alone, the plain acts, the negations, the no-cue rerun, just-asking. Full paste text is in `scratchpad/fill/07-checks.md`; the load-bearing sentences:
+The shuffle null, the label-swap band, the topic-block bootstrap, word count alone, the plain acts, the negations, the no-cue rerun, just-asking. Full paste text is in `journal/fill-2026-09-11/07-checks.md`; the load-bearing sentences:
 
 - Plain acts: 33 of 60 called legal by the sentence-only headline probe, 56 / 58 / 59 by the other three. This is the worst number in the run and belongs next to the 0.74, not buried. It says the cut-off fitted among harmful sentences of 11 to 14 words does not survive on 8-word sentences further off-distribution than any test row. It does not say the ranking fails.
 - Negations: 61 of 61 and 58 of 61 called legal by the headline probes; 55 and 36 by the reverse ones. Say that the 61 of 61 carries little — the negations score −7.9 on average, twice as far to the legal side as the design's own legal rows, so "not flagged" was never in doubt. The 36 of 61 is the reverse probe under the question at layer 26, whose mass-mean direction already disagrees with it (0.41 against 0.91); park it in the limitations, unexplained.
@@ -216,7 +216,7 @@ For each, say whether it could have been addressed in the budget. Four rotations
 
 ### 3.11 Verification and reproducibility (150 words plus the log table)
 
-Two versions of the paragraph, depending on what you actually finish — full text in `scratchpad/fill/12-verification.md`. The rule: a number counts as verified only when you have run it and written the log row in your own words. What is done and matching: the dataset counts and the six seeded random rows. What is pending: the split check, the refit of the table numbers, the fair baseline recompute.
+Two versions of the paragraph, depending on what you actually finish — full text in `journal/fill-2026-09-11/12-verification.md`. The rule: a number counts as verified only when you have run it and written the log row in your own words. What is done and matching: the dataset counts and the six seeded random rows. What is pending: the split check, the refit of the table numbers, the fair baseline recompute.
 
 Expected values so you know what "matched" looks like: sentence only 21 of 30 right, AUROC 0.742, 12 of 30 called illegal; sentence + question 15 of 30, 0.742, 0 of 30 called illegal. Two differences are expected and are not errors: the prompted reverse AUROC comes out 0.911 against the script's 0.907 (one rank pair, a different lbfgs build), and bootstrap edges move by one row.
 
@@ -285,11 +285,11 @@ Nanda reads the form answers first and uses them as the filter, so put a number 
 
 ### Q6, limitations
 
-Full 560-word draft in `scratchpad/fill/06-against-limits.md`. It is honest and specific, and it says for each limitation whether it could have been addressed inside the budget. The line to keep whatever else is cut: "No neutral-question control. It is one more extraction and one evaluation, about half an hour of Colab. It was cut under the one-test rule on 10 Sep, and it is the cut I regret."
+Full 560-word draft in `journal/fill-2026-09-11/06-against-limits.md`. It is honest and specific, and it says for each limitation whether it could have been addressed inside the budget. The line to keep whatever else is cut: "No neutral-question control. It is one more extraction and one evaluation, about half an hour of Colab. It was cut under the one-test rule on 10 Sep, and it is the cut I regret."
 
 ### Q7, LLM usage — Nanda weighs this heavily, and it is the answer that must be exact
 
-Full draft in `scratchpad/fill/08-llm-usage.md`, about 560 words. The specific catches it uses, all traceable:
+Full draft in `journal/fill-2026-09-11/08-llm-usage.md`, about 560 words. The specific catches it uses, all traceable:
 
 - The cue-word audit rewrote 43 rows; on the hand-check those rows turned out disproportionately borderline (4 of your 6 exclusions and 23 of your 66 legality flags fell on rewritten rows), and you asked in the notes why naming a rule should be disqualifying if the point is a conceptual and not a lexical representation.
 - Claude's relabel tally said 5, then 6; yours is 4, because it counted a text edit and a flag.
@@ -308,7 +308,7 @@ And the disclosure: the write-up is your prose; these form answers are yours fro
 
 ### Q8, prior mechinterp experience
 
-Draft in `scratchpad/fill/09-bio.md`. **The agent found no record that you did Karpathy, micrograd or GPT-2 from scratch** — no repo, no learning-log entry after 24 Jun. Earlier vault drafts lead with that claim. Do not use it unless it is true. What the files do support: linear algebra from first principles and a toy superposition model typed by hand in a REPL (18 Jun), numpy-100 by hand (24 Jun), ARENA chapter 0 environment stood up (24 Jun, how far you got is unrecorded), three university AI courses 2023-2025, the red-teaming affiliate year. The pilots 01-09 stay out as your own technical work; the draft discloses them in one sentence as AI-run, which is the honest version.
+Draft in `journal/fill-2026-09-11/09-bio.md`. **The agent found no record that you did Karpathy, micrograd or GPT-2 from scratch** — no repo, no learning-log entry after 24 Jun. Earlier vault drafts lead with that claim. Do not use it unless it is true. What the files do support: linear algebra from first principles and a toy superposition model typed by hand in a REPL (18 Jun), numpy-100 by hand (24 Jun), ARENA chapter 0 environment stood up (24 Jun, how far you got is unrecorded), three university AI courses 2023-2025, the red-teaming affiliate year. The pilots 01-09 stay out as your own technical work; the draft discloses them in one sentence as AI-run, which is the honest version.
 
 ### Q9, three pieces of evidence (103 words)
 
@@ -354,4 +354,4 @@ His two lines worth keeping in mind while you write: "Negative or inconclusive r
 6. Decide what to say about ARENA and whether any from-scratch work is yours to claim.
 7. Confirm the JUS100 October dates for Q11, and whether the supervisor leave conversation has happened.
 
-Agent working files, if you want the full text of any section: `scratchpad/fill/01-factcheck.md` through `15-formq1q4.md`.
+Agent working files, if you want the full text of any section: `journal/fill-2026-09-11/01-factcheck.md` through `15-formq1q4.md`.

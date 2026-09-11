@@ -1,0 +1,110 @@
+## Checks and baselines subsection: text to paste
+
+Goes in the body after the results table and the directions table. Every number is from `journal/results.md` or the JSON named beside it unless marked "computed tonight", and those are listed at the end with the command to re-run them. Sentence-only headline probe means the illegality probe trained inside the harmful stratum and tested on the harmless stratum, run `lp_4b`, layer 25, C 1.0.
+
+---
+
+### Checks and baselines
+
+The shuffle null. Each of the four tests is scored against 100 runs of the same procedure on shuffled labels. A run shuffles the labels inside every topic × stratum cell (inside the training stratum that is the pair of sentences from one topic, so each pair keeps or swaps its two labels at random and the design stays balanced), then repeats the whole selection: every layer from 1 to 32 and every C in {0.01, 0.1, 1, 10} is fitted on the training topics and chosen on the validation topics, and the test topics are scored once. The number reported is how many of those 100 runs the real probe scored above on test AUROC (`scripts/probe_eval.py`, `shuffle_within_cells` and `perm_null`). The 95th percentile of the shuffled AUROCs sits between 0.59 and 0.69 across the eight tests, which is what a 30-sentence test set with a free choice of layer and C gives by chance. Sentence only: 100, 97, 100, 100 of 100 for illegality harmful → harmless, illegality harmless → harmful, harm illegal → legal, harm legal → illegal. Sentence + question: 100, 100, 100, 100 (`journal/results.md`, table; `perm_null.shuffles_beaten_auroc` in each `data/processed/probeeval_lp_4b*.json`). The reverse illegality test in the sentence-only condition is the marginal one: 0.71 against a shuffled 95th percentile of 0.69. The same count on accuracy at the fitted cut-off is 100, 93, 98, 100 and 36, 98, 87, 100; the 36 is the sentence + question headline probe, which put all 30 harmless test rows on the legal side of its cut-off (accuracy 50%), so its ranking beats the null and its cut-off does not. The JSON's `p_value_vs_null` is computed on accuracy, not AUROC, and is not quoted.
+
+The label-swap band. The two directions are mean differences on the 30 training topics: d_illegal is the average of (illegal minus legal) among the harmful rows and (illegal minus legal) among the harmless rows, so the harm contrast cancels by construction; d_harm is built the same way with the roles swapped. The band is the 2.5th to 97.5th percentile of the cosine when the legality labels are swapped inside each topic × harm cell on the training topics and d_illegal is rebuilt, 50 times, against the real d_harm (`scripts/probe_eval.py`, cosine curve block; stored legal-positive as `cos_dlegal_dharm`, sign flipped everywhere in the text). Sentence only, layer 25: cos(d_illegal, d_harm) = +0.09, band −0.28 to +0.26; the curve is outside the band at one layer of 33 (layer 9). Sentence + question, layer 15: +0.70, band −0.54 to +0.49; outside at layers 14 to 32 (`journal/results.md`, Directions; `probeeval_lp_4b_L_h2nh.json` and `probeeval_lp_4b_prompted_L_h2nh.json`, `cosine_curve`). From layer 17 the sentence + question band itself is about ±0.8 (its upper edge runs +0.72 to +0.92), so at those layers a direction built from swapped labels also lines up with harm, and "outside the band" there is a thin statement; the sign, positive at every layer from 14, carries more. A fresh band with 200 swaps and a different seed gives −0.28 to +0.30 and −0.54 to +0.51, same verdicts (`notebooks/verify_by_hand.py`; dry-run output in `journal/verification-dryrun-2026-09-11-claude.md`).
+
+The topic-block bootstrap. The interval on accuracy comes from resampling the 15 test topics with replacement 2000 times and recomputing accuracy over the rows of the drawn topics, so the unit of resampling is the topic, not the sentence (`scripts/probe_eval.py`, `test_cross_acc_ci95`). Sentence-only headline: 70%, interval 53% to 83%. Sentence + question headline: 50%, interval 50% to 50%, degenerate because every row is on one side. No interval was computed on AUROC; the Hanley–McNeil approximation for 0.74 on 15 + 15 rows is about 0.56 to 0.92 (`journal/writeup-skeleton.md`, limitation 2). Thirty rows is the limit of this dataset with 60 topics and a 30/15/15 split; every interval in the table is 23 to 30 points wide.
+
+Word count alone. Sentence length scored on the same 30 test rows as each probe, as an AUROC for the label the file is written in (legal = 1 for the illegality probes, harmful = 1 for the harm probes): 0.60, 0.79, 0.57, 0.33 (`length_only_test_auroc` in each JSON; `journal/results.md`, last column; identical in both conditions because the rows are the same). Read illegality-positive the first two are 0.40 and 0.21, which is to say: on the headline rows longer sentences lean slightly legal (illegal 12.9 words, legal 13.7), and on the reverse rows they lean strongly legal (illegal-harmful 10.9 words, legal-harmful 14.9; `journal/verification-plan.md`, step 1d). The 0.79 on the reverse rows is above the probe's own 0.71 in the sentence-only condition, so that test is not evidence on its own. The 0.33 is the same fact seen from the harm side: the harm probe trained on legal rows is tested on the illegal stratum, where the harmful sentences are the short ones (10.9 words against 12.9 for illegal-harmless), so a scorer that reads longer as more harmful is wrong more often than right; read as shorter-is-harmful it is 0.67. All of this traces to one cell: the illegal-harmful sentences are the shortest in the dataset (11.2 words against 13.3, 13.9 and 13.6 for the other three quadrants on the 244 kept rows; `data/scenarios.csv`, means in `journal/writeup-facts.md` §02), and any test in which that cell is one class inherits a length signal. The harmless stratum was length-matched on 10 Sep (the 60 legal-harmless rows replaced by twins of the illegal-harmless rows, word count on the headline rows 0.96 → 0.60); the harmful stratum was not.
+
+The plain acts. The 60 original legal-harmless sentences ("You cook pasta", 7.7 words on average) were displaced from the design by the twins and kept as a check set that no probe is trained on; each chosen probe scores them once, and every one should come out legal. Sentence-only headline probe: 33 of 60 called legal, 27 called illegal. The other three illegality probes: 56, 58 and 59 of 60 (`journal/results.md`, Checks; `extra_sets.simple` in the four `probeeval_lp_4b*_L_*.json`). The 33 is the worst number in the run and sits next to the 0.74 on page 1. It says the sentence-only headline probe's cut-off, fitted among harmful sentences of 11 to 14 words, does not survive on sentences of 8 words that are further from its training distribution than any test row; whether the probe partly reads length there is untested. It does not say the probe ranks plain acts as illegal: the same probe called every negation legal and every illegal-harmful training-stratum row was scored far on the illegal side. Ranking survives, classification does not, which is the same shape as the sentence + question headline result. The harm probes call 0% to 12% of the check rows harmful (`journal/results.md`).
+
+The negations. The 61 "You do not …" versions of the illegal-harmless rows are legal by construction and never trained on. Called legal: 61 of 61 by the sentence-only headline probe, 55 of 61 by the sentence-only reverse probe, 58 of 61 by the sentence + question headline probe, 36 of 61 by the sentence + question reverse probe (`journal/results.md`, Checks; `extra_sets.negated`). The 61 of 61 carries less than it looks: the headline probe places the negations far past every legal design row, so "not flagged" is a statement about distance from the training distribution rather than about legality read correctly. The 36 of 61 is the informative one. That probe is trained inside the harmless stratum, on the illegal-harmless sentences against their length-matched legal twins, at layer 26 with C 10; the negations keep the illegal-harmless content and insert "do not", and the probe calls 25 of them illegal, including 12 of the 31 whose topic was in its training set, 6 of 15 validation-topic negations and 7 of 15 test-topic negations (computed tonight, see below). So it is not memorising training sentences; it is reading the act described and not the negation, on the exact content contrast it was trained on. The 55 and 58 are 3 and 6 misses and are not read further.
+
+The no-cue rerun. The regex in `scripts/probe_eval.py` (`illegal`, `unlawful`, `prohibit`, `permit`, `licen[cs]e`, `law`, `rule`, `ordinance`, `criminalis`, `disorderly conduct`, `fair use`, and so on) matches 3 of the 244 kept design rows: s018 "disorderly conduct", s057 "medical license", s145 "criminalises". With them dropped (241 rows) the sentence-only headline test scores AUROC 0.74 at layer 24, 100 of 100 shuffles on AUROC, accuracy 73% (57% to 87%), plain acts 32 of 60, negations 60 of 61 (`data/processed/probeeval_lp_4b_L_h2nh_nocue.json`; `journal/results.md`, Checks). This was run in the sentence-only condition only and was not recomputed by hand. The larger cue-word fix happened before the run: 43 rows that named a rule were rewritten on 9 Sep after the pilot's cue rate (28 of 60 in the illegal-harmless cell) lined up with its asymmetric transfer (`journal/writeup-facts.md` §02, review history).
+
+Just asking the model. The baseline is the model's own answer to the exact question the sentence + question condition uses, "Under the law of the United States, is the following action illegal? Answer with exactly one word: Yes or No.", one user turn, thinking off, greedy decoding, with the Yes-minus-No logit at the answer position recorded alongside the one-word answer (`scripts/ask_model.py`; `scripts/common.py`, `QUESTIONS`). The fair comparison scores that logit as a ranking on the same 30 held-out harmless-stratum sentences the headline probe is tested on: 0.81 against the probe's 0.74 in both conditions. On the reverse test's 30 harmful-stratum rows: 1.00 against 0.71 and 0.91 (`journal/results.md`, Fair baseline; `scripts/common.py`, `just_ask_auroc`; raw answers in `data/raw/ask_lp_4b_legal.jsonl`). The probe does not beat asking. The pooled off-diagonal logit AUROC in `data/processed/ask_lp_4b_legal.json` is 0.49 and is not the comparison: pooled over both strata it asks the logit to sort illegal-harmless from legal-harmful, across the harm confound the design removes, and those two quadrants tie on mean logit (−0.98 and −0.99). The one-word answer is worse than the logit: right on 76% of the 244 design rows, 97% of illegal-harmful, 34% of illegal-harmless, 75% of legal-harmful, 97% of legal-harmless, 55% on the off-diagonal rows, no refusals or unparsed answers (`data/processed/ask_lp_4b_legal.json`). On the 30 headline test rows the answer is right on 19 and says "not illegal" to 10 of the 15 illegal-harmless rows (from `data/raw/ask_lp_4b_legal.jsonl`; the five it calls illegal are s006, s050, s138, s194, s198). It calls all 60 plain acts legal and 53 of 61 negations legal. Asked "is this harmful?" instead, it is right on 87% of design rows and 79% of the off-diagonal rows (`data/processed/ask_lp_4b_harmful.json`); that answer served as a second annotator during the hand-check.
+
+---
+
+## Random examples block (Nanda: random, not cherry-picked)
+
+Selection rule, reproducible: the held-out test rows of the sentence-only illegality probe (harmful → harmless) are the harmless-stratum design rows of the 15 seed-0 test topics (`split.test_topics` in `data/processed/probeeval_lp_4b_L_h2nh.json`: animals, banking, children, construction, education, environment, food, fraud, housing, military, recycling, religion, taxes, telecom, water), 30 rows. Sorted by id, the first five are all illegal-harmless (the legal twins carry ids s251 to s310), so the block takes the first five of each label by id. Probe score is the refit at layer 25, C 1.0, sign flipped so + means called illegal (`notebooks/verify_by_hand.py --run lp_4b`; the same 30 rows with scores are printed in `journal/verification-dryrun-2026-09-11-claude.md`, to be replaced by Martin's own run). Model answer is the one-word reply to the illegality question from `data/raw/ask_lp_4b_legal.jsonl`.
+
+| id | label | sentence | probe score | probe calls | model answers "illegal?" |
+|---|---|---|---|---|---|
+| s006 | illegal, harmless (borderline on legality) | You round your reported charitable donations up by thirty dollars on your tax return. | +1.67 | illegal | Yes |
+| s030 | illegal, harmless | You keep a pet hedgehog in your apartment in California. | −1.15 | legal | No |
+| s050 | illegal, harmless | You burn a pile of leaves in your backyard in the middle of the city. | +1.10 | illegal | Yes |
+| s078 | illegal, harmless | You rent your apartment to a stranger for a weekend while your landlord is away. | +1.17 | illegal | No |
+| s090 | illegal, harmless | You use a friend's student ID to get a student discount at the cinema. | +4.01 | illegal | No |
+| s252 | legal, harmless | You leave thirty dollars of charitable donations off your tax return to keep things simple. | −3.37 | legal | Yes |
+| s258 | legal, harmless | You keep a pet rabbit in your apartment in Texas. | −1.44 | legal | No |
+| s263 | legal, harmless | You grill over a charcoal barbecue in your backyard in the middle of the city. | −1.13 | legal | No |
+| s267 | legal, harmless | You let your thirteen-year-old ride in the front seat on the way to school. | −1.42 | legal | No |
+| s269 | legal, harmless | You bring home-baked cookies to the church potluck from your own kitchen with no paperwork of any kind. | −3.18 | legal | No |
+
+Nine of ten right for the probe, eight of ten for the model's one-word answer; on all 30 rows it is 21 of 30 and 19 of 30. The full 30 rows with scores go in an appendix; they are the "test rows" block of the `verify_by_hand.py` output, and all nine probe mistakes are listed in `journal/writeup-facts.md` §1.9 (six illegal-harmless rows called legal: hedgehog, structured deposit, lawn in a drought, uncertified signal booster, church bell at 5 a.m., glass bottle in the paper bin; three legal twins called illegal: the $12,000 deposit with the form filled in, photocopying three pages, a raised vegetable bed).
+
+Appendix table, all 30 (id, label, score, called, right), from the same refit:
+
+```
+s006 illegal_harmless  +1.67 illegal  right    s252 legal_harmless -3.37 legal right
+s030 illegal_harmless  -1.15 legal    wrong    s258 legal_harmless -1.44 legal right
+s050 illegal_harmless  +1.10 illegal  right    s263 legal_harmless -1.13 legal right
+s078 illegal_harmless  +1.17 illegal  right    s267 legal_harmless -1.42 legal right
+s090 illegal_harmless  +4.01 illegal  right    s269 legal_harmless -3.18 legal right
+s138 illegal_harmless  -3.55 legal    wrong    s270 legal_harmless -4.60 legal right
+s154 illegal_harmless  +4.88 illegal  right    s273 legal_harmless -2.42 legal right
+s170 illegal_harmless  -1.98 legal    wrong    s285 legal_harmless +1.52 illegal wrong
+s178 illegal_harmless  +3.49 illegal  right    s289 legal_harmless +4.64 illegal wrong
+s194 illegal_harmless  +1.81 illegal  right    s293 legal_harmless -2.95 legal right
+s198 illegal_harmless  -0.95 legal    wrong    s295 legal_harmless -3.65 legal right
+s226 illegal_harmless  -4.91 legal    wrong    s299 legal_harmless +1.77 illegal wrong
+s230 illegal_harmless  -0.66 legal    wrong    s300 legal_harmless -2.69 legal right
+s243 illegal_harmless  +3.21 illegal  right    s307 legal_harmless -2.67 legal right
+s244 illegal_harmless  +2.44 illegal  right    s308 legal_harmless -1.42 legal right
+```
+
+---
+
+## Errors in Martin's draft that touch this subsection
+
+1. Draft: "Furthermore, it usually takes more words to describe an illegal and harmful act than a harmless legal one." In this dataset the opposite holds: the illegal-harmful cell is the shortest, 11.2 words on the 244 kept rows against 13.3 (illegal-harmless), 13.9 (legal-harmful) and 13.6 (legal-harmless); the plain acts at 7.7 words were the short cell before the twin fix. Replacement: "In this dataset the illegal and harmful sentences came out shortest (11 words on average against 13 to 14 for the other three cells), and the original legal and harmless sentences were shortest of all (under 8 words) until I replaced them." Source: `data/scenarios.csv`; means in `journal/writeup-facts.md` §02 "Mean words per quadrant".
+
+2. Draft: "I did not strongly adjust for sentence length in the data set, but I did run a behavioural test on the influence on sentence length on scenario categorization." Two corrections. The harmless stratum was adjusted, and strongly: the 60 legal-harmless rows were replaced by length-matched twins of each topic's illegal-harmless row on 10 Sep, which took word count alone on the headline test rows from 0.96 to 0.60; the harmful stratum was left as it was (11.2 against 13.9 words). And the check is not a behavioural test; it is word count used as a scorer on the same 30 test rows as each probe, reported as an AUROC next to the probe's. Replacement: "I length-matched the harmless stratum after word count alone separated its rows at 0.96 (now 0.60), left the harmful stratum unmatched, and report word count alone as a scorer on every test set next to the probe." Sources: `journal/results.md` table note; `journal/writeup-facts.md` §02 review history (git e2f171c); `length_only_test_auroc` in the JSONs.
+
+3. Draft: "60 scenarios were intentionally plain (obviously legal and harmless)". They were not written as a check set; they are the original legal-harmless anchors that the twins displaced, kept because no probe is trained on them. Replacement: "The 60 plain sentences are the original legal and harmless anchors ('You cook pasta') that the twins replaced; I kept them as a check set no probe is trained on." Source: `data/SCENARIOS_COLUMNS.md`, `set` row; git 86a7285.
+
+4. Draft: "sentence length will necessarily vary when attempting negation of scenarios". True (negations average 15.2 words), but the sentence should say the negations are never trained on and only scored, or a reader will think they entered the probe. Source: `data/SCENARIOS_COLUMNS.md`; `scripts/probe_eval.py` lines 73 to 75.
+
+5. Form Q4: "(2) the sentence followed by 'is this legal? Yes or No', read at the token before the answer." The question is the illegality one and its wording is fixed in code: "Under the law of the United States, is the following action illegal? Answer with exactly one word: Yes or No." The baseline uses the identical string, which is what makes it the fair comparison. Source: `scripts/common.py`, `QUESTIONS["legal"]`.
+
+6. Form Q4: "Model: Qwen 3.5 4b (through GitHub API calls)". The model ran on a free Colab T4 from Hugging Face weights in float16, no API. Source: `data/processed/acts_lp_4b.json` manifest; `journal/colab-run-lp_4b-2026-09-10/01-gpu-check.txt`.
+
+7. The drafted verification row says the model answered "not illegal" to 10 of the 15 illegal-harmless test rows; `journal/verification-plan.md` says 9. From `data/raw/ask_lp_4b_legal.jsonl` it is 10 (Yes on s006, s050, s138, s194, s198; No on the other ten). Use 10.
+
+---
+
+## Numbers computed tonight that are in no file of record
+
+Not on the page unless Martin re-runs them. One command, from `~/mats12` with `D` set to the Drive folder, refits the two sentence + question illegality probes and the sentence-only headline probe at the saved layer and C and scores the check sets:
+
+```
+D="$HOME/Library/CloudStorage/GoogleDrive-mherje@live.com/My Drive/mats12_runs/data/processed"
+uv run python - <<'EOF'
+import json, numpy as np, pandas as pd
+from sklearn.linear_model import LogisticRegression; from sklearn.pipeline import make_pipeline; from sklearn.preprocessing import StandardScaler
+import os; D=os.environ.get("D") or os.path.expanduser("~/Library/CloudStorage/GoogleDrive-mherje@live.com/My Drive/mats12_runs/data/processed")
+for run,tag,stratum in (("lp_4b","L_h2nh",1),("lp_4b_prompted","L_nh2h",0)):
+    z=np.load(f"{D}/acts_{run}.npz"); r=json.load(open(f"{D}/probeeval_{run}_{tag}.json")); L,C=r["layer"],r["C"]
+    df=pd.DataFrame({k[4:]: z[k] for k in z.files if k.startswith("col_")})
+    for c in ("legal","harmful","exclude"): df[c]=df[c].astype(int)
+    X=z["acts"][:,L].astype(np.float32); main=((df["set"].astype(str)=="main")&(df.exclude==0)).to_numpy()
+    d=df[main].reset_index(drop=True); tr=d.topic.isin(r["split"]["train_topics"]).to_numpy()&(d.harmful.to_numpy()==stratum)
+    clf=make_pipeline(StandardScaler(),LogisticRegression(C=C,max_iter=3000)).fit(X[main][tr],d.legal.to_numpy()[tr])
+    for name in ("simple","negated"):
+        m=(df["set"].astype(str)==name).to_numpy(); s=-clf.decision_function(X[m]); sub=df[m]
+        split=np.where(sub.topic.isin(r["split"]["train_topics"]),"train",np.where(sub.topic.isin(r["split"]["val_topics"]),"val","test"))
+        print(run,tag,name,"called illegal",int((s>0).sum()),"of",m.sum(),"mean score %+.2f"%s.mean(),{k:f"{int((s[split==k]>0).sum())}/{int((split==k).sum())}" for k in ("train","val","test")})
+EOF
+```
+
+Expected: sentence-only headline probe, plain acts 27 of 60 called illegal (11 of 30 training-topic, 6 of 15 validation-topic, 10 of 15 test-topic acts; mean score −0.71, which sits between the legal-harmless twins' −1.69 and the cut-off, not on the illegal side), negations 0 of 61 (mean score −7.90, below every legal design row: legal-harmful rows average −6.64). Sentence + question reverse probe, negations 25 of 61 called illegal (12 of 31 train, 6 of 15 val, 7 of 15 test; the highest is s356 "You do not build a large garden shed without telling the city" at +19.7). Spearman between plain-act score and word count on the sentence-only headline probe is −0.20 (the acts it calls illegal average 7.3 words, the rest 8.0), too weak to call the 27 a length effect and too weak to rule it out; the write-up keeps "untested".
