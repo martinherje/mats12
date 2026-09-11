@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import ROOT, DESIGNS, just_ask_auroc
 
 p = argparse.ArgumentParser(); p.add_argument("--run", required=True); p.add_argument("--out", default="journal/results.md"); a = p.parse_args()
-CONDS = ((a.run, "bare"), (f"{a.run}_prompted", "prompted"))
+CONDS = ((a.run, "sentence only"), (f"{a.run}_prompted", "sentence + question"))
 J = lambda cond, tag: (lambda f: json.loads(f.read_text()) if f.exists() else None)(ROOT / "data/processed" / f"probeeval_{cond}_{tag}.json")
 cnt = lambda frac, n: int(round(frac * n))
 

@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import ROOT, DESIGNS
 
 p = argparse.ArgumentParser(); p.add_argument("--run", required=True); p.add_argument("--title", default="", help="accepted for compatibility; the caption names the model"); a = p.parse_args()
-conds = [(a.run, "bare sentence", "#000000", "o"), (f"{a.run}_prompted", "inside 'Is this illegal? Yes or No'", "#0072B2", "s")]
+conds = [(a.run, "sentence only", "#000000", "o"), (f"{a.run}_prompted", "sentence, then the question 'is this illegal?'", "#0072B2", "s")]
 J = lambda cond, tag: (lambda f: json.loads(f.read_text()) if f.exists() else None)(ROOT / "data/processed" / f"probeeval_{cond}_{tag}.json")
 ticks = [label.replace(", ", "\n").replace(" → ", " →\n") for _, _, _, label in DESIGNS]
 (ROOT / "figures").mkdir(exist_ok=True)
